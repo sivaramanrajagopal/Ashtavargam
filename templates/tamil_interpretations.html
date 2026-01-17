@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}Tamil Ashtakavarga Interpretations{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center bg-gradient-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-outline-light" onclick="goToResults()">
+                            <i class="fas fa-arrow-left"></i> Back to Results
+                        </button>
+                        <div>
+                            <h1 class="mb-0">
+                                <i class="fas fa-star"></i>
+                                <span class="tamil-text">சர்வ அஷ்டவர்க்க பலன்கள்</span>
+                            </h1>
+                            <p class="mb-0 mt-2">Tamil Ashtakavarga Interpretations</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-light me-2" onclick="goToMatrixView()">
+                                <i class="fas fa-table"></i> Matrix View
+                            </button>
+                            <button class="btn btn-outline-light" onclick="goToHome()">
+                                <i class="fas fa-home"></i> Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Longevity Analysis -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-heartbeat text-danger"></i>
+                                    ஆயுள் பலன் (Longevity Analysis)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="longevityText">
+                                            Loading longevity analysis...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agam vs Puram -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-balance-scale text-primary"></i>
+                                    அகம் vs புறம் (Internal vs External Happiness)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="agamPuramText">
+                                            Loading Agam vs Puram analysis...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wealth Analysis -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-coins text-success"></i>
+                                    ஸ்ரீசுரம் (Wealth vs Expenses)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="srisuramText">
+                                            Loading Srisuram analysis...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-chart-line text-warning"></i>
+                                    அஸ்ரீசுரம் (Income vs Expenses)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="asrisuramText">
+                                            Loading Asrisuram analysis...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beneficial Rasis -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-heart text-success"></i>
+                                    நன்மை பயக்கும் ராசி (Most Beneficial Rasi)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="mostBeneficialText">
+                                            Loading most beneficial Rasi...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-exclamation-triangle text-danger"></i>
+                                    தவிர்க்க வேண்டிய ராசி (Least Beneficial Rasi)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <p class="interpretation-text" id="leastBeneficialText">
+                                            Loading least beneficial Rasi...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Age Periods -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-clock text-info"></i>
+                                    வயது வாரியான பலன்கள் (Age-wise Predictions)
+                                </h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="interpretation-card">
+                                            <div class="card-header-custom">
+                                                <h5>வீட்டு அடிப்படையில் (House-based)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="interpretation-text" id="agePeriodsHouseText">
+                                                    Loading house-based age periods...
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="interpretation-card">
+                                            <div class="card-header-custom">
+                                                <h5>ராசி அடிப்படையில் (Rasi-based)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="interpretation-text" id="agePeriodsRasiText">
+                                                    Loading Rasi-based age periods...
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lucky Directions -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-compass text-primary"></i>
+                                    அதிர்ஷ்ட திசைகள் (Lucky Directions)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3 text-center">
+                                                <div class="direction-card">
+                                                    <h5>கிழக்கு</h5>
+                                                    <div class="direction-points" id="eastPoints">-</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <div class="direction-card">
+                                                    <h5>தெற்கு</h5>
+                                                    <div class="direction-points" id="southPoints">-</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <div class="direction-card">
+                                                    <h5>மேற்கு</h5>
+                                                    <div class="direction-points" id="westPoints">-</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <div class="direction-card">
+                                                    <h5>வடக்கு</h5>
+                                                    <div class="direction-points" id="northPoints">-</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="interpretation-text mt-3" id="luckyDirectionText">
+                                            Loading lucky direction analysis...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relationship Dynamics -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="interpretation-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-users text-success"></i>
+                                    உறவு முறைகள் (Relationship Dynamics)
+                                </h3>
+                                <div class="interpretation-card">
+                                    <div class="card-body">
+                                        <div id="relationshipDynamics">
+                                            Loading relationship dynamics...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.interpretation-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.interpretation-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.interpretation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.interpretation-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.direction-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.direction-points {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-top: 10px;
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    margin: -1px -1px 0 -1px;
+}
+
+.card-header-custom h5 {
+    margin: 0;
+    font-weight: bold;
+}
+
+.tamil-text {
+    font-family: 'Latha', 'Tamil Sangam MN', serif;
+    font-size: 1.2em;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load data from sessionStorage
+let ashtakavargaData = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get data from sessionStorage
+    const data = sessionStorage.getItem('ashtakavargaData');
+    if (!data) {
+        alert('No calculation data found. Please go back and calculate first.');
+        window.location.href = '/';
+        return;
+    }
+    
+    try {
+        ashtakavargaData = JSON.parse(data);
+        console.log('Tamil interpretation data loaded:', ashtakavargaData);
+        
+        // Populate Tamil interpretations
+        populateTamilInterpretations();
+        
+    } catch (error) {
+        console.error('Error parsing data:', error);
+        alert('Error loading calculation data. Please try again.');
+        window.location.href = '/';
+    }
+});
+
+function populateTamilInterpretations() {
+    try {
+        const tamilData = ashtakavargaData.tamil_interpretation;
+        
+        if (!tamilData) {
+            console.error('No Tamil interpretation data found');
+            return;
+        }
+        
+        // Longevity Analysis
+        document.getElementById('longevityText').textContent = tamilData.longevity.interpretation;
+        
+        // Agam vs Puram
+        document.getElementById('agamPuramText').textContent = tamilData.agam_puram.interpretation;
+        
+        // Srisuram
+        document.getElementById('srisuramText').textContent = tamilData.srisuram.interpretation;
+        
+        // Asrisuram
+        document.getElementById('asrisuramText').textContent = tamilData.asrisuram.interpretation;
+        
+        // Most Beneficial Rasi
+        document.getElementById('mostBeneficialText').textContent = tamilData.beneficial_rasis.most_beneficial.interpretation;
+        
+        // Least Beneficial Rasi
+        document.getElementById('leastBeneficialText').textContent = tamilData.beneficial_rasis.least_beneficial.interpretation;
+        
+        // Age Periods - House based
+        document.getElementById('agePeriodsHouseText').textContent = tamilData.age_periods.house_based.interpretation;
+        
+        // Age Periods - Rasi based
+        document.getElementById('agePeriodsRasiText').textContent = tamilData.age_periods.rasi_based.interpretation;
+        
+        // Lucky Directions
+        const directions = tamilData.lucky_directions.directions;
+        document.getElementById('eastPoints').textContent = directions.கிழக்கு;
+        document.getElementById('southPoints').textContent = directions.தெற்கு;
+        document.getElementById('westPoints').textContent = directions.மேற்கு;
+        document.getElementById('northPoints').textContent = directions.வடக்கு;
+        
+        document.getElementById('luckyDirectionText').textContent = tamilData.lucky_directions.luckiest.interpretation;
+        
+        // Relationship Dynamics
+        const relationshipsDiv = document.getElementById('relationshipDynamics');
+        relationshipsDiv.innerHTML = '';
+        
+        tamilData.relationships.relationships.forEach(relationship => {
+            const p = document.createElement('p');
+            p.className = 'interpretation-text';
+            p.textContent = relationship;
+            relationshipsDiv.appendChild(p);
+        });
+        
+    } catch (error) {
+        console.error('Error populating Tamil interpretations:', error);
+    }
+}
+
+function goToResults() {
+    window.location.href = '/results';
+}
+
+function goToHome() {
+    window.location.href = '/';
+}
+
+function goToMatrixView() {
+    window.location.href = '/matrix-view';
+}
+</script>
+{% endblock %}

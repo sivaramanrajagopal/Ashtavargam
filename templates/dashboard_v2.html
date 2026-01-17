@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Interpretation Dashboard - Vedic Astrology Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px;
+            padding: 30px;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .interpretation-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .interpretation-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+        }
+        
+        .house-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+        
+        .score-auspicious {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .score-average {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: #000;
+        }
+        
+        .score-inauspicious {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+        }
+        
+        .comparison-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .planet-strength {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            margin: 5px;
+        }
+        
+        .strength-strong { background: #28a745; }
+        .strength-neutral { background: #ffc107; color: #000; }
+        .strength-weak { background: #dc3545; }
+        
+        .house-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil Sangam MN', 'Latha', 'Vijaya', sans-serif;
+            font-size: 1.1em;
+        }
+        
+        .interpretation-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .sav-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .bav-analysis {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .prediction-section {
+            background: #fff3e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back to Results
+    </button>
+
+    <div class="container-fluid">
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1><i class="fas fa-book-open"></i> Ashtakavarga Interpretation Guide</h1>
+                <h3>Vedic Astrology Analysis Based on Traditional Rules</h3>
+                <p class="mb-0">Understanding Your Chart Through Sarvashtakavarga (SAV) & Bhinnashtakavarga (BAV)</p>
+            </div>
+
+            <!-- SAV Total Verification -->
+            <div class="sav-total">
+                <h2><i class="fas fa-calculator"></i> Sarvashtakavarga Total</h2>
+                <h1 id="savTotal">337</h1>
+                <p class="mb-0">Total Points Across All 12 Houses (Always 337 in Traditional System)</p>
+            </div>
+
+            <!-- House-by-House Interpretation -->
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="fas fa-home"></i> House-by-House Interpretation</h2>
+                    <p class="text-muted">Each house's strength determines the favorability of its related life areas</p>
+                </div>
+            </div>
+            
+            <div class="row" id="houseInterpretations">
+                <!-- House interpretations will be populated here -->
+            </div>
+
+            <!-- Key House Comparisons -->
+            <div class="comparison-section">
+                <h3><i class="fas fa-balance-scale"></i> Key House Comparisons</h3>
+                <p class="text-muted">Critical comparisons that reveal life dynamics</p>
+                <div id="houseComparisons">
+                    <!-- Comparisons will be populated here -->
+                </div>
+            </div>
+
+            <!-- BAV Analysis -->
+            <div class="bav-analysis">
+                <h3><i class="fas fa-globe"></i> Bhinnashtakavarga (BAV) Analysis</h3>
+                <p class="text-muted">Individual planet strengths and their effects</p>
+                <div id="bavAnalysis">
+                    <!-- BAV analysis will be populated here -->
+                </div>
+            </div>
+
+            <!-- Transit & Dasha Predictions -->
+            <div class="prediction-section">
+                <h3><i class="fas fa-clock"></i> Transit & Dasha Predictions</h3>
+                <p class="text-muted">How to use Ashtakavarga for timing predictions</p>
+                <div id="predictions">
+                    <!-- Predictions will be populated here -->
+                </div>
+            </div>
+
+            <!-- Interpretation Guide -->
+            <div class="interpretation-card">
+                <div class="card-header-custom">
+                    <h3><i class="fas fa-graduation-cap"></i> How to Interpret Your Ashtakavarga</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5><i class="fas fa-check-circle text-success"></i> Auspicious Houses (30+ points)</h5>
+                            <p class="interpretation-text">These houses are very strong and bring favorable results. Higher scores indicate more prosperity in these life areas.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5><i class="fas fa-minus-circle text-warning"></i> Average Houses (25-29 points)</h5>
+                            <p class="interpretation-text">Mixed or average results. Affairs proceed without significant gains or major troubles.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5><i class="fas fa-times-circle text-danger"></i> Inauspicious Houses (Below 25 points)</h5>
+                            <p class="interpretation-text">Potential challenges and less favorable outcomes. These areas require more effort and attention.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let ashtakavargaData = null;
+        
+        function goBack() {
+            window.location.href = '/results';
+        }
+        
+        function getScoreClass(score) {
+            if (score >= 30) return 'score-auspicious';
+            if (score >= 25) return 'score-average';
+            return 'score-inauspicious';
+        }
+        
+        function getScoreInterpretation(score) {
+            if (score >= 30) return 'Very Auspicious - Strong favorable results';
+            if (score >= 25) return 'Average - Mixed results';
+            return 'Inauspicious - Requires attention';
+        }
+        
+        function getPlanetStrengthClass(total) {
+            if (total >= 5) return 'strength-strong';
+            if (total === 4) return 'strength-neutral';
+            return 'strength-weak';
+        }
+        
+        function getPlanetStrengthText(total) {
+            if (total >= 5) return 'Strong - Positive results';
+            if (total === 4) return 'Neutral - Mixed effects';
+            return 'Weak - Limited positive results';
+        }
+        
+        function populateHouseInterpretations(houses) {
+            const container = document.getElementById('houseInterpretations');
+            container.innerHTML = '';
+            
+            houses.forEach(house => {
+                const houseCard = document.createElement('div');
+                houseCard.className = 'col-md-6 col-lg-4 mb-4';
+                
+                const scoreClass = getScoreClass(house.value);
+                const interpretation = getScoreInterpretation(house.value);
+                
+                // Use the Tamil Rasi name already calculated by the backend
+                const actualRasi = house.tamil;
+                
+                houseCard.innerHTML = `
+                    <div class="interpretation-card">
+                        <div class="card-header-custom">
+                            <h5 class="mb-0">House ${house.house}</h5>
+                            <small class="tamil-text">${actualRasi}</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="house-score ${scoreClass}">
+                                ${house.value}
+                            </div>
+                            <div class="house-name">${house.name}</div>
+                            <p class="interpretation-text">
+                                <strong>${interpretation}</strong><br>
+                                ${house.value >= 30 ? 
+                                    'This house is very strong and will bring excellent results in its related life areas. You can expect prosperity and success here.' :
+                                    house.value >= 25 ? 
+                                    'This house shows average strength. Results will be mixed - neither exceptionally good nor particularly challenging.' :
+                                    'This house needs attention. You may face challenges in this area of life and should work harder to achieve desired results.'
+                                }
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(houseCard);
+            });
+        }
+        
+        function populateHouseComparisons(houses) {
+            const container = document.getElementById('houseComparisons');
+            container.innerHTML = '';
+            
+            // Key comparisons based on Vedic astrology rules
+            const comparisons = [
+                {
+                    title: 'Income vs Expenses (11th vs 12th House)',
+                    house1: houses[10], // 11th house (index 10)
+                    house2: houses[11], // 12th house (index 11)
+                    interpretation: 'Income vs Expenditures'
+                },
+                {
+                    title: 'Career vs Income (10th vs 11th House)',
+                    house1: houses[9], // 10th house (index 9)
+                    house2: houses[10], // 11th house (index 10)
+                    interpretation: 'Career vs Gains'
+                },
+                {
+                    title: 'Health vs Longevity (1st vs 8th House)',
+                    house1: houses[0], // 1st house (index 0)
+                    house2: houses[7], // 8th house (index 7)
+                    interpretation: 'Self vs Longevity'
+                },
+                {
+                    title: 'Wealth vs Expenditures (2nd vs 12th House)',
+                    house1: houses[1], // 2nd house (index 1)
+                    house2: houses[11], // 12th house (index 11)
+                    interpretation: 'Accumulated Wealth vs Losses'
+                }
+            ];
+            
+            comparisons.forEach(comp => {
+                const comparisonDiv = document.createElement('div');
+                comparisonDiv.className = 'comparison-item';
+                
+                const house1Score = comp.house1.value;
+                const house2Score = comp.house2.value;
+                const difference = house1Score - house2Score;
+                
+                let result = '';
+                if (comp.title.includes('Income vs Expenses')) {
+                    result = house1Score > house2Score ? 
+                        'Income will exceed expenses. You will enjoy material comforts and financial stability.' :
+                        'Expenses may exceed income. Be careful with financial planning and budgeting.';
+                } else if (comp.title.includes('Career vs Income')) {
+                    result = house1Score > house2Score ? 
+                        'You may work harder for your gains. Career success requires more effort.' :
+                        'Gains will come with less effort. Income may flow more easily than career advancement.';
+                } else if (comp.title.includes('Health vs Longevity')) {
+                    result = house1Score > house2Score ? 
+                        'Good health and long life indicated. Strong constitution and vitality.' :
+                        'Health may need attention. Focus on wellness and preventive care.';
+                } else if (comp.title.includes('Wealth vs Expenditures')) {
+                    result = house1Score > house2Score ? 
+                        'You can save and accumulate money. Good financial management skills.' :
+                        'May face challenges in wealth accumulation. Focus on reducing unnecessary expenses.';
+                }
+                
+                comparisonDiv.innerHTML = `
+                    <h6><strong>${comp.title}</strong></h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>${comp.house1.name}:</strong> ${house1Score} points
+                        </div>
+                        <div class="col-6">
+                            <strong>${comp.house2.name}:</strong> ${house2Score} points
+                        </div>
+                    </div>
+                    <p class="mt-2 mb-0"><strong>Interpretation:</strong> ${result}</p>
+                `;
+                
+                container.appendChild(comparisonDiv);
+            });
+        }
+        
+        function populateBAVAnalysis(planets) {
+            const container = document.getElementById('bavAnalysis');
+            container.innerHTML = '';
+            
+            planets.forEach(planet => {
+                const planetDiv = document.createElement('div');
+                planetDiv.className = 'comparison-item';
+                
+                const strengthClass = getPlanetStrengthClass(planet.total);
+                const strengthText = getPlanetStrengthText(planet.total);
+                
+                planetDiv.innerHTML = `
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h6><strong>${planet.name}</strong></h6>
+                            <small class="tamil-text">${planet.tamil}</small>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="planet-strength ${strengthClass}">
+                                ${planet.total} Points
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-0"><strong>${strengthText}</strong></p>
+                            <small class="text-muted">
+                                ${planet.total >= 5 ? 
+                                    'This planet will give positive results during its dasha periods and transits.' :
+                                    planet.total === 4 ? 
+                                    'This planet has neutral effects - neither strongly positive nor negative.' :
+                                    'This planet may not produce strong positive results, even if exalted or in its own sign.'
+                                }
+                            </small>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(planetDiv);
+            });
+        }
+        
+        function populatePredictions(houses, planets) {
+            const container = document.getElementById('predictions');
+            container.innerHTML = '';
+            
+            // Find strongest and weakest houses
+            const sortedHouses = [...houses].sort((a, b) => b.value - a.value);
+            const strongestHouse = sortedHouses[0];
+            const weakestHouse = sortedHouses[sortedHouses.length - 1];
+            
+            // Find strongest and weakest planets
+            const sortedPlanets = [...planets].sort((a, b) => b.total - a.total);
+            const strongestPlanet = sortedPlanets[0];
+            const weakestPlanet = sortedPlanets[sortedPlanets.length - 1];
+            
+            const predictionsDiv = document.createElement('div');
+            predictionsDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-star text-success"></i> Most Auspicious Periods</h5>
+                        <div class="comparison-item">
+                            <h6><strong>Transits through House ${strongestHouse.house} (${strongestHouse.name})</strong></h6>
+                            <p>When planets transit through your strongest house (${strongestHouse.value} points), they will yield very favorable results. This is an excellent time for activities related to ${strongestHouse.name.toLowerCase()}.</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h6><strong>${strongestPlanet.name} Dasha Periods</strong></h6>
+                            <p>During ${strongestPlanet.name}'s major or sub-periods (${strongestPlanet.total} BAV points), you will experience very positive results. This planet will give its best effects during its ruling periods.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-exclamation-triangle text-warning"></i> Periods Requiring Caution</h5>
+                        <div class="comparison-item">
+                            <h6><strong>Transits through House ${weakestHouse.house} (${weakestHouse.name})</strong></h6>
+                            <p>When planets transit through your weakest house (${weakestHouse.value} points), results may be unfavorable. Be extra careful during these periods in matters related to ${weakestHouse.name.toLowerCase()}.</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h6><strong>${weakestPlanet.name} Dasha Periods</strong></h6>
+                            <p>During ${weakestPlanet.name}'s periods (${weakestPlanet.total} BAV points), results may be limited. This planet may not give strong positive effects even during its ruling periods.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-item mt-3">
+                    <h6><strong>Combined Analysis for Best Timing</strong></h6>
+                    <p>For the most auspicious results, look for periods when strong planets (5+ BAV points) are transiting through strong houses (30+ SAV points). Conversely, avoid important decisions when weak planets are transiting through weak houses.</p>
+                </div>
+            `;
+            
+            container.appendChild(predictionsDiv);
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                ashtakavargaData = JSON.parse(sessionStorage.getItem('ashtakavargaData'));
+                
+                if (ashtakavargaData && ashtakavargaData.interpretation) {
+                    const interpretation = ashtakavargaData.interpretation;
+                    
+                    // Update SAV total
+                    document.getElementById('savTotal').textContent = interpretation.overall.total;
+                    
+                    // Populate house interpretations
+                    populateHouseInterpretations(interpretation.houses);
+                    
+                    // Populate house comparisons
+                    populateHouseComparisons(interpretation.houses);
+                    
+                    // Populate BAV analysis
+                    populateBAVAnalysis(interpretation.planets);
+                    
+                    // Populate predictions
+                    populatePredictions(interpretation.houses, interpretation.planets);
+                } else {
+                    console.error('No interpretation data found');
+                    document.body.innerHTML = '<div class="container text-center mt-5"><h2>No data available</h2><p>Please go back and calculate your chart first.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                document.body.innerHTML = '<div class="container text-center mt-5"><h2>Error loading data</h2><p>Please try again.</p></div>';
+            }
+        });
+    </script>
+</body>
+</html>

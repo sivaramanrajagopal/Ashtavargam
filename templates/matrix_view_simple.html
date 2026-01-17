@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Matrix View - Simple</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .matrix-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .matrix-table .total-row {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .matrix-table .total-col {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .sarvastakavarga-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .sarvastakavarga-house {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sarvastakavarga-house.strong {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .sarvastakavarga-house.moderate {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+        
+        .sarvastakavarga-house.weak {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .interpretation-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .interpretation-table th,
+        .interpretation-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .interpretation-table th {
+            background: #e9ecef;
+            font-weight: bold;
+        }
+        
+        .strength-strong { color: #28a745; font-weight: bold; }
+        .strength-moderate { color: #ffc107; font-weight: bold; }
+        .strength-weak { color: #dc3545; font-weight: bold; }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .sarvastakavarga-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <h1 class="mb-0">
+                    <i class="fas fa-table"></i>
+                    <span class="tamil-text">அஷ்டவர்க்க மேட்ரிக்ஸ் காட்சி</span>
+                </h1>
+                <p class="mb-0 mt-2">Ashtakavarga Matrix View - Complete Analysis</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="text-center mb-4">
+            <a href="/" class="btn btn-primary">Home</a>
+            <a href="/results" class="btn btn-success">Results</a>
+            <a href="/dashboard" class="btn btn-info">Dashboard</a>
+            <a href="/tamil-interpretations" class="btn btn-warning">Tamil Interpretations</a>
+        </div>
+
+        <!-- Matrix Grid -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Bhinnashtakavarga Matrices (8 Planets + Ascendant)</h3>
+                <div class="row" id="matrixGrid">
+                    <!-- Matrices will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Sarvashtakavarga Chart -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Sarvashtakavarga Chart (Traditional South Indian Format)</h3>
+                <div class="sarvastakavarga-grid" id="sarvastakavargaGrid">
+                    <!-- Sarvashtakavarga will be populated here -->
+                </div>
+                <div class="text-center mt-4">
+                    <h4>Total Sarvashtakavarga: <span id="sarvaTotal" class="text-primary">0</span></h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interpretation Table -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Simple Interpretation Summary</h3>
+                <table class="interpretation-table" id="interpretationTable">
+                    <thead>
+                        <tr>
+                            <th>Planet</th>
+                            <th>Total Points</th>
+                            <th>Strength Level</th>
+                            <th>Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Interpretation rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load data from sessionStorage
+        function loadMatrixData() {
+            try {
+                const resultData = JSON.parse(sessionStorage.getItem('ashtakavargaResult'));
+                if (!resultData) {
+                    console.error('No calculation data found');
+                    showNoDataMessage();
+                    return;
+                }
+
+                console.log('Loaded data:', resultData);
+                populateMatrices(resultData);
+                populateSarvashtakavarga(resultData);
+                populateInterpretationTable(resultData);
+            } catch (error) {
+                console.error('Error loading matrix data:', error);
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            document.getElementById('matrixGrid').innerHTML = `
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning">
+                        <h4>No Calculation Data Found</h4>
+                        <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Populate all 8 Bhinnashtakavarga matrices
+        function populateMatrices(data) {
+            const matrixGrid = document.getElementById('matrixGrid');
+            matrixGrid.innerHTML = '';
+
+            const planets = ['SUN', 'MOON', 'MARS', 'MERCURY', 'JUPITER', 'VENUS', 'SATURN', 'ASCENDANT'];
+            const tamilRasiAbbr = ['மே', 'ரி', 'மி', 'க', 'சி', 'க', 'து', 'வி', 'த', 'ம', 'கு', 'மீ'];
+
+            planets.forEach(planet => {
+                const matrixCard = document.createElement('div');
+                matrixCard.className = 'col-md-6 col-lg-3 mb-4';
+                
+                const planetName = planet === 'ASCENDANT' ? 'Ascendant' : planet;
+                const tamilName = planet === 'ASCENDANT' ? 'லக்கினம்' : planet;
+                
+                // Get the chart data for this planet
+                const chartData = data.ashtakavarga_charts?.[planet]?.chart || [];
+                const total = data.totals?.[planet] || 0;
+                
+                matrixCard.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">${planetName}<br><small class="tamil-text">${tamilName}</small></h5>
+                            <small>Total: ${total}</small>
+                        </div>
+                        <div class="card-body p-2">
+                            <table class="matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>House</th>
+                                        ${tamilRasiAbbr.map(rasi => `<th>${rasi}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="total-row">Values</td>
+                                        ${chartData.map(value => `<td>${value}</td>`).join('')}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                matrixGrid.appendChild(matrixCard);
+            });
+        }
+
+        // Populate Sarvashtakavarga chart
+        function populateSarvashtakavarga(data) {
+            const sarvastakavargaGrid = document.getElementById('sarvastakavargaGrid');
+            const sarvaTotal = document.getElementById('sarvaTotal');
+            
+            if (!sarvastakavargaGrid || !sarvaTotal) return;
+
+            const sarvaValues = data.sarvashtakavarga || [];
+            const tamilRasis = ['மேஷம்', 'ரிஷபம்', 'மிதுனம்', 'கடகம்', 'சிம்மம்', 'கன்னி', 'துலாம்', 'விருச்சிகம்', 'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'];
+            
+            let total = 0;
+            sarvastakavargaGrid.innerHTML = '';
+
+            sarvaValues.forEach((value, index) => {
+                total += value;
+                
+                let strengthClass = 'weak';
+                if (value >= 30) strengthClass = 'strong';
+                else if (value >= 25) strengthClass = 'moderate';
+                
+                const houseDiv = document.createElement('div');
+                houseDiv.className = `sarvastakavarga-house ${strengthClass}`;
+                houseDiv.innerHTML = `
+                    <h6>House ${index + 1}</h6>
+                    <div class="tamil-text">${tamilRasis[index]}</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #1976d2;">${value}</div>
+                `;
+                
+                sarvastakavargaGrid.appendChild(houseDiv);
+            });
+
+            sarvaTotal.textContent = total;
+        }
+
+        // Populate interpretation table
+        function populateInterpretationTable(data) {
+            const interpretationTable = document.getElementById('interpretationTable');
+            if (!interpretationTable) return;
+
+            const tbody = interpretationTable.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            const planets = ['SUN', 'MOON', 'MARS', 'MERCURY', 'JUPITER', 'VENUS', 'SATURN', 'ASCENDANT'];
+            const planetNames = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Ascendant'];
+            const totals = data.totals || {};
+
+            planets.forEach((planet, index) => {
+                const total = totals[planet] || 0;
+                let strength, strengthClass, interpretation;
+                
+                if (total >= 50) {
+                    strength = 'Strong';
+                    strengthClass = 'strength-strong';
+                    interpretation = 'Excellent planetary strength. Very favorable results expected.';
+                } else if (total >= 40) {
+                    strength = 'Moderate';
+                    strengthClass = 'strength-moderate';
+                    interpretation = 'Good planetary strength. Mixed but generally favorable results.';
+                } else {
+                    strength = 'Weak';
+                    strengthClass = 'strength-weak';
+                    interpretation = 'Challenging planetary strength. Requires effort and remedies.';
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${planetNames[index]}</strong></td>
+                    <td><strong>${total}</strong></td>
+                    <td><span class="${strengthClass}">${strength}</span></td>
+                    <td>${interpretation}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMatrixData();
+        });
+    </script>
+</body>
+</html>

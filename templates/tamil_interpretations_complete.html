@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Ashtakavarga Interpretations - Complete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .english-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .interpretation-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .interpretation-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .interpretation-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #28a745;
+        }
+        
+        .interpretation-item.weak {
+            border-left-color: #dc3545;
+        }
+        
+        .interpretation-item.moderate {
+            border-left-color: #ffc107;
+        }
+        
+        .interpretation-item.strong {
+            border-left-color: #28a745;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .item-description {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .item-recommendation {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: #1976d2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 20px;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .house-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .house-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .house-card.strong {
+            border-left-color: #28a745;
+        }
+        
+        .house-card.moderate {
+            border-left-color: #ffc107;
+        }
+        
+        .house-card.weak {
+            border-left-color: #dc3545;
+        }
+        
+        .house-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .house-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .house-interpretation {
+            color: #6c757d;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-light" onclick="goToHome()">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-language"></i>
+                            <span class="tamil-text">சர்வ அஷ்டவர்க்க பலன்கள்</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Complete Tamil Ashtakavarga Interpretations</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-light" onclick="goToResults()">
+                            <i class="fas fa-chart-bar"></i> Results
+                        </button>
+                        <button class="btn btn-outline-light ms-2" onclick="goToDashboard()">
+                            <i class="fas fa-chart-line"></i> Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-card">
+            <h3 class="tamil-text">உங்கள் அஷ்டவர்க்க சுருக்கம்</h3>
+            <p class="english-text">Your Ashtakavarga Summary</p>
+            <div id="summarySection">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading summary...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Longevity Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="tamil-text">ஆயுள் பலன்</h3>
+                <p class="english-text">Longevity Analysis</p>
+                <div id="longevitySection">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading longevity analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- House Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="tamil-text">வீடு வாரியாக பலன்</h3>
+                <p class="english-text">House-wise Analysis</p>
+                <div id="houseAnalysisSection">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading house analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Age Periods -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="tamil-text">வயது காலங்கள்</h3>
+                <p class="english-text">Age Periods</p>
+                <div id="agePeriodsSection">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading age periods...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lucky Directions -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="tamil-text">அதிர்ஷ்ட திசைகள்</h3>
+                <p class="english-text">Lucky Directions</p>
+                <div id="luckyDirectionsSection">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading lucky directions...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remedies -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="tamil-text">பரிகாரங்கள்</h3>
+                <p class="english-text">Remedies</p>
+                <div id="remediesSection">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading remedies...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function goToHome() {
+            window.location.href = '/';
+        }
+        
+        function goToResults() {
+            window.location.href = '/results';
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadTamilInterpretations();
+        });
+
+        function loadTamilInterpretations() {
+            // Try to get data from session storage first
+            let data = null;
+            const storedData = sessionStorage.getItem('ashtakavarga_data');
+            if (storedData) {
+                try {
+                    data = JSON.parse(storedData);
+                } catch (e) {
+                    console.error('Error parsing stored data:', e);
+                }
+            }
+            
+            // If no stored data, try server-side data
+            {% if calculation_data %}
+            if (!data) {
+                data = {{ calculation_data | tojson }};
+                // Also store in sessionStorage for consistency
+                sessionStorage.setItem('ashtakavarga_data', JSON.stringify(data));
+            }
+            {% endif %}
+            
+            if (data) {
+                populateAllTamilInterpretations(data);
+            } else {
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            const sections = ['summarySection', 'longevitySection', 'houseAnalysisSection', 'agePeriodsSection', 'luckyDirectionsSection', 'remediesSection'];
+            sections.forEach(section => {
+                document.getElementById(section).innerHTML = `
+                    <div class="alert alert-warning">
+                        <h4>No Calculation Data Found</h4>
+                        <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                    </div>
+                `;
+            });
+        }
+
+        function populateAllTamilInterpretations(data) {
+            populateSummary(data);
+            populateLongevityAnalysis(data);
+            populateHouseAnalysis(data);
+            populateAgePeriods(data);
+            populateLuckyDirections(data);
+            populateRemedies(data);
+        }
+
+        function populateSummary(data) {
+            const sarvaTotal = data.sarva_total || 0;
+            const overallStrength = getOverallStrengthTamil(sarvaTotal);
+            
+            document.getElementById('summarySection').innerHTML = `
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${sarvaTotal}</div>
+                        <div class="stat-label tamil-text">மொத்த புள்ளிகள்</div>
+                        <div class="english-text">Total Points</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${Math.round(sarvaTotal / 12)}</div>
+                        <div class="stat-label tamil-text">வீட்டுக்கு சராசரி</div>
+                        <div class="english-text">Average per House</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${overallStrength.level}</div>
+                        <div class="stat-label tamil-text">ஒட்டுமொத்த வலிமை</div>
+                        <div class="english-text">Overall Strength</div>
+                    </div>
+                </div>
+                <div class="tamil-text" style="margin-top: 20px; font-size: 1.1rem;">
+                    ${overallStrength.tamilDescription}
+                </div>
+            `;
+        }
+
+        function getOverallStrengthTamil(total) {
+            if (total >= 350) {
+                return {
+                    level: 'மிக உயர்ந்தது',
+                    tamilDescription: 'உங்கள் சார்ட் மிகவும் சக்திவாய்ந்தது. வாழ்க்கையில் பெரும் வெற்றி, செல்வம் மற்றும் மகிழ்ச்சி கிடைக்கும். அனைத்து வாழ்க்கை பகுதிகளிலும் நல்ல கிரக ஆதரவு உள்ளது.'
+                };
+            } else if (total >= 320) {
+                return {
+                    level: 'உயர்ந்தது',
+                    tamilDescription: 'உங்கள் சார்ட் நல்ல வலிமை கொண்டது. பெரும்பாலான வாழ்க்கை பகுதிகளில் வெற்றி கிடைக்கும். சில பகுதிகளில் கவனம் தேவை.'
+                };
+            } else if (total >= 300) {
+                return {
+                    level: 'நடுத்தரம்',
+                    tamilDescription: 'உங்கள் சார்ட் நடுத்தர வலிமை கொண்டது. சில பகுதிகளில் நல்ல முடிவுகள், சில பகுதிகளில் முயற்சி தேவை.'
+                };
+            } else if (total >= 280) {
+                return {
+                    level: 'குறைவு',
+                    tamilDescription: 'உங்கள் சார்ட் சில சவால்களைக் கொண்டுள்ளது. கவனமான முயற்சி மற்றும் பரிகாரங்கள் தேவை. ஆனால் இது ஆன்மீக வளர்ச்சிக்கு வாய்ப்பு.'
+                };
+            } else {
+                return {
+                    level: 'மிக குறைவு',
+                    tamilDescription: 'உங்கள் சார்ட் கடினமான சவால்களைக் கொண்டுள்ளது. ஆனால் இது ஆழ்ந்த ஆன்மீக வளர்ச்சிக்கு மற்றும் தனிப்பட்ட மாற்றத்திற்கு வாய்ப்பு.'
+                };
+            }
+        }
+
+        function populateLongevityAnalysis(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const longevity = calculateLongevityTamil(sarva);
+            
+            document.getElementById('longevitySection').innerHTML = `
+                <div class="interpretation-section">
+                    <h4 class="tamil-text">ஆயுள் பலன்</h4>
+                    <div class="interpretation-item ${longevity.strength}">
+                        <div class="item-title tamil-text">${longevity.tamilTitle}</div>
+                        <div class="item-description tamil-text">${longevity.tamilDescription}</div>
+                        <div class="item-recommendation tamil-text">${longevity.recommendation}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function calculateLongevityTamil(sarva) {
+            const total = sarva.reduce((sum, val) => sum + val, 0);
+            const avg = total / 12;
+            
+            if (avg >= 30) {
+                return {
+                    strength: 'strong',
+                    tamilTitle: 'நீண்ட ஆயுள்',
+                    tamilDescription: 'உங்கள் சார்ட் நீண்ட ஆயுளைக் காட்டுகிறது. நல்ல உடல் ஆரோக்கியம் மற்றும் வலிமை கிடைக்கும்.',
+                    recommendation: 'உடல் ஆரோக்கியத்தை பராமரிக்கவும், வழக்கமான உடற்பயிற்சி செய்யவும்.'
+                };
+            } else if (avg >= 25) {
+                return {
+                    strength: 'moderate',
+                    tamilTitle: 'நடுத்தர ஆயுள்',
+                    tamilDescription: 'உங்கள் சார்ட் நடுத்தர ஆயுளைக் காட்டுகிறது. கவனமான வாழ்க்கை முறை தேவை.',
+                    recommendation: 'ஆரோக்கியமான வாழ்க்கை முறையை பின்பற்றவும், வழக்கமான சுகாதார பரிசோதனைகள் செய்யவும்.'
+                };
+            } else {
+                return {
+                    strength: 'weak',
+                    tamilTitle: 'குறுகிய ஆயுள்',
+                    tamilDescription: 'உங்கள் சார்ட் குறுகிய ஆயுளைக் காட்டுகிறது. ஆனால் பரிகாரங்கள் மூலம் மேம்படுத்தலாம்.',
+                    recommendation: 'ஆன்மீக நடைமுறைகள், தானம், மற்றும் பரிகாரங்கள் செய்யவும்.'
+                };
+            }
+        }
+
+        function populateHouseAnalysis(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const nativeChart = data.native_chart || [];
+            
+            let html = '<div class="house-analysis">';
+            
+            for (let i = 0; i < sarva.length; i++) {
+                const value = sarva[i];
+                const houseNum = i + 1;
+                const houseInfo = nativeChart[i] || {};
+                const rasiName = houseInfo.rasi_name || getRasiName(houseNum);
+                const strength = value >= 30 ? 'strong' : value >= 25 ? 'moderate' : 'weak';
+                const interpretation = getHouseInterpretationTamil(houseNum, value);
+                
+                html += `
+                    <div class="house-card ${strength}">
+                        <div class="house-title tamil-text">வீடு ${houseNum} - ${rasiName}</div>
+                        <div class="house-value">${value}</div>
+                        <div class="house-interpretation tamil-text">${interpretation}</div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('houseAnalysisSection').innerHTML = html;
+        }
+
+        function getHouseInterpretationTamil(houseNum, value) {
+            const houseSignifications = {
+                1: 'உடல், ஆரோக்கியம், தோற்றம்',
+                2: 'செல்வம், குடும்பம், பேச்சு',
+                3: 'சகோதரர்கள், தைரியம், தொடர்பு',
+                4: 'தாய், வீடு, கல்வி',
+                5: 'குழந்தைகள், படைப்பாற்றல், அறிவு',
+                6: 'ஆரோக்கியம், சேவை, எதிரிகள்',
+                7: 'திருமணம், கூட்டாளிகள், வணிகம்',
+                8: 'ஆயுள், மாற்றம், மறைபொருள்',
+                9: 'தந்தை, அதிர்ஷ்டம், ஆன்மீகம்',
+                10: 'வேலை, மதிப்பு, அதிகாரம்',
+                11: 'லாபம், நண்பர்கள், லட்சியங்கள்',
+                12: 'இழப்பு, ஆன்மீகம், வெளிநாடு'
+            };
+            
+            const signification = houseSignifications[houseNum] || 'வாழ்க்கை பகுதி';
+            
+            if (value >= 30) {
+                return `${signification} - மிகவும் வலிமையானது மற்றும் சாதகமானது`;
+            } else if (value >= 25) {
+                return `${signification} - நடுத்தர வலிமை`;
+            } else {
+                return `${signification} - கவனம் மற்றும் பரிகாரங்கள் தேவை`;
+            }
+        }
+
+        function populateAgePeriods(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const agePeriods = calculateAgePeriodsTamil(sarva);
+            
+            let html = '<div class="interpretation-section">';
+            agePeriods.forEach(period => {
+                html += `
+                    <div class="interpretation-item ${period.strength}">
+                        <div class="item-title tamil-text">${period.tamilTitle}</div>
+                        <div class="item-description tamil-text">${period.tamilDescription}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.getElementById('agePeriodsSection').innerHTML = html;
+        }
+
+        function calculateAgePeriodsTamil(sarva) {
+            return [
+                {
+                    strength: 'strong',
+                    tamilTitle: 'குழந்தை பருவம் (0-12 வயது)',
+                    tamilDescription: 'இந்த காலத்தில் நல்ல வளர்ச்சி மற்றும் கல்வி கிடைக்கும். குடும்ப ஆதரவு நல்லது.'
+                },
+                {
+                    strength: 'moderate',
+                    tamilTitle: 'இளமை (13-25 வயது)',
+                    tamilDescription: 'இந்த காலத்தில் கல்வி மற்றும் தொழில் பகுதிகளில் நடுத்தர முடிவுகள் கிடைக்கும்.'
+                },
+                {
+                    strength: 'strong',
+                    tamilTitle: 'முதிர்வயது (26-50 வயது)',
+                    tamilDescription: 'இந்த காலத்தில் தொழில் மற்றும் குடும்ப வாழ்க்கையில் நல்ல முன்னேற்றம் கிடைக்கும்.'
+                },
+                {
+                    strength: 'moderate',
+                    tamilTitle: 'முதுமை (51+ வயது)',
+                    tamilDescription: 'இந்த காலத்தில் ஆன்மீக வளர்ச்சி மற்றும் அமைதியான வாழ்க்கை கிடைக்கும்.'
+                }
+            ];
+        }
+
+        function populateLuckyDirections(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const directions = calculateLuckyDirectionsTamil(sarva);
+            
+            let html = '<div class="interpretation-section">';
+            directions.forEach(direction => {
+                html += `
+                    <div class="interpretation-item ${direction.strength}">
+                        <div class="item-title tamil-text">${direction.tamilTitle}</div>
+                        <div class="item-description tamil-text">${direction.tamilDescription}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.getElementById('luckyDirectionsSection').innerHTML = html;
+        }
+
+        function calculateLuckyDirectionsTamil(sarva) {
+            return [
+                {
+                    strength: 'strong',
+                    tamilTitle: 'கிழக்கு திசை',
+                    tamilDescription: 'இந்த திசையில் வாழ்க்கை முன்னேற்றம் மற்றும் வெற்றி கிடைக்கும்.'
+                },
+                {
+                    strength: 'moderate',
+                    tamilTitle: 'வடக்கு திசை',
+                    tamilDescription: 'இந்த திசையில் நடுத்தர முடிவுகள் கிடைக்கும். கவனமாக இருங்கள்.'
+                },
+                {
+                    strength: 'weak',
+                    tamilTitle: 'மேற்கு திசை',
+                    tamilDescription: 'இந்த திசையில் சில சவால்கள் இருக்கலாம். பரிகாரங்கள் செய்யவும்.'
+                },
+                {
+                    strength: 'moderate',
+                    tamilTitle: 'தெற்கு திசை',
+                    tamilDescription: 'இந்த திசையில் நடுத்தர முடிவுகள் கிடைக்கும்.'
+                }
+            ];
+        }
+
+        function populateRemedies(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const remedies = calculateRemediesTamil(sarva);
+            
+            let html = '<div class="interpretation-section">';
+            remedies.forEach(remedy => {
+                html += `
+                    <div class="interpretation-item ${remedy.strength}">
+                        <div class="item-title tamil-text">${remedy.tamilTitle}</div>
+                        <div class="item-description tamil-text">${remedy.tamilDescription}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            document.getElementById('remediesSection').innerHTML = html;
+        }
+
+        function calculateRemediesTamil(sarva) {
+            const total = sarva.reduce((sum, val) => sum + val, 0);
+            
+            if (total < 300) {
+                return [
+                    {
+                        strength: 'strong',
+                        tamilTitle: 'தினமும் பிரார்த்தனை',
+                        tamilDescription: 'தினமும் காலை மற்றும் மாலை பிரார்த்தனை செய்யவும். இது உங்கள் சார்ட்டை மேம்படுத்தும்.'
+                    },
+                    {
+                        strength: 'strong',
+                        tamilTitle: 'தானம் செய்தல்',
+                        tamilDescription: 'ஏழைகளுக்கு உணவு, உடை, மற்றும் பணம் தானம் செய்யவும். இது நல்ல கர்மாவை உருவாக்கும்.'
+                    },
+                    {
+                        strength: 'moderate',
+                        tamilTitle: 'மந்திர ஜபம்',
+                        tamilDescription: 'உங்கள் இஷ்ட தெய்வத்தின் மந்திரத்தை தினமும் ஜபிக்கவும்.'
+                    }
+                ];
+            } else {
+                return [
+                    {
+                        strength: 'moderate',
+                        tamilTitle: 'வழக்கமான பிரார்த்தனை',
+                        tamilDescription: 'வழக்கமான பிரார்த்தனை மற்றும் ஆன்மீக நடைமுறைகளை பின்பற்றவும்.'
+                    },
+                    {
+                        strength: 'moderate',
+                        tamilTitle: 'நல்ல காரியங்கள்',
+                        tamilDescription: 'நல்ல காரியங்கள் செய்து நல்ல கர்மாவை உருவாக்கவும்.'
+                    }
+                ];
+            }
+        }
+
+        function getRasiName(houseNum) {
+            const rasis = [
+                "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி",
+                "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+            ];
+            return rasis[houseNum - 1] || '';
+        }
+    </script>
+</body>
+</html>

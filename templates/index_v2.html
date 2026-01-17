@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Ashtakavarga Calculator V2</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #3498DB;
+            --accent-color: #E74C3C;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --info-color: #17A2B8;
+            --light-color: #F8F9FA;
+            --dark-color: #343A40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+        
+        .container {
+            max-width: 800px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--success-color), var(--info-color));
+            border: none;
+            border-radius: 15px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn-calculate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+        
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .quick-fill {
+            margin-bottom: 20px;
+        }
+        
+        .quick-fill .btn {
+            margin: 5px;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .tamil-text {
+            font-family: 'Latha', 'Tahoma', sans-serif;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="mb-0">
+                            <i class="fas fa-star"></i>
+                            <span class="tamil-text">தமிழ் அஷ்டவர்க்க கணிப்பான்</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Tamil Ashtakavarga Calculator V2</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form id="birthForm">
+                            <div class="quick-fill text-center">
+                                <h6>Quick Fill:</h6>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillChennai()">Chennai</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillMumbai()">Mumbai</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillDelhi()">Delhi</button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillBangalore()">Bangalore</button>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">
+                                            <i class="fas fa-user"></i> Name
+                                        </label>
+                                        <input type="text" class="form-control" id="name" name="name" 
+                                               value="Sivaraman R" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="dob" class="form-label">
+                                            <i class="fas fa-calendar"></i> Date of Birth
+                                        </label>
+                                        <input type="date" class="form-control" id="dob" name="dob" 
+                                               value="1978-09-18" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="tob" class="form-label">
+                                            <i class="fas fa-clock"></i> Time of Birth
+                                        </label>
+                                        <input type="time" class="form-control" id="tob" name="tob" 
+                                               value="17:35" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="place" class="form-label">
+                                            <i class="fas fa-map-marker-alt"></i> Place of Birth
+                                        </label>
+                                        <input type="text" class="form-control" id="place" name="place" 
+                                               value="Chennai" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="latitude" class="form-label">
+                                            <i class="fas fa-globe"></i> Latitude
+                                        </label>
+                                        <input type="number" class="form-control" id="latitude" name="latitude" 
+                                               step="0.0001" value="13.0827" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="longitude" class="form-label">
+                                            <i class="fas fa-globe"></i> Longitude
+                                        </label>
+                                        <input type="number" class="form-control" id="longitude" name="longitude" 
+                                               step="0.0001" value="80.2707" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="timezone" class="form-label">
+                                            <i class="fas fa-clock"></i> Timezone
+                                        </label>
+                                        <input type="number" class="form-control" id="timezone" name="timezone" 
+                                               step="0.5" value="5.5" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="loading" id="loading">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-3">Calculating Ashtakavarga...</p>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-calculate" id="calculateBtn">
+                                <i class="fas fa-calculator"></i> Calculate Ashtakavarga
+                            </button>
+                            
+                            <div class="alert alert-danger" id="errorAlert" style="display: none;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span id="errorMessage"></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Quick fill functions
+        function fillChennai() {
+            document.getElementById('place').value = 'Chennai';
+            document.getElementById('latitude').value = '13.0827';
+            document.getElementById('longitude').value = '80.2707';
+            document.getElementById('timezone').value = '5.5';
+        }
+        
+        function fillMumbai() {
+            document.getElementById('place').value = 'Mumbai';
+            document.getElementById('latitude').value = '19.0760';
+            document.getElementById('longitude').value = '72.8777';
+            document.getElementById('timezone').value = '5.5';
+        }
+        
+        function fillDelhi() {
+            document.getElementById('place').value = 'Delhi';
+            document.getElementById('latitude').value = '28.6139';
+            document.getElementById('longitude').value = '77.2090';
+            document.getElementById('timezone').value = '5.5';
+        }
+        
+        function fillBangalore() {
+            document.getElementById('place').value = 'Bangalore';
+            document.getElementById('latitude').value = '12.9716';
+            document.getElementById('longitude').value = '77.5946';
+            document.getElementById('timezone').value = '5.5';
+        }
+        
+        // Form submission
+        document.getElementById('birthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('calculateBtn').disabled = true;
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit to server
+            fetch('/calculate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('calculateBtn').disabled = false;
+                
+                if (data.success) {
+                    // Store data in sessionStorage and redirect
+                    sessionStorage.setItem('ashtakavargaData', JSON.stringify(data.data));
+                    window.location.href = '/results';
+                } else {
+                    // Show error
+                    document.getElementById('errorMessage').textContent = data.error;
+                    document.getElementById('errorAlert').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('calculateBtn').disabled = false;
+                document.getElementById('errorMessage').textContent = 'An error occurred while calculating. Please try again.';
+                document.getElementById('errorAlert').style.display = 'block';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

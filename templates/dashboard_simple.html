@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Dashboard - Simple</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .strength-strong { color: #28a745; font-weight: bold; }
+        .strength-moderate { color: #ffc107; font-weight: bold; }
+        .strength-weak { color: #dc3545; font-weight: bold; }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .interpretation-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="/" class="btn btn-outline-light">Home</a>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="tamil-text">அஷ்டவர்க்க டாஷ்போர்டு</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Ashtakavarga Dashboard - Simple Version</p>
+                    </div>
+                    <div>
+                        <a href="/results" class="btn btn-outline-light">Results</a>
+                        <a href="/matrix-view" class="btn btn-outline-light">Matrix View</a>
+                        <a href="/tamil-interpretations" class="btn btn-outline-light">Tamil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3>Overall Analysis</h3>
+                <div id="overallAnalysis">
+                    <!-- Overall analysis will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- House Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3>House Analysis</h3>
+                <div id="houseAnalysis">
+                    <!-- House analysis will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Planet Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3>Planet Analysis</h3>
+                <div id="planetAnalysis">
+                    <!-- Planet analysis will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load data from sessionStorage
+        function loadDashboard() {
+            try {
+                const resultData = JSON.parse(sessionStorage.getItem('ashtakavargaResult'));
+                if (!resultData) {
+                    console.error('No calculation data found');
+                    showNoDataMessage();
+                    return;
+                }
+
+                populateOverallAnalysis(resultData);
+                populateHouseAnalysis(resultData);
+                populatePlanetAnalysis(resultData);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            document.getElementById('overallAnalysis').innerHTML = `
+                <div class="alert alert-warning">
+                    <h4>No Calculation Data Found</h4>
+                    <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                </div>
+            `;
+        }
+
+        function populateOverallAnalysis(data) {
+            const overallAnalysis = document.getElementById('overallAnalysis');
+            const interpretation = data.interpretation || {};
+            const overall = interpretation.overall || {};
+            
+            overallAnalysis.innerHTML = `
+                <div class="interpretation-card">
+                    <h4>${overall.strength || 'Overall Analysis'}</h4>
+                    <p><strong>Total Points:</strong> ${overall.total || 0}</p>
+                    <p><strong>Level:</strong> <span class="strength-${overall.level?.toLowerCase().replace(' ', '-') || 'moderate'}">${overall.level || 'Moderate'}</span></p>
+                    <p><strong>Description:</strong> ${overall.description || 'No description available.'}</p>
+                </div>
+            `;
+        }
+
+        function populateHouseAnalysis(data) {
+            const houseAnalysis = document.getElementById('houseAnalysis');
+            const interpretation = data.interpretation || {};
+            const houses = interpretation.houses || [];
+            
+            let html = '<div class="row">';
+            houses.forEach(house => {
+                html += `
+                    <div class="col-md-4 mb-3">
+                        <div class="interpretation-card">
+                            <h6>House ${house.house} - ${house.tamil || house.name}</h6>
+                            <p><strong>Value:</strong> ${house.value}</p>
+                            <p><strong>Strength:</strong> <span class="strength-${house.level?.toLowerCase() || 'moderate'}">${house.strength || 'Moderate'}</span></p>
+                            <p><strong>Significations:</strong> ${house.significations || 'N/A'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            houseAnalysis.innerHTML = html;
+        }
+
+        function populatePlanetAnalysis(data) {
+            const planetAnalysis = document.getElementById('planetAnalysis');
+            const interpretation = data.interpretation || {};
+            const planets = interpretation.planets || [];
+            
+            let html = '<div class="row">';
+            planets.forEach(planet => {
+                html += `
+                    <div class="col-md-6 mb-3">
+                        <div class="interpretation-card">
+                            <h6>${planet.name}</h6>
+                            <p><strong>Total Points:</strong> ${planet.total}</p>
+                            <p><strong>Strength:</strong> <span class="strength-${planet.level?.toLowerCase() || 'moderate'}">${planet.strength || 'Moderate'}</span></p>
+                            <p><strong>Description:</strong> ${planet.description || 'No description available.'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            planetAnalysis.innerHTML = html;
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>

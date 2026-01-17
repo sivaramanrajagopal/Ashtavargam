@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Results - Complete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        /* Traditional Chart Layout */
+        .traditional-chart {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            max-width: 700px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .chart-house {
+            background: white;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .chart-house:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .chart-house.ascendant {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            border-color: #ff4757;
+        }
+        
+        .chart-house.planets {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border-color: #26a69a;
+        }
+        
+        .chart-house.empty {
+            background: #f8f9fa;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+        
+        .house-number {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .rasi-name {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .planets-list {
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .planet-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .planet-tag.ascendant {
+            background: rgba(255,255,255,0.4);
+        }
+        
+        /* Individual Planet Charts */
+        .planet-chart {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .planet-chart h6 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .planet-values {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 5px;
+        }
+        
+        .planet-value {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .planet-value.strong {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .planet-value.moderate {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .planet-value.weak {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .planet-value.orange {
+            background: #ffa500;
+            color: white;
+            border-color: #ff8c00;
+        }
+        
+        /* Sarvashtakavarga */
+        .sarva-chart {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .sarva-house {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .sarva-house:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .sarva-house.strong {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .sarva-house.moderate {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .sarva-house.weak {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-light" onclick="goToHome()">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-star"></i>
+                            <span class="tamil-text">அஷ்டவர்க்க முடிவுகள்</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Complete Ashtakavarga Results</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-light" onclick="goToDashboard()">
+                            <i class="fas fa-chart-line"></i> Dashboard
+                        </button>
+                        <button class="btn btn-outline-light ms-2" onclick="goToMatrixView()">
+                            <i class="fas fa-table"></i> Matrix View
+                        </button>
+                        <button class="btn btn-outline-light ms-2" onclick="goToProkeralaView()">
+                            <i class="fas fa-th"></i> Prokerala Style
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Birth Info -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-user"></i> Birth Information</h3>
+                <div id="birthInfo">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading birth information...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Native Chart -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-star"></i> Native Chart - Traditional South Indian Layout</h3>
+                <div id="nativeChart">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading native chart...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Planet Charts -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-globe"></i> Individual Planet Charts</h3>
+                <div id="planetCharts">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading planet charts...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sarvashtakavarga -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-calculator"></i> Sarvashtakavarga</h3>
+                <div id="sarvashtakavarga">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading Sarvashtakavarga...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function goToHome() {
+            window.location.href = '/';
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+        
+        function goToMatrixView() {
+            window.location.href = '/matrix-view';
+        }
+        
+        function goToProkeralaView() {
+            window.location.href = '/ashtakavarga-prokerala';
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadResults();
+        });
+
+        function loadResults() {
+            // Try to get data from session storage first
+            let data = null;
+            const storedData = sessionStorage.getItem('ashtakavarga_data');
+            if (storedData) {
+                try {
+                    data = JSON.parse(storedData);
+                } catch (e) {
+                    console.error('Error parsing stored data:', e);
+                }
+            }
+            
+            // If no stored data, try server-side data
+            {% if calculation_data %}
+            if (!data) {
+                data = {{ calculation_data | tojson }};
+                // Also store in sessionStorage for consistency
+                sessionStorage.setItem('ashtakavarga_data', JSON.stringify(data));
+            }
+            {% endif %}
+            
+            if (data) {
+                populateAllData(data);
+            } else {
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            document.getElementById('birthInfo').innerHTML = `
+                <div class="alert alert-warning">
+                    <h4>No Calculation Data Found</h4>
+                    <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                </div>
+            `;
+            
+            document.getElementById('nativeChart').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No native chart data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('planetCharts').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No planet chart data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('sarvashtakavarga').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No Sarvashtakavarga data available.</p>
+                </div>
+            `;
+        }
+
+        function populateAllData(data) {
+            populateBirthInfo(data);
+            populateNativeChart(data);
+            populatePlanetCharts(data);
+            populateSarvashtakavarga(data);
+        }
+
+        function populateBirthInfo(data) {
+            const birthInfo = document.getElementById('birthInfo');
+            const info = data.birth_info || {};
+            
+            birthInfo.innerHTML = `
+                <div class="row">
+                    <div class="col-md-3"><strong>Name:</strong> ${info.name || 'N/A'}</div>
+                    <div class="col-md-3"><strong>DOB:</strong> ${info.dob || 'N/A'}</div>
+                    <div class="col-md-3"><strong>TOB:</strong> ${info.tob || 'N/A'}</div>
+                    <div class="col-md-3"><strong>Place:</strong> ${info.place || 'N/A'}</div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><strong>Coordinates:</strong> ${info.coordinates || 'N/A'}</div>
+                </div>
+            `;
+        }
+
+        function populateNativeChart(data) {
+            const chart = data.native_chart || [];
+            
+            // Clear all planets first
+            for (let i = 1; i <= 12; i++) {
+                const planetsElement = document.getElementById(`planets-${i}`);
+                const rasiElement = document.getElementById(`rasi-${i}`);
+                const houseElement = document.querySelector(`[data-house="${i}"]`);
+                
+                if (planetsElement) planetsElement.innerHTML = '';
+                if (houseElement) houseElement.className = 'chart-house';
+            }
+            
+            // Create the traditional chart layout
+            const nativeChart = document.getElementById('nativeChart');
+            nativeChart.innerHTML = `
+                <div class="traditional-chart">
+                    <!-- Top row: Houses 10, 11, 12, 1 -->
+                    <div class="chart-house" data-house="10">
+                        <div class="house-number">10</div>
+                        <div class="rasi-name" id="rasi-10">மகரம்</div>
+                        <div class="planets-list" id="planets-10"></div>
+                    </div>
+                    <div class="chart-house" data-house="11">
+                        <div class="house-number">11</div>
+                        <div class="rasi-name" id="rasi-11">கும்பம்</div>
+                        <div class="planets-list" id="planets-11"></div>
+                    </div>
+                    <div class="chart-house" data-house="12">
+                        <div class="house-number">12</div>
+                        <div class="rasi-name" id="rasi-12">மீனம்</div>
+                        <div class="planets-list" id="planets-12"></div>
+                    </div>
+                    <div class="chart-house ascendant" data-house="1">
+                        <div class="house-number">1</div>
+                        <div class="rasi-name" id="rasi-1">மேஷம்</div>
+                        <div class="planets-list" id="planets-1"></div>
+                    </div>
+                    
+                    <!-- Right side: Houses 2, 3 -->
+                    <div class="chart-house" data-house="2">
+                        <div class="house-number">2</div>
+                        <div class="rasi-name" id="rasi-2">ரிஷபம்</div>
+                        <div class="planets-list" id="planets-2"></div>
+                    </div>
+                    <div class="chart-house" data-house="3">
+                        <div class="house-number">3</div>
+                        <div class="rasi-name" id="rasi-3">மிதுனம்</div>
+                        <div class="planets-list" id="planets-3"></div>
+                    </div>
+                    
+                    <!-- Left side: Houses 8, 9 -->
+                    <div class="chart-house" data-house="8">
+                        <div class="house-number">8</div>
+                        <div class="rasi-name" id="rasi-8">விருச்சிகம்</div>
+                        <div class="planets-list" id="planets-8"></div>
+                    </div>
+                    <div class="chart-house" data-house="9">
+                        <div class="house-number">9</div>
+                        <div class="rasi-name" id="rasi-9">தனுசு</div>
+                        <div class="planets-list" id="planets-9"></div>
+                    </div>
+                    
+                    <!-- Bottom row: Houses 4, 5, 6, 7 -->
+                    <div class="chart-house" data-house="4">
+                        <div class="house-number">4</div>
+                        <div class="rasi-name" id="rasi-4">கடகம்</div>
+                        <div class="planets-list" id="planets-4"></div>
+                    </div>
+                    <div class="chart-house" data-house="5">
+                        <div class="house-number">5</div>
+                        <div class="rasi-name" id="rasi-5">சிம்மம்</div>
+                        <div class="planets-list" id="planets-5"></div>
+                    </div>
+                    <div class="chart-house" data-house="6">
+                        <div class="house-number">6</div>
+                        <div class="rasi-name" id="rasi-6">கன்னி</div>
+                        <div class="planets-list" id="planets-6"></div>
+                    </div>
+                    <div class="chart-house" data-house="7">
+                        <div class="house-number">7</div>
+                        <div class="rasi-name" id="rasi-7">துலாம்</div>
+                        <div class="planets-list" id="planets-7"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Populate each house
+            chart.forEach(house => {
+                const houseNum = house.house;
+                const rasiName = house.rasi_name;
+                const planets = house.planets || [];
+                
+                // Update Rasi name
+                const rasiElement = document.getElementById(`rasi-${houseNum}`);
+                if (rasiElement) {
+                    rasiElement.textContent = rasiName;
+                }
+                
+                // Update planets
+                const planetsElement = document.getElementById(`planets-${houseNum}`);
+                const houseElement = document.querySelector(`[data-house="${houseNum}"]`);
+                
+                if (planetsElement && houseElement) {
+                    if (planets.length > 0) {
+                        houseElement.className = 'chart-house planets';
+                        planetsElement.innerHTML = planets.map(planet => 
+                            `<span class="planet-tag ${planet === 'ASCENDANT' ? 'ascendant' : ''}">${planet}</span>`
+                        ).join('');
+                    } else {
+                        houseElement.className = 'chart-house empty';
+                        planetsElement.innerHTML = '<span class="planet-tag">Empty</span>';
+                    }
+                }
+            });
+            
+            // Highlight Ascendant (House 1)
+            const ascendantElement = document.querySelector('[data-house="1"]');
+            if (ascendantElement) {
+                ascendantElement.className = 'chart-house ascendant';
+            }
+        }
+
+        function populatePlanetCharts(data) {
+            const planetCharts = document.getElementById('planetCharts');
+            const charts = data.ashtakavarga_charts || {};
+            const totals = data.totals || {};
+            
+            let html = '';
+            for (const [planet, chart] of Object.entries(charts)) {
+                const total = totals[planet] || 0;
+                html += `
+                    <div class="planet-chart">
+                        <h6>${planet} - Total: ${total}</h6>
+                        <div class="planet-values">
+                            ${chart.map((value, index) => {
+                                const houseNum = index + 1;
+                                const strength = value >= 5 ? 'strong' : value >= 3 ? 'moderate' : 'weak';
+                                return `<div class="planet-value ${strength}">${value}</div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            planetCharts.innerHTML = html;
+        }
+
+        function populateSarvashtakavarga(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const total = data.sarva_total || 0;
+            
+            const sarvaContainer = document.getElementById('sarvashtakavarga');
+            sarvaContainer.innerHTML = `
+                <div class="text-center mb-4">
+                    <h4>Total Sarvashtakavarga: <span class="badge bg-primary">${total}</span></h4>
+                </div>
+                <div class="sarva-chart">
+                    ${sarva.map((value, index) => {
+                        const houseNum = index + 1;
+                        const strength = value >= 30 ? 'strong' : value >= 25 ? 'moderate' : 'weak';
+                        return `
+                            <div class="sarva-house ${strength}">
+                                <div class="house-number">${houseNum}</div>
+                                <div class="rasi-name">${getRasiName(houseNum)}</div>
+                                <div class="value">${value}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function getRasiName(houseNum) {
+            const rasis = [
+                "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி",
+                "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+            ];
+            return rasis[houseNum - 1] || '';
+        }
+    </script>
+</body>
+</html>

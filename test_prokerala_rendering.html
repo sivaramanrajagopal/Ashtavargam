@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Prokerala Rendering</title>
+    <style>
+        body { padding: 20px; font-family: Arial; }
+        .test-grid {
+            display: grid;
+            grid-template-columns: 100px 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px;
+            gap: 5px;
+            background: #f0f0f0;
+            padding: 10px;
+            width: fit-content;
+            margin: 20px;
+        }
+        .cell {
+            background: white;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .central {
+            background: #fff9e6;
+            border: 3px solid #ffd700;
+            grid-column: 2 / 4;
+            flex-direction: column;
+        }
+        .t1 { grid-column: 1; grid-row: 1; }
+        .t2 { grid-column: 2; grid-row: 1; }
+        .t3 { grid-column: 3; grid-row: 1; }
+        .t4 { grid-column: 4; grid-row: 1; }
+        .ml { grid-column: 1; grid-row: 2; }
+        .mr { grid-column: 4; grid-row: 2; }
+        .b1 { grid-column: 1; grid-row: 3; }
+        .b2 { grid-column: 2; grid-row: 3; }
+        .b3 { grid-column: 3; grid-row: 3; }
+        .b4 { grid-column: 4; grid-row: 3; }
+    </style>
+</head>
+<body>
+    <h1>Test Grid Layout</h1>
+    <p>This should show: Top (4 cells), Middle (left, central spans 2, right), Bottom (4 cells)</p>
+    <div class="test-grid">
+        <div class="cell t1">5</div>
+        <div class="cell t2">4</div>
+        <div class="cell t3">1</div>
+        <div class="cell t4">4</div>
+        <div class="cell ml">6</div>
+        <div class="cell central">
+            <div style="color: #d32f2f; font-weight: bold;">Sun</div>
+            <div>Total: 48</div>
+        </div>
+        <div class="cell mr">7</div>
+        <div class="cell b1">4</div>
+        <div class="cell b2">4</div>
+        <div class="cell b3">3</div>
+        <div class="cell b4">3</div>
+    </div>
+    <p>If you see 11 cells (4 top, 3 middle, 4 bottom) with central spanning 2 columns, the layout is correct.</p>
+</body>
+</html>
+

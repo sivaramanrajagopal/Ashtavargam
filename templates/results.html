@@ -1,0 +1,980 @@
+{% extends "base.html" %}
+
+{% block title %}Ashtakavarga Results - Tamil Calculator{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-white mb-3">
+            <i class="fas fa-chart-line me-3"></i>
+            Ashtakavarga Results
+        </h1>
+        <p class="lead text-white-50 tamil-text">
+            அஷ்டகவர்கம் முடிவுகள்
+        </p>
+    </div>
+    
+    <!-- Birth Info Summary -->
+    <div class="card mb-4" id="birthInfoCard">
+        <div class="card-header">
+            <h4 class="mb-0">
+                <i class="fas fa-user-astronaut me-2"></i>
+                Birth Information
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row" id="birthInfo">
+                <!-- Birth info will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Planet Tabs -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">
+                <i class="fas fa-star me-2"></i>
+                Individual Planet Charts
+            </h4>
+        </div>
+        <div class="card-body p-0">
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs" id="planetTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="native-tab" data-bs-toggle="tab" 
+                            data-bs-target="#native" type="button" role="tab">
+                        <i class="fas fa-star me-2"></i>
+                        <span class="d-none d-md-inline">Native Chart</span>
+                    </button>
+                </li>
+                {% for planet, info in planet_info.items() %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="{{ planet.lower() }}-tab" data-bs-toggle="tab" 
+                            data-bs-target="#{{ planet.lower() }}" type="button" role="tab">
+                        <span class="planet-emoji">{{ info.emoji }}</span>
+                        <span class="d-none d-md-inline">{{ planet }}</span>
+                        <span class="tamil-text d-none d-lg-inline">({{ info.tamil }})</span>
+                    </button>
+                </li>
+                {% endfor %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sarva-tab" data-bs-toggle="tab" 
+                            data-bs-target="#sarva" type="button" role="tab">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        <span class="d-none d-md-inline">Sarvashtakavarga</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="interpretation-tab" data-bs-toggle="tab" 
+                            data-bs-target="#interpretation" type="button" role="tab">
+                        <i class="fas fa-book-open me-2"></i>
+                        <span class="d-none d-md-inline">Interpretation</span>
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- Tab Content -->
+            <div class="tab-content" id="planetTabContent">
+                <!-- Native Chart Tab -->
+                <div class="tab-pane fade show active" id="native" role="tabpanel">
+                    <div class="p-4">
+                        <h3><i class="fas fa-star me-2"></i>பிறப்பு விளக்கப்படம் (Native Chart)</h3>
+                        <p class="text-muted">Planetary positions in 12 houses based on birth data</p>
+                        
+                        <!-- Native Chart Table -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">House</th>
+                                        <th class="text-center">Rasi</th>
+                                        <th class="text-center">Planets</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="native-chart-body">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                {% for planet, info in planet_info.items() %}
+                <div class="tab-pane fade" id="{{ planet.lower() }}" role="tabpanel">
+                    <div class="p-4">
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <h3>
+                                    <span class="planet-emoji">{{ info.emoji }}</span>
+                                    {{ planet }} - {{ info.tamil }}
+                                </h3>
+                                <p class="text-muted">Individual Ashtakavarga Chart</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Total Points</h5>
+                                        <h2 class="text-primary" id="{{ planet.lower() }}-total">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Traditional Tamil Ashtakavarga Table -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="{{ planet.lower() }}-table">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">மே</th>
+                                        <th class="text-center">ரி</th>
+                                        <th class="text-center">மி</th>
+                                        <th class="text-center">க</th>
+                                        <th class="text-center">சி</th>
+                                        <th class="text-center">க</th>
+                                        <th class="text-center">து</th>
+                                        <th class="text-center">வி</th>
+                                        <th class="text-center">த</th>
+                                        <th class="text-center">ம</th>
+                                        <th class="text-center">கு</th>
+                                        <th class="text-center">மீ</th>
+                                        <th class="text-center">மொ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Planet vs Planet Matrix -->
+                        <div class="mt-4">
+                            <h5 class="mb-3">
+                                <i class="fas fa-table me-2"></i>
+                                Planet vs Planet Matrix ({{ planet }})
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="{{ planet.lower() }}-matrix-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-center">Planet</th>
+                                            <th class="text-center">மே</th>
+                                            <th class="text-center">ரி</th>
+                                            <th class="text-center">மி</th>
+                                            <th class="text-center">க</th>
+                                            <th class="text-center">சி</th>
+                                            <th class="text-center">க</th>
+                                            <th class="text-center">து</th>
+                                            <th class="text-center">வி</th>
+                                            <th class="text-center">த</th>
+                                            <th class="text-center">ம</th>
+                                            <th class="text-center">கு</th>
+                                            <th class="text-center">மீ</th>
+                                            <th class="text-center">மொ</th>
+                                            <th class="text-center">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Matrix rows will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Analysis -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Strength Analysis</h6>
+                                        <div id="{{ planet.lower() }}-analysis">
+                                            <!-- Analysis will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Legend</h6>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="value-indicator value-high"></span>
+                                            <span>High (6+ points)</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="value-indicator value-medium"></span>
+                                            <span>Medium (4-5 points)</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="value-indicator value-low"></span>
+                                            <span>Low (0-3 points)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Sarvashtakavarga Tab -->
+                <div class="tab-pane fade" id="sarva" role="tabpanel">
+                    <div class="p-4">
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <h3>
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    Sarvashtakavarga - சர்வாஷ்டகவர்கம்
+                                </h3>
+                                <p class="text-muted">Combined strength of all planets for each house</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Total Points</h5>
+                                        <h2 class="text-primary" id="sarva-total">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Traditional Sarvashtakavarga Table -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="sarva-table">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="text-center">மே</th>
+                                        <th class="text-center">ரி</th>
+                                        <th class="text-center">மி</th>
+                                        <th class="text-center">க</th>
+                                        <th class="text-center">சி</th>
+                                        <th class="text-center">க</th>
+                                        <th class="text-center">து</th>
+                                        <th class="text-center">வி</th>
+                                        <th class="text-center">த</th>
+                                        <th class="text-center">ம</th>
+                                        <th class="text-center">கு</th>
+                                        <th class="text-center">மீ</th>
+                                        <th class="text-center">மொ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Sarvashtakavarga Analysis -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">House Strength Analysis</h6>
+                                        <div id="sarva-analysis">
+                                            <!-- Analysis will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Strength Levels</h6>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="value-indicator" style="background-color: #FF4757;"></span>
+                                            <span>Very Strong (30+ points)</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="value-indicator" style="background-color: #FFA502;"></span>
+                                            <span>Strong (25-29 points)</span>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="value-indicator" style="background-color: #2ED573;"></span>
+                                            <span>Moderate (20-24 points)</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="value-indicator" style="background-color: #747D8C;"></span>
+                                            <span>Weak (0-19 points)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interpretation Tab -->
+                <div class="tab-pane fade" id="interpretation" role="tabpanel">
+                    <div class="p-4">
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h3>
+                                    <i class="fas fa-book-open me-2"></i>
+                                    Ashtakavarga Interpretation Guide
+                                </h3>
+                                <p class="text-muted">Understanding the meaning and significance of Ashtakavarga</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Introduction -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    What is Ashtakavarga?
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-3">
+                                    Ashtakavarga, according to <strong>Brihatparasara Horashastra</strong>, is a system that predicts and determines the life and longevity of an individual on accounts derived from the energies emanated due to different planetary positions. Every planet courses through an unending movement across bhavas or houses as opposed to their positions during the individual's time of birth, and the present positions relative to the Sun and the houses radiate a certain energy. This energy can be read and interpreted to predict the forthcoming events of one's life.
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="alert alert-info">
+                                            <strong>Sarvashtakavarga:</strong> The Ashtakavarga of all planets evaluated together
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="alert alert-warning">
+                                            <strong>Bhinnashtakavarga:</strong> The Ashtakavarga of the planets evaluated individually
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- House Meanings -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-home me-2"></i>
+                                    What Each House Represents
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>1st House (Lagna):</strong> Body and different parts of the body
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>2nd House:</strong> Truth, well-being, and wealth
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>3rd House:</strong> Voice, courage, valor, and kinship
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>4th House:</strong> Relations, happiness and residence
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>5th House:</strong> Disposition, perceptions, and knowledge
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>6th House:</strong> Enemies, confrontations and sickness
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>7th House:</strong> Marriage and matters regarding travel
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>8th House:</strong> Mental troubles, illness, death and destruction
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>9th House:</strong> Fortune, preceptor and spiritual aptitude
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>10th House:</strong> Knowledge, courage, prowess, fame and duty
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>11th House:</strong> Abundance, opulence and wealth
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>12th House:</strong> Expenses, sin and destruction
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Planet Meanings -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-star me-2"></i>
+                                    What Each Planet Represents
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <strong>☉ Sun:</strong> Valor, courage and matters regarding fatherly figures
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>☽ Moon:</strong> Mind, intelligence, emotions and motherly figures
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>☿ Mercury:</strong> Communication, judgment, religion and knowledge
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>♂ Mars:</strong> Siblings, morality, character, strength, and passion
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <strong>♀ Venus:</strong> Virility, marriage, sexual satisfaction, femininity, and vehicles
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>♃ Jupiter:</strong> Strength, power, fame, intelligence, and wealth
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>♄ Saturn:</strong> Sorrow, destruction, distress, longevity, and death
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Score Interpretation -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Understanding Ashtakavarga Scores
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-primary">
+                                    <h6><strong>Average Score:</strong> 28 points</h6>
+                                    <p class="mb-0">The total of 337 points divided by 12 houses gives an average of 28. Scores below 28 are unfavorable, above 28 are desirable.</p>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Individual Planet Scores:</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>8+ bindus:</strong> Auspicious - wealth, fame, luxury</span>
+                                                <span class="badge bg-success">Excellent</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>7 bindus:</strong> Material comforts and pleasure</span>
+                                                <span class="badge bg-info">Very Good</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>6 bindus:</strong> Earn with effort</span>
+                                                <span class="badge bg-primary">Good</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>5 bindus:</strong> Overcome barriers easily</span>
+                                                <span class="badge bg-warning">Moderate</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>House Scores:</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>30+ points:</strong> Highly desirable results</span>
+                                                <span class="badge bg-success">Excellent</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>28-30 points:</strong> Neutral - neither good nor bad</span>
+                                                <span class="badge bg-secondary">Neutral</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span><strong>Below 28:</strong> Highly inauspicious</span>
+                                                <span class="badge bg-danger">Poor</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Practical Reading Guide -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-eye me-2"></i>
+                                    How to Read Your Ashtakavarga Chart
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Favorable Scores (5+ bindus):</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <strong>8 bindus:</strong> Ideal life with wealth, fame, and luxury
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>7 bindus:</strong> Material comforts surrounded by loved ones
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>6 bindus:</strong> Earn through your efforts
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>5 bindus:</strong> Adapt easily to life changes
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Challenging Scores (0-4 bindus):</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <strong>4 bindus:</strong> Mixed happiness and sorrow
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>3 bindus:</strong> Health, family, or financial disturbances
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>2 bindus:</strong> Loss, misery, and anger
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>1 bindu:</strong> Loss of belongings, accidents, infections
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>0 bindus:</strong> Tragedy, death, mental disturbances
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-warning mt-3">
+                                    <h6><strong>Important Note:</strong></h6>
+                                    <p class="mb-0">Ashtakavarga scores are accurate enough to predict various aspects of life. Planets with 5+ bindus are highly desirable and bring wealth, health, happiness, and luxury. Planets with 1-3 bindus tend to cause imbalance, diseases, and privations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="text-center mt-4">
+        <button class="btn btn-primary btn-lg me-3" onclick="window.print()">
+            <i class="fas fa-print me-2"></i>Print Results
+        </button>
+        <button class="btn btn-outline-primary btn-lg" onclick="window.location.href='/'">
+            <i class="fas fa-calculator me-2"></i>New Calculation
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load data from sessionStorage
+let ashtakavargaData = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get data from sessionStorage
+    const data = sessionStorage.getItem('ashtakavargaData');
+    if (!data) {
+        alert('No calculation data found. Please go back and calculate first.');
+        window.location.href = '/';
+        return;
+    }
+    
+    try {
+        ashtakavargaData = JSON.parse(data);
+        console.log('Data loaded successfully:', ashtakavargaData);
+        
+        // Validate data structure
+        if (!ashtakavargaData.planetary_positions || !ashtakavargaData.native_chart || !ashtakavargaData.ashtakavarga_charts) {
+            throw new Error('Invalid data structure: missing required fields');
+        }
+        
+        // Populate birth info
+        try {
+            populateBirthInfo();
+        } catch (error) {
+            console.error('Error in populateBirthInfo:', error);
+        }
+        
+        // Populate native chart
+        try {
+            populateNativeChart();
+        } catch (error) {
+            console.error('Error in populateNativeChart:', error);
+        }
+        
+        // Populate planet charts
+        try {
+            populatePlanetCharts();
+        } catch (error) {
+            console.error('Error in populatePlanetCharts:', error);
+        }
+        
+        // Populate Sarvashtakavarga
+        try {
+            populateSarvashtakavarga();
+        } catch (error) {
+            console.error('Error in populateSarvashtakavarga:', error);
+        }
+        
+    } catch (error) {
+        console.error('Error parsing data:', error);
+        console.error('Raw data:', data);
+        alert('Error loading calculation data. Please try again. Error: ' + error.message);
+        window.location.href = '/';
+    }
+    
+    // Activate first tab
+    const firstTab = document.querySelector('#planetTabs .nav-link');
+    if (firstTab) {
+        firstTab.classList.add('active');
+        const firstTabPane = document.querySelector('#planetTabContent .tab-pane');
+        if (firstTabPane) {
+            firstTabPane.classList.add('show', 'active');
+        }
+    }
+});
+
+function populateBirthInfo() {
+    const birthInfo = ashtakavargaData.birth_info;
+    const birthInfoDiv = document.getElementById('birthInfo');
+    
+    birthInfoDiv.innerHTML = `
+        <div class="col-md-3">
+            <strong>Name:</strong><br>
+            ${birthInfo.name}
+        </div>
+        <div class="col-md-3">
+            <strong>Date of Birth:</strong><br>
+            ${birthInfo.dob}
+        </div>
+        <div class="col-md-3">
+            <strong>Time of Birth:</strong><br>
+            ${birthInfo.tob}
+        </div>
+        <div class="col-md-3">
+            <strong>Place:</strong><br>
+            ${birthInfo.place}
+        </div>
+    `;
+}
+
+function populateNativeChart() {
+    try {
+        const nativeChart = ashtakavargaData.native_chart;
+        const tableBody = document.getElementById('native-chart-body');
+        
+        if (!nativeChart || !tableBody) {
+            console.error('Missing native chart data or table element');
+            return;
+        }
+        
+        tableBody.innerHTML = '';
+        
+        nativeChart.forEach(house => {
+        const row = document.createElement('tr');
+        let planetsText = '';
+        
+        if (house.planets.length > 0) {
+            planetsText = house.planets.map(planet => {
+                const planetNames = {
+                    'SUN': '☉ Sun',
+                    'MOON': '☽ Moon', 
+                    'MARS': '♂ Mars',
+                    'MERCURY': '☿ Mercury',
+                    'JUPITER': '♃ Jupiter',
+                    'VENUS': '♀ Venus',
+                    'SATURN': '♄ Saturn',
+                    'ASCENDANT': '↑ Asc'
+                };
+                return planetNames[planet] || planet;
+            }).join(', ');
+        } else {
+            planetsText = '-';
+        }
+        
+        row.innerHTML = `
+            <td class="text-center"><strong>${house.house}</strong></td>
+            <td class="text-center">${house.rasi_name}</td>
+            <td class="text-center">${planetsText}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+    } catch (error) {
+        console.error('Error populating native chart:', error);
+    }
+}
+
+function populatePlanetCharts() {
+    try {
+        const charts = ashtakavargaData.ashtakavarga_charts;
+        const planetaryPositions = ashtakavargaData.planetary_positions;
+        
+        if (!charts || !planetaryPositions) {
+            console.error('Missing chart data or planetary positions');
+            return;
+        }
+    
+    // Planet order for table columns (matching the contributions data structure)
+    const planetOrder = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Ascendant'];
+    
+    // Create planet position mapping (planetaryPositions is already an object)
+    const planetPositions = planetaryPositions;
+    
+    Object.keys(charts).forEach(planet => {
+        const chartData = charts[planet];
+        const planetLower = planet.toLowerCase();
+        
+        // Update total
+        document.getElementById(`${planetLower}-total`).textContent = chartData.total;
+        
+        // Populate table
+        const tableBody = document.querySelector(`#${planetLower}-table tbody`);
+        tableBody.innerHTML = '';
+        
+        // Create rows for each planet contributor
+        planetOrder.forEach(planetName => {
+            const row = document.createElement('tr');
+            let rowHTML = '';
+            
+            // Get the house position of this planet (convert to uppercase for planetary positions)
+            const planetHouse = planetPositions[planetName.toUpperCase()];
+            
+            // Add values for each house (1-12)
+            for (let houseNum = 1; houseNum <= 12; houseNum++) {
+                const houseContributors = chartData.contributions[houseNum.toString()] || [];
+                const hasContribution = houseContributors.includes(planetName);
+                
+                // Highlight if this is the planet's actual position
+                const isPlanetPosition = (planetHouse === houseNum);
+                const cellClass = isPlanetPosition ? 'text-center bg-warning' : 'text-center';
+                
+                rowHTML += `<td class="${cellClass}">${hasContribution ? '1' : '0'}</td>`;
+            }
+            
+            // Add total for this planet
+            let planetTotal = 0;
+            for (let houseNum = 1; houseNum <= 12; houseNum++) {
+                const houseContributors = chartData.contributions[houseNum.toString()] || [];
+                if (houseContributors.includes(planetName)) {
+                    planetTotal++;
+                }
+            }
+            rowHTML += `<td class="text-center"><strong>${planetTotal}</strong></td>`;
+            
+            row.innerHTML = rowHTML;
+            tableBody.appendChild(row);
+        });
+        
+        // Add total row with house totals
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'table-info fw-bold';
+        let totalRowHTML = '';
+        
+        // Add house totals
+        for (let houseNum = 1; houseNum <= 12; houseNum++) {
+            const houseData = chartData.chart.find(h => h.house === houseNum);
+            const value = houseData ? houseData.value : 0;
+            totalRowHTML += `<td class="text-center"><strong>${value}</strong></td>`;
+        }
+        
+        // Add grand total
+        totalRowHTML += `<td class="text-center"><strong>${chartData.total}</strong></td>`;
+        totalRow.innerHTML = totalRowHTML;
+        tableBody.appendChild(totalRow);
+        
+        // Populate analysis
+        const analysis = document.getElementById(`${planetLower}-analysis`);
+        const maxValue = Math.max(...chartData.chart.map(h => h.value));
+        const minValue = Math.min(...chartData.chart.map(h => h.value));
+        const avgValue = (chartData.total / 12).toFixed(1);
+        
+        analysis.innerHTML = `
+            <p><strong>Average:</strong> ${avgValue} points</p>
+            <p><strong>Highest:</strong> ${maxValue} points</p>
+            <p><strong>Lowest:</strong> ${minValue} points</p>
+        `;
+        
+        // Populate planet matrix table
+        const matrixTableBody = document.querySelector(`#${planetLower}-matrix-table tbody`);
+        matrixTableBody.innerHTML = '';
+        
+        // Get planet matrix data
+        const planetMatrix = chartData.planet_matrix || {};
+        
+        // Create rows for each contributing planet
+        planetOrder.forEach(contributingPlanet => {
+            const row = document.createElement('tr');
+            let rowHTML = '';
+            
+            // Get the house position of this contributing planet (convert to uppercase for planetary positions)
+            const contributingPlanetHouse = planetPositions[contributingPlanet.toUpperCase()];
+            
+            // Add planet name
+            const planetNames = {
+                'Sun': '☉ Sun',
+                'Moon': '☽ Moon',
+                'Mars': '♂ Mars',
+                'Mercury': '☿ Mercury',
+                'Jupiter': '♃ Jupiter',
+                'Venus': '♀ Venus',
+                'Saturn': '♄ Saturn',
+                'Ascendant': '↑ Asc'
+            };
+            rowHTML += `<td class="text-center"><strong>${planetNames[contributingPlanet] || contributingPlanet}</strong></td>`;
+            
+            // Add values for each house (1-12)
+            let planetTotal = 0;
+            for (let houseNum = 1; houseNum <= 12; houseNum++) {
+                const value = planetMatrix[contributingPlanet.toUpperCase()] ? planetMatrix[contributingPlanet.toUpperCase()][houseNum - 1] : 0;
+                planetTotal += value;
+                
+                // Highlight if this is the contributing planet's actual position
+                const isPlanetPosition = (contributingPlanetHouse === houseNum);
+                const cellClass = isPlanetPosition ? 'text-center bg-warning' : 'text-center';
+                
+                rowHTML += `<td class="${cellClass}">${value}</td>`;
+            }
+            
+            // Add total for this contributing planet
+            rowHTML += `<td class="text-center"><strong>${planetTotal}</strong></td>`;
+            
+            row.innerHTML = rowHTML;
+            matrixTableBody.appendChild(row);
+        });
+        
+        // Add total row with house totals
+        const matrixTotalRow = document.createElement('tr');
+        matrixTotalRow.className = 'table-info fw-bold';
+        let matrixTotalRowHTML = '';
+        
+        // Add house totals
+        matrixTotalRowHTML += '<td class="text-center"><strong>Total</strong></td>';
+        for (let houseNum = 1; houseNum <= 12; houseNum++) {
+            const houseData = chartData.chart.find(h => h.house === houseNum);
+            const value = houseData ? houseData.value : 0;
+            matrixTotalRowHTML += `<td class="text-center"><strong>${value}</strong></td>`;
+        }
+        
+        // Add grand total
+        matrixTotalRowHTML += `<td class="text-center"><strong>${chartData.total}</strong></td>`;
+        matrixTotalRow.innerHTML = matrixTotalRowHTML;
+        matrixTableBody.appendChild(matrixTotalRow);
+    });
+    } catch (error) {
+        console.error('Error populating planet charts:', error);
+    }
+}
+
+function populateSarvashtakavarga() {
+    const sarvaData = ashtakavargaData.sarva_analysis;
+    const sarvaTotal = ashtakavargaData.sarva_total;
+    const charts = ashtakavargaData.ashtakavarga_charts;
+    const planetaryPositions = ashtakavargaData.planetary_positions;
+    
+    // Planet order for table columns (excluding Ascendant for Sarvashtakavarga)
+    const planetOrder = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn'];
+    
+    // Create planet position mapping (planetaryPositions is already an object)
+    const planetPositions = planetaryPositions;
+    
+    // Update total
+    document.getElementById('sarva-total').textContent = sarvaTotal;
+    
+    // Populate table
+    const tableBody = document.querySelector('#sarva-table tbody');
+    tableBody.innerHTML = '';
+    
+    // Create rows for each planet
+    planetOrder.forEach(planetName => {
+        const row = document.createElement('tr');
+        let rowHTML = '';
+        
+        // Get the house position of this planet (convert to uppercase for planetary positions)
+        const planetHouse = planetPositions[planetName.toUpperCase()];
+        
+        // Add individual planet values for each house (1-12)
+        for (let houseNum = 1; houseNum <= 12; houseNum++) {
+            const planetChart = charts[planetName.toUpperCase()];
+            if (!planetChart) {
+                console.error(`Planet chart not found for: ${planetName}`);
+                continue;
+            }
+            const houseValue = planetChart.chart.find(h => h.house === houseNum);
+            const value = houseValue ? houseValue.value : 0;
+            
+            // Highlight if this is the planet's actual position
+            const isPlanetPosition = (planetHouse === houseNum);
+            const cellClass = isPlanetPosition ? 'text-center bg-warning' : 'text-center';
+            
+            rowHTML += `<td class="${cellClass}">${value}</td>`;
+        }
+        
+        // Add planet total
+        const planetTotal = charts[planetName].total;
+        rowHTML += `<td class="text-center"><strong>${planetTotal}</strong></td>`;
+        
+        row.innerHTML = rowHTML;
+        tableBody.appendChild(row);
+    });
+    
+    // Add Sarvashtakavarga row
+    const sarvaRow = document.createElement('tr');
+    sarvaRow.className = 'table-info fw-bold';
+    let sarvaRowHTML = '';
+    
+    // Add Sarvashtakavarga values for each house
+    for (let houseNum = 1; houseNum <= 12; houseNum++) {
+        const houseData = sarvaData.find(h => h.house === houseNum);
+        const value = houseData ? houseData.value : 0;
+        sarvaRowHTML += `<td class="text-center"><strong>${value}</strong></td>`;
+    }
+    
+    // Add Sarvashtakavarga total
+    sarvaRowHTML += `<td class="text-center"><strong>${sarvaTotal}</strong></td>`;
+    sarvaRow.innerHTML = sarvaRowHTML;
+    tableBody.appendChild(sarvaRow);
+    
+    // Populate analysis
+    const analysis = document.getElementById('sarva-analysis');
+    const strongHouses = sarvaData.filter(h => h.value >= 30).length;
+    const weakHouses = sarvaData.filter(h => h.value < 20).length;
+    const avgValue = (sarvaTotal / 12).toFixed(1);
+    
+    analysis.innerHTML = `
+        <p><strong>Average:</strong> ${avgValue} points</p>
+        <p><strong>Strong Houses:</strong> ${strongHouses}</p>
+        <p><strong>Weak Houses:</strong> ${weakHouses}</p>
+        <p><strong>Total Points:</strong> ${sarvaTotal}/337</p>
+    `;
+}
+
+function getValueBadgeClass(value) {
+    if (value >= 6) return 'bg-success';
+    if (value >= 4) return 'bg-warning';
+    return 'bg-secondary';
+}
+
+function getSarvaBadgeClass(value) {
+    if (value >= 30) return 'bg-danger';
+    if (value >= 25) return 'bg-warning';
+    if (value >= 20) return 'bg-info';
+    return 'bg-secondary';
+}
+
+function getHouseInterpretation(value) {
+    if (value >= 30) return 'Very Favorable';
+    if (value >= 25) return 'Favorable';
+    if (value >= 20) return 'Moderate';
+    return 'Needs Attention';
+}
+</script>
+{% endblock %}

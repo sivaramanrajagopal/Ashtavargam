@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Results - Tamil Calculator V2</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #3498DB;
+            --accent-color: #E74C3C;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --info-color: #17A2B8;
+            --light-color: #F8F9FA;
+            --dark-color: #343A40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 20px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            background-color: #f8f9fa;
+            border-color: transparent;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .tab-content {
+            padding: 20px;
+        }
+        
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px 8px;
+        }
+        
+        .table tbody td {
+            text-align: center;
+            padding: 12px 8px;
+            border: 1px solid #dee2e6;
+            font-weight: 500;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .bg-warning {
+            background-color: #ffc107 !important;
+            color: #000 !important;
+            font-weight: bold;
+        }
+        
+        .tamil-text {
+            font-family: 'Latha', 'Tahoma', sans-serif;
+            font-size: 16px;
+        }
+        
+        .planet-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .planet-emoji {
+            font-size: 24px;
+        }
+        
+        .total-badge {
+            background: linear-gradient(135deg, var(--success-color), var(--info-color));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            border: none;
+            border-radius: 15px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        .birth-info {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .birth-info h5 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .birth-info .row {
+            margin-bottom: 10px;
+        }
+        
+        .birth-info .col-sm-3 {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .birth-info .col-sm-9 {
+            color: var(--dark-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header text-center">
+                <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-light" onclick="goToDashboard()">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+            <button class="btn btn-outline-light ms-2" onclick="goToTamilInterpretations()">
+                <i class="fas fa-language"></i> Tamil Interpretations
+            </button>
+            <button class="btn btn-outline-light ms-2" onclick="goToMatrixView()">
+                <i class="fas fa-table"></i> Matrix View
+            </button>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-star"></i>
+                            <span class="tamil-text">அஷ்டவர்க்க முடிவுகள்</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Ashtakavarga Results - Tamil Calculator V2</p>
+                    </div>
+                    <button class="btn btn-outline-light" onclick="goToHome()">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Birth Information -->
+        <div class="card">
+            <div class="card-body">
+                <div class="birth-info" id="birthInfo">
+                    <!-- Birth info will be populated here -->
+                </div>
+                
+                <div class="text-center">
+                    <a href="/" class="back-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Calculator
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Tabs -->
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs" id="planetTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="native-tab" data-bs-toggle="tab" 
+                                data-bs-target="#native" type="button" role="tab">
+                            <i class="fas fa-home"></i> Native Chart
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sun-tab" data-bs-toggle="tab" 
+                                data-bs-target="#sun" type="button" role="tab">
+                            <i class="fas fa-sun"></i> Sun
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="moon-tab" data-bs-toggle="tab" 
+                                data-bs-target="#moon" type="button" role="tab">
+                            <i class="fas fa-moon"></i> Moon
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mars-tab" data-bs-toggle="tab" 
+                                data-bs-target="#mars" type="button" role="tab">
+                            <i class="fas fa-mars"></i> Mars
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="mercury-tab" data-bs-toggle="tab" 
+                                data-bs-target="#mercury" type="button" role="tab">
+                            <i class="fas fa-mercury"></i> Mercury
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="jupiter-tab" data-bs-toggle="tab" 
+                                data-bs-target="#jupiter" type="button" role="tab">
+                            <i class="fas fa-jupiter"></i> Jupiter
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="venus-tab" data-bs-toggle="tab" 
+                                data-bs-target="#venus" type="button" role="tab">
+                            <i class="fas fa-venus"></i> Venus
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="saturn-tab" data-bs-toggle="tab" 
+                                data-bs-target="#saturn" type="button" role="tab">
+                            <i class="fas fa-saturn"></i> Saturn
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ascendant-tab" data-bs-toggle="tab" 
+                                data-bs-target="#ascendant" type="button" role="tab">
+                            <i class="fas fa-compass"></i> Ascendant
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sarva-tab" data-bs-toggle="tab" 
+                                data-bs-target="#sarva" type="button" role="tab">
+                            <i class="fas fa-chart-bar"></i> Sarvashtakavarga
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="tab-content" id="planetTabContent">
+                <!-- Native Chart Tab -->
+                <div class="tab-pane fade show active" id="native" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">பிறப்பு விளக்கப்படம்</h4>
+                        <p>Native Chart</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Planets</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nativeTableBody">
+                                <!-- Native chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Planet Tabs -->
+                <div class="tab-pane fade" id="sun" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">சூர்யன் அஷ்டவர்க்கம்</h4>
+                        <p>Sun Ashtakavarga</p>
+                        <span class="total-badge" id="sun-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sunTableBody">
+                                <!-- Sun chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="moon" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">சந்திரன் அஷ்டவர்க்கம்</h4>
+                        <p>Moon Ashtakavarga</p>
+                        <span class="total-badge" id="moon-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="moonTableBody">
+                                <!-- Moon chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="mars" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">செவ்வாய் அஷ்டவர்க்கம்</h4>
+                        <p>Mars Ashtakavarga</p>
+                        <span class="total-badge" id="mars-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marsTableBody">
+                                <!-- Mars chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="mercury" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">புதன் அஷ்டவர்க்கம்</h4>
+                        <p>Mercury Ashtakavarga</p>
+                        <span class="total-badge" id="mercury-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mercuryTableBody">
+                                <!-- Mercury chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="jupiter" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">குரு அஷ்டவர்க்கம்</h4>
+                        <p>Jupiter Ashtakavarga</p>
+                        <span class="total-badge" id="jupiter-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jupiterTableBody">
+                                <!-- Jupiter chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="venus" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">சுக்ரன் அஷ்டவர்க்கம்</h4>
+                        <p>Venus Ashtakavarga</p>
+                        <span class="total-badge" id="venus-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="venusTableBody">
+                                <!-- Venus chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="saturn" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">சனி அஷ்டவர்க்கம்</h4>
+                        <p>Saturn Ashtakavarga</p>
+                        <span class="total-badge" id="saturn-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="saturnTableBody">
+                                <!-- Saturn chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="ascendant" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">லக்கினம் அஷ்டவர்க்கம்</h4>
+                        <p>Ascendant Ashtakavarga</p>
+                        <span class="total-badge" id="ascendant-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ascendantTableBody">
+                                <!-- Ascendant chart data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Sarvashtakavarga Tab -->
+                <div class="tab-pane fade" id="sarva" role="tabpanel">
+                    <div class="text-center mb-3">
+                        <h4 class="tamil-text">சர்வாஷ்டகவர்கம்</h4>
+                        <p>Sarvashtakavarga</p>
+                        <span class="total-badge" id="sarva-total">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>House</th>
+                                    <th>Rasi</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sarvaTableBody">
+                                <!-- Sarvashtakavarga data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let ashtakavargaData = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get data from sessionStorage
+            const data = sessionStorage.getItem('ashtakavargaData');
+            if (!data) {
+                alert('No calculation data found. Please go back and calculate first.');
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                ashtakavargaData = JSON.parse(data);
+                console.log('Data loaded successfully:', ashtakavargaData);
+                
+                // Populate birth info
+                populateBirthInfo();
+                
+                // Populate native chart
+                populateNativeChart();
+                
+                // Populate planet charts
+                populatePlanetCharts();
+                
+                // Populate Sarvashtakavarga
+                populateSarvashtakavarga();
+                
+            } catch (error) {
+                console.error('Error parsing data:', error);
+                alert('Error loading calculation data. Please try again.');
+                window.location.href = '/';
+            }
+        });
+        
+        function populateBirthInfo() {
+            const birthInfo = ashtakavargaData.birth_info;
+            const html = `
+                <h5><i class="fas fa-user"></i> Birth Information</h5>
+                <div class="row">
+                    <div class="col-sm-3">Name:</div>
+                    <div class="col-sm-9">${birthInfo.name}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">Date of Birth:</div>
+                    <div class="col-sm-9">${birthInfo.dob}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">Time of Birth:</div>
+                    <div class="col-sm-9">${birthInfo.tob}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">Place:</div>
+                    <div class="col-sm-9">${birthInfo.place}</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">Coordinates:</div>
+                    <div class="col-sm-9">${birthInfo.coordinates}</div>
+                </div>
+            `;
+            document.getElementById('birthInfo').innerHTML = html;
+        }
+        
+        function populateNativeChart() {
+            const nativeChart = ashtakavargaData.native_chart;
+            const tbody = document.getElementById('nativeTableBody');
+            tbody.innerHTML = '';
+            
+            nativeChart.forEach(house => {
+                const row = document.createElement('tr');
+                const planets = house.planets.length > 0 ? house.planets.join(', ') : '-';
+                row.innerHTML = `
+                    <td>${house.house}</td>
+                    <td class="tamil-text">${house.rasi_name}</td>
+                    <td>${planets}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function populatePlanetCharts() {
+            const charts = ashtakavargaData.ashtakavarga_charts;
+            const planetaryPositions = ashtakavargaData.planetary_positions;
+            
+            Object.keys(charts).forEach(planet => {
+                const chartData = charts[planet];
+                const planetLower = planet.toLowerCase();
+                
+                // Update total
+                document.getElementById(`${planetLower}-total`).textContent = chartData.total;
+                
+                // Populate table
+                const tableBody = document.querySelector(`#${planetLower}TableBody`);
+                tableBody.innerHTML = '';
+                
+                chartData.chart.forEach(house => {
+                    const row = document.createElement('tr');
+                    
+                    // Highlight if this is the planet's actual position
+                    const isPlanetPosition = (planetaryPositions[planet] === house.house);
+                    const cellClass = isPlanetPosition ? 'bg-warning' : '';
+                    
+                    row.innerHTML = `
+                        <td>${house.house}</td>
+                        <td class="tamil-text">${house.rasi}</td>
+                        <td class="${cellClass}">${house.value}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+        }
+        
+        function populateSarvashtakavarga() {
+            const sarvaData = ashtakavargaData.sarvashtakavarga;
+            const sarvaTotal = ashtakavargaData.sarva_total;
+            const planetaryPositions = ashtakavargaData.planetary_positions;
+            
+            // Update total
+            document.getElementById('sarva-total').textContent = sarvaTotal;
+            
+            // Populate table
+            const tableBody = document.getElementById('sarvaTableBody');
+            tableBody.innerHTML = '';
+            
+            const tamilRasis = [
+                "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி",
+                "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+            ];
+            
+            sarvaData.forEach((value, index) => {
+                const row = document.createElement('tr');
+                
+                // Check if any planet is in this house
+                let isPlanetPosition = false;
+                Object.values(planetaryPositions).forEach(pos => {
+                    if (pos === index + 1) {
+                        isPlanetPosition = true;
+                    }
+                });
+                
+                const cellClass = isPlanetPosition ? 'bg-warning' : '';
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="tamil-text">${tamilRasis[index]}</td>
+                    <td class="${cellClass}">${value}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+        
+function goToHome() {
+    window.location.href = '/';
+}
+
+        function goToTamilInterpretations() {
+            window.location.href = '/tamil-interpretations';
+        }
+        
+        function goToMatrixView() {
+            window.location.href = '/matrix-view';
+        }
+    </script>
+</body>
+</html>

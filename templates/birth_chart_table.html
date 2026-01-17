@@ -1,0 +1,204 @@
+<!-- Birth Chart Table Component -->
+<div class="birth-chart-section">
+    <h2>Birth Chart - Planetary Positions</h2>
+    
+    <!-- Planetary Positions Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover birth-chart-table">
+            <thead class="table-primary">
+                <tr>
+                    <th>Planet</th>
+                    <th>Longitude</th>
+                    <th>Sign (English)</th>
+                    <th>Sign (Tamil)</th>
+                    <th>House</th>
+                    <th>Sign Lord</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody id="planetaryPositionsTable">
+                <!-- Will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- House Lords Table -->
+    <h3 class="mt-4">House Lords</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover house-lords-table">
+            <thead class="table-secondary">
+                <tr>
+                    <th>House</th>
+                    <th>Sign</th>
+                    <th>House Lord</th>
+                </tr>
+            </thead>
+            <tbody id="houseLordsTable">
+                <!-- Will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.birth-chart-section {
+    margin: 30px 0;
+}
+
+.birth-chart-table th,
+.house-lords-table th {
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+}
+
+.birth-chart-table td,
+.house-lords-table td {
+    text-align: center;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.birth-chart-table tbody tr:hover,
+.house-lords-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.tamil-text {
+    font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+    font-size: 16px;
+}
+
+.planet-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.sign-english {
+    color: #555;
+}
+
+.sign-tamil {
+    color: #4a90e2;
+}
+
+.house-number {
+    font-weight: bold;
+    color: #d32f2f;
+    font-size: 18px;
+}
+
+.lord-name {
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.longitude-value {
+    font-family: monospace;
+    color: #666;
+}
+
+.position-value {
+    font-family: monospace;
+    color: #555;
+}
+</style>
+
+<script>
+// Birth Chart Table Rendering Functions
+function renderBirthChartTable(birthChartData) {
+    if (!birthChartData || !birthChartData.planets) {
+        console.error('Invalid birth chart data');
+        return;
+    }
+    
+    const planetNames = {
+        'SUN': 'Sun',
+        'MOON': 'Moon',
+        'MARS': 'Mars',
+        'MERCURY': 'Mercury',
+        'JUPITER': 'Jupiter',
+        'VENUS': 'Venus',
+        'SATURN': 'Saturn'
+    };
+    
+    const rashiNames = [
+        'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+        'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+    ];
+    
+    const rashiNamesTamil = [
+        'மேஷம்', 'ரிஷபம்', 'மிதுனம்', 'கடகம்', 'சிம்மம்', 'கன்னி',
+        'துலாம்', 'விருச்சிகம்', 'தனுசு', 'மகரம்', 'கும்பம்', 'மீனம்'
+    ];
+    
+    // Render Planetary Positions Table
+    const positionsTable = document.getElementById('planetaryPositionsTable');
+    if (positionsTable) {
+        positionsTable.innerHTML = '';
+        
+        birthChartData.planets.forEach(planet => {
+            const row = document.createElement('tr');
+            
+            // Format longitude
+            const longitude = parseFloat(planet.longitude).toFixed(2);
+            
+            // Format position (degrees° minutes' seconds")
+            const position = `${planet.degrees}° ${planet.minutes}' ${planet.seconds}"`;
+            
+            row.innerHTML = `
+                <td class="planet-name">${planetNames[planet.planet] || planet.planet}</td>
+                <td class="longitude-value">${longitude}°</td>
+                <td class="sign-english">${planet.sign}</td>
+                <td class="sign-tamil tamil-text">${planet.sign_tamil}</td>
+                <td class="house-number">${planet.house}</td>
+                <td class="lord-name">${planetNames[planet.sign_lord] || planet.sign_lord}</td>
+                <td class="position-value">${position}</td>
+            `;
+            
+            if (positionsTable) {
+                positionsTable.appendChild(row);
+            }
+        });
+    }
+    
+    // Render House Lords Table
+    const houseLordsTable = document.getElementById('houseLordsTable');
+    if (houseLordsTable && birthChartData.house_lords) {
+        houseLordsTable.innerHTML = '';
+        
+        const ascendantRasi = birthChartData.ascendant_rasi || 1;
+        
+        for (let houseNum = 1; houseNum <= 12; houseNum++) {
+            const row = document.createElement('tr');
+            
+            // Calculate which sign this house represents
+            const houseRasiIndex = (ascendantRasi - 1 + houseNum - 1) % 12;
+            const signEnglish = rashiNames[houseRasiIndex];
+            const signTamil = rashiNamesTamil[houseRasiIndex];
+            const houseLord = birthChartData.house_lords[houseNum] || 'N/A';
+            
+            row.innerHTML = `
+                <td class="house-number">${houseNum}</td>
+                <td>
+                    <div>${signEnglish}</div>
+                    <div class="tamil-text sign-tamil" style="font-size: 14px;">${signTamil}</div>
+                </td>
+                <td class="lord-name">${planetNames[houseLord] || houseLord}</td>
+            `;
+            
+            if (houseLordsTable) {
+                houseLordsTable.appendChild(row);
+            }
+        }
+    }
+}
+
+// Export function for use in other templates
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { renderBirthChartTable };
+}
+</script>
+

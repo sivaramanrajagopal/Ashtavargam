@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Test - Ashtakavarga Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .dashboard-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px;
+            padding: 30px;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .strength-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            margin: 5px;
+        }
+        
+        .strength-very-strong { background: #28a745; }
+        .strength-strong { background: #ffc107; color: #000; }
+        .strength-moderate { background: #17a2b8; }
+        .strength-weak { background: #dc3545; }
+        .strength-very-weak { background: #6c757d; }
+        
+        .house-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .house-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .house-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+        }
+        
+        .house-value {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .planet-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .planet-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .planet-header {
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+        }
+        
+        .overall-summary {
+            background: linear-gradient(135deg, #ffc107 0%, #ffc107dd 100%);
+            color: #000;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .recommendations {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .signification-item {
+            background: #e9ecef;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .progress-custom {
+            height: 25px;
+            border-radius: 15px;
+            background: #e9ecef;
+        }
+        
+        .progress-bar-custom {
+            border-radius: 15px;
+            transition: width 0.6s ease;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil Sangam MN', 'Latha', 'Vijaya', sans-serif;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1><i class="fas fa-chart-line"></i> Ashtakavarga Dashboard</h1>
+                <h3>Comprehensive Analysis & Interpretation</h3>
+                <p class="mb-0">Based on Parasara Principles & Tamil Astrological Traditions</p>
+            </div>
+
+            <!-- Overall Summary -->
+            <div class="overall-summary">
+                <h2><i class="fas fa-star"></i> Overall Chart Strength</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Good</h3>
+                        <p>Chart Strength</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>337</h3>
+                        <p>Total Points</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>28.1</h3>
+                        <p>Average per House</p>
+                    </div>
+                </div>
+                <p class="mt-3">Favorable chart with moderate to good planetary influences</p>
+            </div>
+
+            <!-- House Analysis -->
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="fas fa-home"></i> House Analysis</h2>
+                    <p class="text-muted">Each house represents different aspects of life. Higher values indicate stronger influences.</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card house-card">
+                        <div class="house-header">
+                            <h5 class="mb-0">House 1</h5>
+                            <small class="tamil-text">லக்கினம்</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="house-value" style="color: #28a745">32</div>
+                            <div class="text-center mb-3">
+                                <span class="strength-indicator strength-very-strong">Very Strong</span>
+                            </div>
+                            <div class="progress progress-custom mb-3">
+                                <div class="progress-bar progress-bar-custom" style="width: 114.3%; background-color: #28a745">
+                                    114.3%
+                                </div>
+                            </div>
+                            <h6 class="text-muted">Lagna (Ascendant)</h6>
+                            <div class="significations">
+                                <div class="signification-item"><small>Physical appearance and constitution</small></div>
+                                <div class="signification-item"><small>Personality and character</small></div>
+                                <div class="signification-item"><small>Health and vitality</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card house-card">
+                        <div class="house-header">
+                            <h5 class="mb-0">House 2</h5>
+                            <small class="tamil-text">தனம்</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="house-value" style="color: #28a745">36</div>
+                            <div class="text-center mb-3">
+                                <span class="strength-indicator strength-very-strong">Very Strong</span>
+                            </div>
+                            <div class="progress progress-custom mb-3">
+                                <div class="progress-bar progress-bar-custom" style="width: 128.6%; background-color: #28a745">
+                                    128.6%
+                                </div>
+                            </div>
+                            <h6 class="text-muted">Dhana (Wealth)</h6>
+                            <div class="significations">
+                                <div class="signification-item"><small>Wealth and financial resources</small></div>
+                                <div class="signification-item"><small>Family and domestic life</small></div>
+                                <div class="signification-item"><small>Speech and communication</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card house-card">
+                        <div class="house-header">
+                            <h5 class="mb-0">House 6</h5>
+                            <small class="tamil-text">அரி</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="house-value" style="color: #dc3545">16</div>
+                            <div class="text-center mb-3">
+                                <span class="strength-indicator strength-weak">Weak</span>
+                            </div>
+                            <div class="progress progress-custom mb-3">
+                                <div class="progress-bar progress-bar-custom" style="width: 57.1%; background-color: #dc3545">
+                                    57.1%
+                                </div>
+                            </div>
+                            <h6 class="text-muted">Ari (Enemies)</h6>
+                            <div class="significations">
+                                <div class="signification-item"><small>Enemies and obstacles</small></div>
+                                <div class="signification-item"><small>Diseases and health issues</small></div>
+                                <div class="signification-item"><small>Service and employment</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planet Analysis -->
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="fas fa-globe"></i> Planet Analysis</h2>
+                    <p class="text-muted">Individual planetary strengths and their influences on your life.</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card planet-card">
+                        <div class="planet-header" style="background: #ffa502">
+                            <h5 class="mb-0">Jupiter</h5>
+                            <small class="tamil-text">குரு</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <h2 style="color: #ffa502">56</h2>
+                                <span class="strength-indicator strength-very-strong">Very Strong</span>
+                            </div>
+                            <div class="progress progress-custom mb-3">
+                                <div class="progress-bar progress-bar-custom" style="width: 100%; background-color: #ffa502">
+                                    100%
+                                </div>
+                            </div>
+                            <div class="significations">
+                                <div class="signification-item"><small>Wisdom and knowledge</small></div>
+                                <div class="signification-item"><small>Teachers and gurus</small></div>
+                                <div class="signification-item"><small>Children and progeny</small></div>
+                                <div class="signification-item"><small>Wealth and prosperity</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card planet-card">
+                        <div class="planet-header" style="background: #2ed573">
+                            <h5 class="mb-0">Mercury</h5>
+                            <small class="tamil-text">புதன்</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <h2 style="color: #2ed573">54</h2>
+                                <span class="strength-indicator strength-very-strong">Very Strong</span>
+                            </div>
+                            <div class="progress progress-custom mb-3">
+                                <div class="progress-bar progress-bar-custom" style="width: 96.4%; background-color: #2ed573">
+                                    96.4%
+                                </div>
+                            </div>
+                            <div class="significations">
+                                <div class="signification-item"><small>Intelligence and communication</small></div>
+                                <div class="signification-item"><small>Business and trade</small></div>
+                                <div class="signification-item"><small>Education and learning</small></div>
+                                <div class="signification-item"><small>Writing and speaking</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations">
+                <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+                <div class="alert alert-info">
+                    <i class="fas fa-arrow-right"></i> Focus on strengthening weak houses: Ari (Enemies)
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-arrow-right"></i> Leverage your strengths in: Lagna (Ascendant), Dhana (Wealth), Sahaja (Siblings), Sukha (Happiness), Putra (Children), Kalatra (Spouse), Ayu (Longevity), Bhagya (Fortune), Karma (Profession), Labha (Gains), Vyaya (Expenses)
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-arrow-right"></i> Regular meditation and spiritual practices can help balance planetary influences
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-arrow-right"></i> Consult with a qualified astrologer for personalized remedies
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

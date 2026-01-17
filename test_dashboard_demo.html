@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Demo - Ashtakavarga Interpretation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .demo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px;
+            padding: 30px;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .score-auspicious {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .score-average {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: #000;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .score-inauspicious {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .comparison-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil Sangam MN', 'Latha', 'Vijaya', sans-serif;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="demo-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1><i class="fas fa-book-open"></i> Ashtakavarga Interpretation Demo</h1>
+                <h3>Understanding Your Chart Through Traditional Vedic Rules</h3>
+                <p class="mb-0">Based on Authentic Parasara Principles</p>
+            </div>
+
+            <!-- SAV Total -->
+            <div class="score-auspicious">
+                <h2><i class="fas fa-calculator"></i> Sarvashtakavarga Total</h2>
+                <h1>337</h1>
+                <p class="mb-0">Total Points Across All 12 Houses (Traditional System)</p>
+            </div>
+
+            <!-- House Examples -->
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="fas fa-home"></i> House Interpretation Examples</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="score-auspicious">
+                        <h3>House 2</h3>
+                        <h1>36</h1>
+                        <h5>Very Auspicious</h5>
+                        <p><strong>Wealth House</strong><br>
+                        <small class="tamil-text">தனம்</small></p>
+                        <p class="mb-0">Excellent financial prospects. Strong wealth accumulation potential.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="score-average">
+                        <h3>House 7</h3>
+                        <h1>24</h1>
+                        <h5>Average</h5>
+                        <p><strong>Marriage House</strong><br>
+                        <small class="tamil-text">கலத்ரம்</small></p>
+                        <p class="mb-0">Mixed results in relationships. Requires effort for success.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="score-inauspicious">
+                        <h3>House 6</h3>
+                        <h1>16</h1>
+                        <h5>Inauspicious</h5>
+                        <p><strong>Enemies House</strong><br>
+                        <small class="tamil-text">அரி</small></p>
+                        <p class="mb-0">Challenges in service/employment. Health needs attention.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Comparisons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-balance-scale"></i> Key House Comparisons</h2>
+                </div>
+            </div>
+            
+            <div class="comparison-item">
+                <h6><strong>Income vs Expenses (11th vs 12th House)</strong></h6>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>11th House (Gains):</strong> 24 points
+                    </div>
+                    <div class="col-6">
+                        <strong>12th House (Expenses):</strong> 24 points
+                    </div>
+                </div>
+                <p class="mt-2 mb-0"><strong>Interpretation:</strong> Balanced income and expenses. Neither excessive gains nor losses expected.</p>
+            </div>
+            
+            <div class="comparison-item">
+                <h6><strong>Career vs Income (10th vs 11th House)</strong></h6>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>10th House (Career):</strong> 28 points
+                    </div>
+                    <div class="col-6">
+                        <strong>11th House (Income):</strong> 24 points
+                    </div>
+                </div>
+                <p class="mt-2 mb-0"><strong>Interpretation:</strong> You may work harder for your gains. Career success requires more effort than easy income flow.</p>
+            </div>
+
+            <!-- Planet Analysis -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-globe"></i> Planet Strength Analysis</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="comparison-item">
+                        <h6><strong>Jupiter - 56 Points</strong></h6>
+                        <span class="badge bg-success">Very Strong</span>
+                        <p class="mt-2 mb-0">This planet will give very positive results during its dasha periods and transits. Excellent for wisdom, wealth, and spiritual growth.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="comparison-item">
+                        <h6><strong>Saturn - 39 Points</strong></h6>
+                        <span class="badge bg-warning">Strong</span>
+                        <p class="mt-2 mb-0">This planet will give positive results but with some challenges. Good for discipline, hard work, and long-term gains.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prediction Examples -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-clock"></i> Transit & Dasha Predictions</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="comparison-item">
+                        <h6><i class="fas fa-star text-success"></i> Most Auspicious Periods</h6>
+                        <p><strong>Transits through House 2 (Wealth - 36 points):</strong> When planets transit through your strongest house, they will yield very favorable results. Excellent time for financial activities.</p>
+                        <p><strong>Jupiter Dasha Periods:</strong> During Jupiter's major or sub-periods (56 BAV points), you will experience very positive results in wisdom, wealth, and spiritual matters.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="comparison-item">
+                        <h6><i class="fas fa-exclamation-triangle text-warning"></i> Periods Requiring Caution</h6>
+                        <p><strong>Transits through House 6 (Enemies - 16 points):</strong> When planets transit through your weakest house, results may be unfavorable. Be extra careful with health and employment matters.</p>
+                        <p><strong>Combined Analysis:</strong> Avoid important decisions when weak planets are transiting through weak houses. Look for strong planets in strong houses for best timing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interpretation Rules -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-graduation-cap"></i> Interpretation Rules</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="comparison-item">
+                        <h6><i class="fas fa-check-circle text-success"></i> Auspicious Houses (30+ points)</h6>
+                        <p>Very strong and bring favorable results. Higher scores indicate more prosperity in these life areas.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="comparison-item">
+                        <h6><i class="fas fa-minus-circle text-warning"></i> Average Houses (25-29 points)</h6>
+                        <p>Mixed or average results. Affairs proceed without significant gains or major troubles.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="comparison-item">
+                        <h6><i class="fas fa-times-circle text-danger"></i> Inauspicious Houses (Below 25 points)</h6>
+                        <p>Potential challenges and less favorable outcomes. These areas require more effort and attention.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Access Instructions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <h4><i class="fas fa-info-circle"></i> How to Access Your Dashboard</h4>
+                        <ol>
+                            <li>Go to <strong>http://localhost:5002</strong></li>
+                            <li>Enter your birth details and calculate your chart</li>
+                            <li>Click the <strong>"Dashboard"</strong> button in the results page</li>
+                            <li>View your personalized Ashtakavarga interpretation</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

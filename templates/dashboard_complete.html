@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Dashboard - Complete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .dashboard-card.strong {
+            border-left: 5px solid #28a745;
+        }
+        
+        .dashboard-card.moderate {
+            border-left: 5px solid #ffc107;
+        }
+        
+        .dashboard-card.weak {
+            border-left: 5px solid #dc3545;
+        }
+        
+        .card-title {
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value.strong {
+            color: #28a745;
+        }
+        
+        .metric-value.moderate {
+            color: #ffc107;
+        }
+        
+        .metric-value.weak {
+            color: #dc3545;
+        }
+        
+        .metric-label {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .interpretation-text {
+            color: #495057;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+        
+        /* House Analysis Grid */
+        .house-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .house-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .house-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .house-card.strong {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 2px solid #28a745;
+        }
+        
+        .house-card.moderate {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffc107;
+        }
+        
+        .house-card.weak {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border: 2px solid #dc3545;
+        }
+        
+        .house-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .house-name {
+            font-size: 1.1rem;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .house-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .house-interpretation {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        /* Planet Analysis */
+        .planet-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .planet-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .planet-card.strong {
+            border-top: 4px solid #28a745;
+        }
+        
+        .planet-card.moderate {
+            border-top: 4px solid #ffc107;
+        }
+        
+        .planet-card.weak {
+            border-top: 4px solid #dc3545;
+        }
+        
+        .planet-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .planet-total {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .planet-strength {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .strength-strong {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .strength-moderate {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .strength-weak {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .recommendations {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .recommendations h5 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .recommendations ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 8px;
+            color: #424242;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-light" onclick="goToHome()">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="tamil-text">அஷ்டவர்க்க டாஷ்போர்டு</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Complete Ashtakavarga Dashboard & Analysis</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-light" onclick="goToResults()">
+                            <i class="fas fa-chart-bar"></i> Results
+                        </button>
+                        <button class="btn btn-outline-light ms-2" onclick="goToMatrixView()">
+                            <i class="fas fa-table"></i> Matrix View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-star"></i> Overall Analysis</h3>
+                <div id="overallAnalysis">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading overall analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- House Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-home"></i> House-by-House Analysis</h3>
+                <div id="houseAnalysis">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading house analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planet Analysis -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-globe"></i> Planet Analysis</h3>
+                <div id="planetAnalysis">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading planet analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+                <div id="recommendations">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading recommendations...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function goToHome() {
+            window.location.href = '/';
+        }
+        
+        function goToResults() {
+            window.location.href = '/results';
+        }
+        
+        function goToMatrixView() {
+            window.location.href = '/matrix-view';
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadDashboardData();
+        });
+
+        function loadDashboardData() {
+            // Try to get data from session storage first
+            let data = null;
+            const storedData = sessionStorage.getItem('ashtakavarga_data');
+            if (storedData) {
+                try {
+                    data = JSON.parse(storedData);
+                } catch (e) {
+                    console.error('Error parsing stored data:', e);
+                }
+            }
+            
+            // If no stored data, try server-side data
+            {% if calculation_data %}
+            if (!data) {
+                data = {{ calculation_data | tojson }};
+                // Also store in sessionStorage for consistency
+                sessionStorage.setItem('ashtakavarga_data', JSON.stringify(data));
+            }
+            {% endif %}
+            
+            if (data) {
+                populateAllDashboardData(data);
+            } else {
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            document.getElementById('overallAnalysis').innerHTML = `
+                <div class="alert alert-warning">
+                    <h4>No Calculation Data Found</h4>
+                    <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                </div>
+            `;
+            
+            document.getElementById('houseAnalysis').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No house analysis data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('planetAnalysis').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No planet analysis data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('recommendations').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No recommendations available.</p>
+                </div>
+            `;
+        }
+
+        function populateAllDashboardData(data) {
+            populateOverallAnalysis(data);
+            populateHouseAnalysis(data);
+            populatePlanetAnalysis(data);
+            populateRecommendations(data);
+        }
+
+        function populateOverallAnalysis(data) {
+            const sarvaTotal = data.sarva_total || 0;
+            const overallStrength = getOverallStrength(sarvaTotal);
+            
+            const overallAnalysis = document.getElementById('overallAnalysis');
+            overallAnalysis.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="dashboard-card ${overallStrength.level}">
+                            <div class="card-title">Total Sarvashtakavarga</div>
+                            <div class="metric-value ${overallStrength.level}">${sarvaTotal}</div>
+                            <div class="metric-label">Points</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card ${overallStrength.level}">
+                            <div class="card-title">Average per House</div>
+                            <div class="metric-value ${overallStrength.level}">${Math.round(sarvaTotal / 12)}</div>
+                            <div class="metric-label">Points</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card ${overallStrength.level}">
+                            <div class="card-title">Overall Strength</div>
+                            <div class="metric-value ${overallStrength.level}">${overallStrength.label}</div>
+                            <div class="metric-label">Life Potential</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="interpretation-text">
+                    <strong>Interpretation:</strong> ${overallStrength.description}
+                </div>
+            `;
+        }
+
+        function getOverallStrength(total) {
+            if (total >= 350) {
+                return {
+                    level: 'strong',
+                    label: 'Exceptional',
+                    description: 'Your chart shows exceptional potential for success, prosperity, and fulfillment. You have strong planetary support across most life areas, suggesting natural talents and good fortune.'
+                };
+            } else if (total >= 320) {
+                return {
+                    level: 'strong',
+                    label: 'Strong',
+                    description: 'Your chart indicates strong potential for success with some areas requiring focused attention. You have good planetary support in most life areas.'
+                };
+            } else if (total >= 300) {
+                return {
+                    level: 'moderate',
+                    label: 'Moderate',
+                    description: 'Your chart shows moderate potential with mixed results across different life areas. While you have some natural strengths, certain areas may require more effort.'
+                };
+            } else if (total >= 280) {
+                return {
+                    level: 'weak',
+                    label: 'Challenging',
+                    description: 'Your chart indicates potential challenges that require focused effort and strategic planning. This presents opportunities for significant personal growth.'
+                };
+            } else {
+                return {
+                    level: 'weak',
+                    label: 'Difficult',
+                    description: 'Your chart presents significant challenges that require dedicated effort and spiritual practices. This offers opportunities for deep personal transformation.'
+                };
+            }
+        }
+
+        function populateHouseAnalysis(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const nativeChart = data.native_chart || [];
+            
+            let html = '<div class="house-grid">';
+            
+            for (let i = 0; i < sarva.length; i++) {
+                const value = sarva[i];
+                const houseNum = i + 1;
+                const houseInfo = nativeChart[i] || {};
+                const rasiName = houseInfo.rasi_name || getRasiName(houseNum);
+                const strength = value >= 30 ? 'strong' : value >= 25 ? 'moderate' : 'weak';
+                const interpretation = getHouseInterpretation(houseNum, value);
+                
+                html += `
+                    <div class="house-card ${strength}">
+                        <div class="house-number">House ${houseNum}</div>
+                        <div class="house-name">${rasiName}</div>
+                        <div class="house-value">${value}</div>
+                        <div class="house-interpretation">${interpretation}</div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('houseAnalysis').innerHTML = html;
+        }
+
+        function getHouseInterpretation(houseNum, value) {
+            const houseSignifications = {
+                1: 'Personality, Health, Appearance',
+                2: 'Wealth, Family, Speech',
+                3: 'Siblings, Courage, Communication',
+                4: 'Mother, Home, Education',
+                5: 'Children, Creativity, Intelligence',
+                6: 'Health, Service, Enemies',
+                7: 'Marriage, Partnership, Business',
+                8: 'Longevity, Transformation, Occult',
+                9: 'Father, Fortune, Spirituality',
+                10: 'Career, Status, Authority',
+                11: 'Gains, Friends, Aspirations',
+                12: 'Losses, Spirituality, Foreign'
+            };
+            
+            const signification = houseSignifications[houseNum] || 'Life Area';
+            
+            if (value >= 30) {
+                return `${signification} - Very strong and favorable`;
+            } else if (value >= 25) {
+                return `${signification} - Moderate strength`;
+            } else {
+                return `${signification} - Needs attention and remedies`;
+            }
+        }
+
+        function populatePlanetAnalysis(data) {
+            const charts = data.ashtakavarga_charts || {};
+            const totals = data.totals || {};
+            
+            let html = '<div class="planet-analysis">';
+            
+            for (const [planet, total] of Object.entries(totals)) {
+                const strength = total >= 50 ? 'strong' : total >= 40 ? 'moderate' : 'weak';
+                const strengthClass = total >= 50 ? 'strength-strong' : total >= 40 ? 'strength-moderate' : 'strength-weak';
+                const interpretation = getPlanetInterpretation(planet, total);
+                
+                html += `
+                    <div class="planet-card ${strength}">
+                        <div class="planet-name">${planet}</div>
+                        <div class="planet-total">${total}</div>
+                        <div class="planet-strength ${strengthClass}">${strength.toUpperCase()}</div>
+                        <div class="interpretation-text">${interpretation}</div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('planetAnalysis').innerHTML = html;
+        }
+
+        function getPlanetInterpretation(planet, total) {
+            if (total >= 50) {
+                return `${planet} is very strong and will bring excellent results in its related life areas.`;
+            } else if (total >= 40) {
+                return `${planet} shows moderate strength with mixed results.`;
+            } else {
+                return `${planet} needs attention and may require remedies for better results.`;
+            }
+        }
+
+        function populateRecommendations(data) {
+            const sarvaTotal = data.sarva_total || 0;
+            const sarva = data.sarvashtakavarga || [];
+            const totals = data.totals || {};
+            
+            let recommendations = [];
+            
+            // Overall recommendations
+            if (sarvaTotal < 300) {
+                recommendations.push('Consider performing regular prayers and spiritual practices');
+                recommendations.push('Focus on developing your strengths and working on weaknesses');
+                recommendations.push('Consult with an astrologer for specific remedies');
+            }
+            
+            // House-specific recommendations
+            sarva.forEach((value, index) => {
+                if (value < 20) {
+                    const houseNum = index + 1;
+                    recommendations.push(`House ${houseNum} is weak - consider remedies for this area`);
+                }
+            });
+            
+            // Planet-specific recommendations
+            for (const [planet, total] of Object.entries(totals)) {
+                if (total < 40) {
+                    recommendations.push(`${planet} is weak - consider wearing appropriate gemstones or performing specific remedies`);
+                }
+            }
+            
+            const recommendationsHtml = `
+                <div class="recommendations">
+                    <h5><i class="fas fa-lightbulb"></i> Personalized Recommendations</h5>
+                    <ul>
+                        ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('recommendations').innerHTML = recommendationsHtml;
+        }
+
+        function getRasiName(houseNum) {
+            const rasis = [
+                "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி",
+                "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+            ];
+            return rasis[houseNum - 1] || '';
+        }
+    </script>
+</body>
+</html>

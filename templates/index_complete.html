@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Ashtakavarga Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .card-body {
+            padding: 40px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: #6c757d;
+        }
+        
+        .feature-list li i {
+            color: #28a745;
+            margin-right: 10px;
+        }
+        
+        /* Location Autocomplete Styles */
+        #locationSuggestions {
+            border: 2px solid #667eea;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #locationSuggestions .list-group-item {
+            border: none;
+            border-bottom: 1px solid #e9ecef;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        #locationSuggestions .list-group-item:hover {
+            background: #f8f9fa;
+        }
+        
+        #locationSuggestions .list-group-item:last-child {
+            border-bottom: none;
+        }
+        
+        input[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+        
+        /* Mobile and Tablet Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .card-header {
+                padding: 20px;
+            }
+            
+            .card-header h1 {
+                font-size: 22px;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
+            
+            .form-control {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 10px 12px;
+            }
+            
+            .btn-calculate {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+            
+            .row > [class*="col-"] {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            
+            .feature-list {
+                font-size: 14px;
+            }
+            
+            /* Location suggestions - full width on mobile */
+            #locationSuggestions {
+                max-height: 250px;
+            }
+            
+            /* Stack columns on mobile */
+            .row .col-md-6,
+            .row .col-md-4 {
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Tablet Styles */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 90%;
+                margin: 30px auto;
+            }
+            
+            .card-body {
+                padding: 30px;
+            }
+        }
+        
+        /* Small Mobile (Portrait) */
+        @media (max-width: 480px) {
+            .card-header h1 {
+                font-size: 18px;
+            }
+            
+            .card-header p {
+                font-size: 12px;
+            }
+            
+            .form-control {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+            
+            .btn-calculate {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .container {
+                margin: 15px auto;
+            }
+            
+            .card-header {
+                padding: 15px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="mb-3">
+                    <i class="fas fa-star"></i>
+                    <span class="tamil-text">அஷ்டவர்க்க கால்குலேட்டர்</span>
+                </h1>
+                <p class="mb-0">Complete Ashtakavarga Calculator - Traditional South Indian Astrology</p>
+            </div>
+            
+            <div class="card-body">
+                <form id="birthForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="dob" name="dob" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tob" class="form-label">Time of Birth</label>
+                            <input type="time" class="form-control" id="tob" name="tob" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="place" class="form-label">Place of Birth</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="place" name="place" 
+                                       placeholder="Start typing a location..." required autocomplete="off">
+                                <div id="locationSuggestions" class="list-group position-absolute w-100" 
+                                     style="z-index: 1000; display: none; max-height: 300px; overflow-y: auto;">
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Type to search for a location</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="number" class="form-control" id="latitude" name="latitude" 
+                                   step="0.0001" placeholder="13.0827" required readonly>
+                            <small class="form-text text-muted">Auto-filled from location</small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="number" class="form-control" id="longitude" name="longitude" 
+                                   step="0.0001" placeholder="80.2707" required readonly>
+                            <small class="form-text text-muted">Auto-filled from location</small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="tz_offset" class="form-label">Timezone Offset</label>
+                            <input type="number" class="form-control" id="tz_offset" name="tz_offset" 
+                                   step="0.5" placeholder="5.5" required readonly>
+                            <small class="form-text text-muted">Auto-filled from location</small>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-calculate">
+                            <i class="fas fa-calculator"></i> Calculate Ashtakavarga
+                        </button>
+                    </div>
+                </form>
+                
+                <hr class="my-5">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-star"></i> Features</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Traditional South Indian Chart Layout</li>
+                            <li><i class="fas fa-check"></i> Complete Bhinnashtakavarga Charts</li>
+                            <li><i class="fas fa-check"></i> Sarvashtakavarga Analysis</li>
+                            <li><i class="fas fa-check"></i> Matrix View (8 Charts)</li>
+                            <li><i class="fas fa-check"></i> English & Tamil Interpretations</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-info-circle"></i> Instructions</h5>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-calendar"></i> Enter your birth details accurately</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Provide correct coordinates</li>
+                            <li><i class="fas fa-clock"></i> Use 24-hour time format</li>
+                            <li><i class="fas fa-globe"></i> Timezone offset from UTC</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Location Autocomplete using Nominatim (OpenStreetMap)
+        let locationSearchTimeout;
+        const placeInput = document.getElementById('place');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+        const tzOffsetInput = document.getElementById('tz_offset');
+        const suggestionsDiv = document.getElementById('locationSuggestions');
+        
+        // Get timezone offset from coordinates (simplified - using India timezone as default)
+        function getTimezoneOffset(lat, lon) {
+            // Simple timezone estimation - can be enhanced with timezone API
+            // For India: 5.5 (IST)
+            // For most of India, use 5.5
+            if (lat >= 6 && lat <= 37 && lon >= 68 && lon <= 97) {
+                return 5.5; // India
+            }
+            // Add more regions as needed
+            return 5.5; // Default to IST
+        }
+        
+        placeInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            if (query.length < 3) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            clearTimeout(locationSearchTimeout);
+            locationSearchTimeout = setTimeout(() => {
+                searchLocation(query);
+            }, 300);
+        });
+        
+        function searchLocation(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displaySuggestions(data);
+                })
+                .catch(error => {
+                    console.error('Location search error:', error);
+                    suggestionsDiv.style.display = 'none';
+                });
+        }
+        
+        function displaySuggestions(results) {
+            if (results.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            suggestionsDiv.innerHTML = '';
+            results.forEach(result => {
+                const item = document.createElement('a');
+                item.href = '#';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `<strong>${result.display_name}</strong>`;
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectLocation(result);
+                });
+                suggestionsDiv.appendChild(item);
+            });
+            
+            suggestionsDiv.style.display = 'block';
+        }
+        
+        function selectLocation(location) {
+            placeInput.value = location.display_name;
+            latitudeInput.value = parseFloat(location.lat).toFixed(4);
+            longitudeInput.value = parseFloat(location.lon).toFixed(4);
+            tzOffsetInput.value = getTimezoneOffset(parseFloat(location.lat), parseFloat(location.lon));
+            suggestionsDiv.style.display = 'none';
+        }
+        
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!placeInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+        
+        // Form submission
+        document.getElementById('birthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Show loading
+            const submitBtn = document.querySelector('.btn-calculate');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+            submitBtn.disabled = true;
+            
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                if (result.success) {
+                    try {
+                        // Store data in sessionStorage
+                        sessionStorage.setItem('ashtakavarga_data', JSON.stringify(result.data));
+                        // Redirect to Prokerala style view
+                        window.location.href = '/ashtakavarga-prokerala';
+                    } catch (storageError) {
+                        console.error('Storage error:', storageError);
+                        alert('Data calculated but storage failed. Redirecting anyway...');
+                        window.location.href = '/ashtakavarga-prokerala';
+                    }
+                } else {
+                    alert('Error: ' + (result.error || 'Calculation failed'));
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Calculation error:', error);
+                alert('Error: ' + error.message + '. Please check the browser console for details.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

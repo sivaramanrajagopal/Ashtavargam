@@ -1,0 +1,408 @@
+/* Additional custom styles for Tamil Ashtakavarga Calculator */
+
+/* Tamil font support */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&display=swap');
+
+.tamil-text {
+    font-family: 'Noto Sans Tamil', sans-serif;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Planet color themes */
+.planet-sun { color: #FF6B35; }
+.planet-moon { color: #4ECDC4; }
+.planet-mars { color: #FF4757; }
+.planet-mercury { color: #2ED573; }
+.planet-jupiter { color: #FFA502; }
+.planet-venus { color: #FF6348; }
+.planet-saturn { color: #747D8C; }
+.planet-ascendant { color: #5352ED; }
+
+/* Value indicators */
+.value-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.value-high { 
+    background-color: #FF4757; 
+    border-color: #FF4757;
+}
+
+.value-medium { 
+    background-color: #FFA502; 
+    border-color: #FFA502;
+}
+
+.value-low { 
+    background-color: #2ED573; 
+    border-color: #2ED573;
+}
+
+/* Chart table enhancements */
+.chart-table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.chart-table th {
+    background: linear-gradient(135deg, #2C3E50, #3498DB);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.chart-table td {
+    vertical-align: middle;
+    font-weight: 500;
+}
+
+.chart-table tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* Traditional Tamil Ashtakavarga Table Styling */
+.table-bordered {
+    border: 2px solid #2C3E50;
+}
+
+.table-dark th {
+    background: linear-gradient(135deg, #2C3E50, #34495E);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #34495E;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1) !important;
+    transform: scale(1.005);
+    transition: all 0.2s ease;
+}
+
+.table-info {
+    background-color: rgba(23, 162, 184, 0.1) !important;
+    border: 2px solid #17a2b8;
+}
+
+.table-info td {
+    font-weight: bold;
+    color: #2C3E50;
+}
+
+/* Badge enhancements for tables */
+.table .badge {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* Planet position highlighting */
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    border: 2px solid #ff8c00 !important;
+}
+
+.table .badge.bg-success {
+    background-color: #28a745 !important;
+    color: white;
+}
+
+.table .badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: white;
+}
+
+.table .badge.bg-primary {
+    background-color: #007bff !important;
+    color: white;
+}
+
+.table .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+}
+
+.table .badge.bg-danger {
+    background-color: #dc3545 !important;
+    color: white;
+}
+
+.table .badge.bg-info {
+    background-color: #17a2b8 !important;
+    color: white;
+}
+
+/* Tamil text styling in tables */
+.table .tamil-text {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-weight: 500;
+    color: #2C3E50;
+}
+
+/* Table responsive enhancements */
+.table-responsive {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Total row styling */
+.total-row {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    border-top: 3px solid #2C3E50;
+    font-weight: bold;
+}
+
+.total-row td {
+    border-top: 2px solid #2C3E50 !important;
+    font-size: 1.1rem;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 10px 10px 0 0;
+    margin-right: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-tabs .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.nav-tabs .nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #3498DB, #8E44AD);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* Card enhancements */
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.95);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #2C3E50, #3498DB);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Button enhancements */
+.btn {
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498DB, #8E44AD);
+    border: none;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+/* Loading animation */
+.loading {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner-border {
+    color: #3498DB;
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .card {
+        margin: 1rem;
+        border-radius: 10px;
+    }
+    
+    .nav-tabs .nav-link {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+        margin-right: 2px;
+    }
+    
+    .chart-table {
+        font-size: 0.9rem;
+    }
+    
+    .chart-table th,
+    .chart-table td {
+        padding: 8px;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .nav-tabs .nav-link {
+        font-size: 0.7rem;
+        padding: 6px 8px;
+    }
+    
+    .chart-table {
+        font-size: 0.8rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .btn,
+    .nav-tabs,
+    .footer {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .tab-content {
+        display: block !important;
+    }
+    
+    .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+    }
+    
+    body {
+        background: white !important;
+    }
+}

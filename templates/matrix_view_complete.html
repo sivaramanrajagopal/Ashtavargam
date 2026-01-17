@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashtakavarga Matrix View - Complete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .tamil-text {
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        /* Matrix Grid Layout */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .matrix-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .matrix-card h5 {
+            color: #495057;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .matrix-table th {
+            background: #e9ecef;
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #dee2e6;
+        }
+        
+        .matrix-table td {
+            padding: 6px 4px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        
+        .matrix-table .house-header {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .matrix-table .planet-header {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .matrix-table .value-strong {
+            background: #d4edda;
+            color: #155724;
+            font-weight: bold;
+        }
+        
+        .matrix-table .value-moderate {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .matrix-table .value-weak {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .matrix-table .value-orange {
+            background: #ffa500;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .total-row {
+            background: #e9ecef !important;
+            font-weight: bold;
+        }
+        
+        .total-col {
+            background: #e9ecef !important;
+            font-weight: bold;
+        }
+        
+        /* Sarvashtakavarga Square */
+        .sarva-square {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .sarva-house {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .sarva-house:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .sarva-house.strong {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .sarva-house.moderate {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+        
+        .sarva-house.weak {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .house-number {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .rasi-name {
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-family: 'Tamil', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-light" onclick="goToHome()">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                    <div>
+                        <h1 class="mb-0">
+                            <i class="fas fa-table"></i>
+                            <span class="tamil-text">அஷ்டவர்க்க மேட்ரிக்ஸ் காட்சி</span>
+                        </h1>
+                        <p class="mb-0 mt-2">Complete Ashtakavarga Matrix View</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-light" onclick="goToResults()">
+                            <i class="fas fa-chart-bar"></i> Results
+                        </button>
+                        <button class="btn btn-outline-light ms-2" onclick="goToDashboard()">
+                            <i class="fas fa-chart-line"></i> Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-chart-pie"></i> Summary Statistics</h3>
+                <div id="summaryStats">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading summary statistics...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Planet Matrices -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-globe"></i> Individual Planet Matrices (Bhinnashtakavarga)</h3>
+                <div id="planetMatrices">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading planet matrices...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sarvashtakavarga Square -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-calculator"></i> Sarvashtakavarga - Traditional Square Format</h3>
+                <div id="sarvashtakavarga">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading Sarvashtakavarga...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interpretation Table -->
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-info-circle"></i> Quick Interpretation Guide</h3>
+                <div id="interpretationTable">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading interpretation guide...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function goToHome() {
+            window.location.href = '/';
+        }
+        
+        function goToResults() {
+            window.location.href = '/results';
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', function() {
+            loadMatrixData();
+        });
+
+        function loadMatrixData() {
+            // Try to get data from session storage first
+            let data = null;
+            const storedData = sessionStorage.getItem('ashtakavarga_data');
+            if (storedData) {
+                try {
+                    data = JSON.parse(storedData);
+                } catch (e) {
+                    console.error('Error parsing stored data:', e);
+                }
+            }
+            
+            // If no stored data, try server-side data
+            {% if calculation_data %}
+            if (!data) {
+                data = {{ calculation_data | tojson }};
+                // Also store in sessionStorage for consistency
+                sessionStorage.setItem('ashtakavarga_data', JSON.stringify(data));
+            }
+            {% endif %}
+            
+            if (data) {
+                populateAllMatrixData(data);
+            } else {
+                showNoDataMessage();
+            }
+        }
+
+        function showNoDataMessage() {
+            document.getElementById('summaryStats').innerHTML = `
+                <div class="alert alert-warning">
+                    <h4>No Calculation Data Found</h4>
+                    <p>Please go to the <a href="/">Home page</a> and perform a calculation first.</p>
+                </div>
+            `;
+            
+            document.getElementById('planetMatrices').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No planet matrix data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('sarvashtakavarga').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No Sarvashtakavarga data available.</p>
+                </div>
+            `;
+            
+            document.getElementById('interpretationTable').innerHTML = `
+                <div class="alert alert-info">
+                    <p>No interpretation data available.</p>
+                </div>
+            `;
+        }
+
+        function populateAllMatrixData(data) {
+            populateSummaryStats(data);
+            populatePlanetMatrices(data);
+            populateSarvashtakavarga(data);
+            populateInterpretationTable(data);
+        }
+
+        function populateSummaryStats(data) {
+            const charts = data.ashtakavarga_charts || {};
+            const totals = data.totals || {};
+            const sarvaTotal = data.sarva_total || 0;
+            
+            const summaryStats = document.getElementById('summaryStats');
+            summaryStats.innerHTML = `
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${sarvaTotal}</div>
+                        <div class="stat-label">Total Sarvashtakavarga</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(charts).length}</div>
+                        <div class="stat-label">Planets Analyzed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Math.round(sarvaTotal / 12)}</div>
+                        <div class="stat-label">Average per House</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${getStrongestPlanet(totals)}</div>
+                        <div class="stat-label">Strongest Planet</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStrongestPlanet(totals) {
+            let maxTotal = 0;
+            let strongestPlanet = '';
+            for (const [planet, total] of Object.entries(totals)) {
+                if (total > maxTotal) {
+                    maxTotal = total;
+                    strongestPlanet = planet;
+                }
+            }
+            return strongestPlanet;
+        }
+
+        function populatePlanetMatrices(data) {
+            const charts = data.ashtakavarga_charts || {};
+            const totals = data.totals || {};
+            
+            let html = '<div class="matrix-grid">';
+            
+            for (const [planet, chart] of Object.entries(charts)) {
+                const total = totals[planet] || 0;
+                html += `
+                    <div class="matrix-card">
+                        <h5>${planet} - Total: ${total}</h5>
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th class="house-header">House</th>
+                                    ${chart.map((_, index) => `<th>${index + 1}</th>`).join('')}
+                                    <th class="total-col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="house-header">Values</td>
+                                    ${chart.map((value, index) => {
+                                        const strength = value >= 5 ? 'value-strong' : value >= 3 ? 'value-moderate' : 'value-weak';
+                                        return `<td class="${strength}">${value}</td>`;
+                                    }).join('')}
+                                    <td class="total-col">${total}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            document.getElementById('planetMatrices').innerHTML = html;
+        }
+
+        function populateSarvashtakavarga(data) {
+            const sarva = data.sarvashtakavarga || [];
+            const total = data.sarva_total || 0;
+            
+            const sarvaContainer = document.getElementById('sarvashtakavarga');
+            sarvaContainer.innerHTML = `
+                <div class="text-center mb-4">
+                    <h4>Total Sarvashtakavarga: <span class="badge bg-primary fs-4">${total}</span></h4>
+                </div>
+                <div class="sarva-square">
+                    ${sarva.map((value, index) => {
+                        const houseNum = index + 1;
+                        const strength = value >= 30 ? 'strong' : value >= 25 ? 'moderate' : 'weak';
+                        return `
+                            <div class="sarva-house ${strength}">
+                                <div class="house-number">${houseNum}</div>
+                                <div class="rasi-name">${getRasiName(houseNum)}</div>
+                                <div class="value">${value}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function populateInterpretationTable(data) {
+            const charts = data.ashtakavarga_charts || {};
+            const totals = data.totals || {};
+            
+            let html = `
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Planet</th>
+                                <th>Total Points</th>
+                                <th>Strength Level</th>
+                                <th>Interpretation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            for (const [planet, total] of Object.entries(totals)) {
+                const strength = total >= 50 ? 'Strong' : total >= 40 ? 'Moderate' : 'Weak';
+                const strengthClass = total >= 50 ? 'text-success' : total >= 40 ? 'text-warning' : 'text-danger';
+                const interpretation = getPlanetInterpretation(planet, total);
+                
+                html += `
+                    <tr>
+                        <td><strong>${planet}</strong></td>
+                        <td><span class="badge bg-primary">${total}</span></td>
+                        <td><span class="${strengthClass}">${strength}</span></td>
+                        <td>${interpretation}</td>
+                    </tr>
+                `;
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            document.getElementById('interpretationTable').innerHTML = html;
+        }
+
+        function getPlanetInterpretation(planet, total) {
+            if (total >= 50) {
+                return `${planet} is very strong and will bring excellent results in its related life areas.`;
+            } else if (total >= 40) {
+                return `${planet} shows moderate strength with mixed results.`;
+            } else {
+                return `${planet} needs attention and may require remedies for better results.`;
+            }
+        }
+
+        function getRasiName(houseNum) {
+            const rasis = [
+                "மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி",
+                "துலாம்", "விருச்சிகம்", "தனுசு", "மகரம்", "கும்பம்", "மீனம்"
+            ];
+            return rasis[houseNum - 1] || '';
+        }
+    </script>
+</body>
+</html>

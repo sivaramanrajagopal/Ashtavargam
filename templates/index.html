@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}Tamil Ashtakavarga Calculator - Birth Data Input{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-white mb-3">
+                    <i class="fas fa-star-and-crescent me-3"></i>
+                    Tamil Ashtakavarga Calculator
+                </h1>
+                <p class="lead text-white-50 tamil-text">
+                    தமிழ் அஷ்டகவர்கம் கணிப்பான் - பராசர முறை
+                </p>
+                <p class="text-white">
+                    Enter your birth details to calculate authentic Tamil Ashtakavarga charts
+                </p>
+            </div>
+            
+            <!-- Birth Data Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-astronaut me-2"></i>
+                        Birth Information
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form id="birthForm">
+                        <div class="row">
+                            <!-- Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Full Name
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" 
+                                       placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <!-- Date of Birth -->
+                            <div class="col-md-6 mb-3">
+                                <label for="dob" class="form-label">
+                                    <i class="fas fa-calendar me-2"></i>Date of Birth
+                                </label>
+                                <input type="date" class="form-control" id="dob" name="dob" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Time of Birth -->
+                            <div class="col-md-6 mb-3">
+                                <label for="tob" class="form-label">
+                                    <i class="fas fa-clock me-2"></i>Time of Birth
+                                </label>
+                                <input type="time" class="form-control" id="tob" name="tob" required>
+                            </div>
+                            
+                            <!-- Place of Birth -->
+                            <div class="col-md-6 mb-3">
+                                <label for="place" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Place of Birth
+                                </label>
+                                <input type="text" class="form-control" id="place" name="place" 
+                                       placeholder="e.g., Chennai, Tamil Nadu" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Latitude -->
+                            <div class="col-md-4 mb-3">
+                                <label for="latitude" class="form-label">
+                                    <i class="fas fa-globe me-2"></i>Latitude
+                                </label>
+                                <input type="number" class="form-control" id="latitude" name="latitude" 
+                                       step="0.0001" placeholder="13.0827" required>
+                                <small class="form-text text-muted">Decimal degrees (e.g., 13.0827)</small>
+                            </div>
+                            
+                            <!-- Longitude -->
+                            <div class="col-md-4 mb-3">
+                                <label for="longitude" class="form-label">
+                                    <i class="fas fa-globe me-2"></i>Longitude
+                                </label>
+                                <input type="number" class="form-control" id="longitude" name="longitude" 
+                                       step="0.0001" placeholder="80.2707" required>
+                                <small class="form-text text-muted">Decimal degrees (e.g., 80.2707)</small>
+                            </div>
+                            
+                            <!-- Timezone -->
+                            <div class="col-md-4 mb-3">
+                                <label for="timezone" class="form-label">
+                                    <i class="fas fa-clock me-2"></i>Timezone
+                                </label>
+                                <input type="number" class="form-control" id="timezone" name="timezone" 
+                                       step="0.5" placeholder="5.5" required>
+                                <small class="form-text text-muted">Hours from UTC (e.g., 5.5 for IST)</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Fill Buttons -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Quick Fill Examples:</label>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillChennai()">
+                                        Chennai
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillMumbai()">
+                                        Mumbai
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillDelhi()">
+                                        Delhi
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="fillBangalore()">
+                                        Bangalore
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-calculator me-2"></i>
+                                Calculate Ashtakavarga
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Loading Indicator -->
+                    <div class="loading" id="loading">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Calculating...</span>
+                        </div>
+                        <p class="mt-3">Calculating your Ashtakavarga charts...</p>
+                        <p class="tamil-text">உங்கள் அஷ்டகவர்கம் விளக்கப்படங்களை கணிக்கிறது...</p>
+                    </div>
+                    
+                    <!-- Error Alert -->
+                    <div class="alert alert-danger mt-3" id="errorAlert" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span id="errorMessage"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        About Ashtakavarga
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>What is Ashtakavarga?</h5>
+                            <p>Ashtakavarga is a sophisticated system in Vedic astrology that evaluates the strength of planets and houses by assigning benefic points (Bindus) based on their positions relative to each other.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Features:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Authentic Parasara Method</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Individual Planet Charts</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Sarvashtakavarga Analysis</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Tamil Language Support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Quick fill functions
+function fillChennai() {
+    document.getElementById('place').value = 'Chennai, Tamil Nadu';
+    document.getElementById('latitude').value = '13.0827';
+    document.getElementById('longitude').value = '80.2707';
+    document.getElementById('timezone').value = '5.5';
+}
+
+function fillMumbai() {
+    document.getElementById('place').value = 'Mumbai, Maharashtra';
+    document.getElementById('latitude').value = '19.0760';
+    document.getElementById('longitude').value = '72.8777';
+    document.getElementById('timezone').value = '5.5';
+}
+
+function fillDelhi() {
+    document.getElementById('place').value = 'New Delhi, Delhi';
+    document.getElementById('latitude').value = '28.6139';
+    document.getElementById('longitude').value = '77.2090';
+    document.getElementById('timezone').value = '5.5';
+}
+
+function fillBangalore() {
+    document.getElementById('place').value = 'Bangalore, Karnataka';
+    document.getElementById('latitude').value = '12.9716';
+    document.getElementById('longitude').value = '77.5946';
+    document.getElementById('timezone').value = '5.5';
+}
+
+// Form submission
+document.getElementById('birthForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show loading
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('errorAlert').style.display = 'none';
+    
+    // Get form data
+    const formData = new FormData(this);
+    
+    // Submit to server
+    fetch('/calculate', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loading').style.display = 'none';
+        
+        if (data.success) {
+            // Store data in sessionStorage and redirect
+            sessionStorage.setItem('ashtakavargaData', JSON.stringify(data.data));
+            window.location.href = '/results';
+        } else {
+            // Show error
+            document.getElementById('errorMessage').textContent = data.error;
+            document.getElementById('errorAlert').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorMessage').textContent = 'An error occurred while calculating. Please try again.';
+        document.getElementById('errorAlert').style.display = 'block';
+        console.error('Error:', error);
+    });
+});
+</script>
+{% endblock %}
