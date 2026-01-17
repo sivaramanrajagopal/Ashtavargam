@@ -1,0 +1,13 @@
+# Nixpacks configuration for Railway (alternative to Dockerfile)
+[phases.setup]
+nixPkgs = ['sqlite', 'gcc']
+
+[phases.install]
+cmds = ['pip install -r requirements.txt']
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = 'python app_complete.py'
+
