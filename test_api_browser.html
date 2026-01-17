@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Ashtakavarga - Browser Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4a90e2;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .response pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .test-input {
+            margin: 10px 0;
+        }
+        .test-input label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        .test-input input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-online {
+            background: #28a745;
+        }
+        .status-offline {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 FastAPI Ashtakavarga Calculator - Browser Test</h1>
+        
+        <div class="info">
+            <strong>API Server:</strong> <span id="serverStatus">
+                <span class="status-indicator status-offline"></span>
+                <span id="statusText">Checking...</span>
+            </span>
+            <br>
+            <strong>Base URL:</strong> http://localhost:8000
+            <br>
+            <strong>Swagger UI:</strong> <a href="http://localhost:8000/docs" target="_blank">http://localhost:8000/docs</a>
+        </div>
+
+        <!-- Health Check -->
+        <div class="test-section">
+            <h2>1. Health Check</h2>
+            <p>Test if the API server is running and healthy.</p>
+            <button onclick="testHealth()">Test Health</button>
+            <div id="healthResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- List Planets -->
+        <div class="test-section">
+            <h2>2. List Planets</h2>
+            <p>Get list of all supported planets.</p>
+            <button onclick="testPlanets()">List Planets</button>
+            <div id="planetsResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- Full Calculation -->
+        <div class="test-section">
+            <h2>3. Full Calculation</h2>
+            <p>Calculate all BAV charts + SAV (complete calculation).</p>
+            <div class="test-input">
+                <label>DOB:</label>
+                <input type="date" id="dob" value="1978-09-18">
+            </div>
+            <div class="test-input">
+                <label>TOB:</label>
+                <input type="time" id="tob" value="17:35">
+            </div>
+            <div class="test-input">
+                <label>Latitude:</label>
+                <input type="number" id="lat" value="13.0827" step="0.0001">
+            </div>
+            <div class="test-input">
+                <label>Longitude:</label>
+                <input type="number" id="lon" value="80.2707" step="0.0001">
+            </div>
+            <div class="test-input">
+                <label>Timezone:</label>
+                <input type="number" id="tz" value="5.5" step="0.5">
+            </div>
+            <button onclick="testFullCalculation()">Calculate Full</button>
+            <div id="fullResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- Individual BAV -->
+        <div class="test-section">
+            <h2>4. Individual BAV</h2>
+            <p>Calculate BAV for a specific planet.</p>
+            <div class="test-input">
+                <label>Planet:</label>
+                <select id="planetSelect">
+                    <option value="SUN">Sun</option>
+                    <option value="MOON">Moon</option>
+                    <option value="MARS">Mars</option>
+                    <option value="MERCURY">Mercury</option>
+                    <option value="JUPITER">Jupiter</option>
+                    <option value="VENUS">Venus</option>
+                    <option value="SATURN">Saturn</option>
+                    <option value="ASCENDANT">Ascendant</option>
+                </select>
+            </div>
+            <button onclick="testBAV()">Calculate BAV</button>
+            <div id="bavResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- SAV Calculation -->
+        <div class="test-section">
+            <h2>5. SAV Calculation</h2>
+            <p>Calculate Sarvashtakavarga (combined strength).</p>
+            <button onclick="testSAV()">Calculate SAV</button>
+            <div id="savResponse" class="response" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // Check server status on load
+        window.addEventListener('load', async () => {
+            await checkServerStatus();
+        });
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                document.getElementById('statusText').textContent = 'Online - ' + data.status;
+                document.querySelector('#serverStatus .status-indicator').className = 'status-indicator status-online';
+            } catch (error) {
+                document.getElementById('statusText').textContent = 'Offline - Server not running';
+                document.querySelector('#serverStatus .status-indicator').className = 'status-indicator status-offline';
+            }
+        }
+
+        function getBirthData() {
+            const dob = document.getElementById('dob').value;
+            const tob = document.getElementById('tob').value;
+            return {
+                dob: dob,
+                tob: tob,
+                latitude: parseFloat(document.getElementById('lat').value),
+                longitude: parseFloat(document.getElementById('lon').value),
+                tz_offset: parseFloat(document.getElementById('tz').value)
+            };
+        }
+
+        function formatJSON(obj) {
+            return JSON.stringify(obj, null, 2);
+        }
+
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            const className = isError ? 'error' : 'success';
+            element.innerHTML = `<pre class="${className}">${formatJSON(data)}</pre>`;
+        }
+
+        async function testHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                showResponse('healthResponse', data);
+            } catch (error) {
+                showResponse('healthResponse', { error: error.message }, true);
+            }
+        }
+
+        async function testPlanets() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/planets`);
+                const data = await response.json();
+                showResponse('planetsResponse', data);
+            } catch (error) {
+                showResponse('planetsResponse', { error: error.message }, true);
+            }
+        }
+
+        async function testFullCalculation() {
+            try {
+                const birthData = getBirthData();
+                const response = await fetch(`${API_BASE}/api/v1/calculate/full`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(birthData)
+                });
+                const data = await response.json();
+                
+                // Add verification summary
+                const summary = {
+                    '✅ SAV Total': data.sav_total + ' (expected: 337)',
+                    '✅ BAV Totals': data.bav_totals,
+                    'Full Response': data
+                };
+                showResponse('fullResponse', summary);
+            } catch (error) {
+                showResponse('fullResponse', { error: error.message }, true);
+            }
+        }
+
+        async function testBAV() {
+            try {
+                const planet = document.getElementById('planetSelect').value;
+                const birthData = getBirthData();
+                const response = await fetch(`${API_BASE}/api/v1/calculate/bav/${planet}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(birthData)
+                });
+                const data = await response.json();
+                
+                const summary = {
+                    'Planet': data.planet,
+                    '✅ Total': data.total,
+                    'BAV Chart (12 houses)': data.bav_chart,
+                    'Full Response': data
+                };
+                showResponse('bavResponse', summary);
+            } catch (error) {
+                showResponse('bavResponse', { error: error.message }, true);
+            }
+        }
+
+        async function testSAV() {
+            try {
+                const birthData = getBirthData();
+                const response = await fetch(`${API_BASE}/api/v1/calculate/sav`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(birthData)
+                });
+                const data = await response.json();
+                
+                const summary = {
+                    '✅ SAV Total': data.total + ' (expected: 337)',
+                    'House Strengths': data.house_strengths,
+                    'SAV Chart (12 houses)': data.sav_chart,
+                    'Full Response': data
+                };
+                showResponse('savResponse', summary);
+            } catch (error) {
+                showResponse('savResponse', { error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>
+

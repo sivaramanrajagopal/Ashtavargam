@@ -1,0 +1,4 @@
+# FastAPI Server Procfile (alternative to Flask)
+# Use this if you want to deploy only the API server on Railway
+web: python api_server.py
+
