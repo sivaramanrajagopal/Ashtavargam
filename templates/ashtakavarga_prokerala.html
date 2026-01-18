@@ -616,6 +616,29 @@
             color: #c62828;
         }
         
+        /* Highlight planet's natural house in overall BAV (same as individual tabs) */
+        .overall-bav-mini-cell.planet-natural-house {
+            background: #e8f5e9;
+            border: 3px solid #4caf50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* Combined: natural house + strength (same as individual tabs) */
+        .overall-bav-mini-cell.planet-natural-house.high {
+            background: #a5d6a7;
+            border-color: #2e7d32;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.medium {
+            background: #fff59d;
+            border-color: #f57f17;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.low {
+            background: #ef9a9a;
+            border-color: #c62828;
+        }
+        
         .overall-bav-mini-cell.central.high {
             background: #fff9e6;
             border-color: #4caf50;
@@ -1073,22 +1096,9 @@
         </div>
         
         <!-- SAV Section -->
-        <div class="section" id="savSection">
-            <h2>Sarvashtakavarga Chart and Score</h2>
-            <p style="color: #666; margin-bottom: 20px;">Given below are the Sarvashtakavarga (Complete Ashtakavarga) chart and scores corresponding to all the planets.</p>
-            
-            <!-- SAV Grid -->
-            <div class="sav-grid-container">
-                <div class="sav-grid" id="savGrid">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </div>
-            
-            <!-- SAV Table -->
-            <h3>Sarvashtakavarga Table</h3>
-            <table class="sav-table" id="savTable">
-                <!-- Will be populated by JavaScript -->
-            </table>
+        <!-- SAV Section removed from individual planet tabs - now only shown in Overall BAV and SAV tab -->
+        <div class="section" id="savSection" style="display: none;">
+            <!-- This section is hidden - SAV is now only shown in Overall BAV and SAV Comparison tab -->
         </div>
     </div>
 
@@ -1592,7 +1602,7 @@
                         // Show individual planet section
                         document.getElementById('overallSection').style.display = 'none';
                         document.getElementById('interpretationsSection').style.display = 'none';
-                        document.getElementById('savSection').style.display = 'block';
+                        document.getElementById('savSection').style.display = 'none';
                         document.querySelectorAll('.bav-section').forEach(section => {
                             section.style.display = 'none';
                         });
@@ -1670,29 +1680,29 @@
                 
                 // Fixed RASI Layout (same as individual BAV grids):
                 // Top row: Meenam(12), Mesham(1), Rishabam(2), Mithunam(3)
-                html += `<div class="overall-bav-mini-cell top-1${getCellClassWithHighlight(12, getRasiValue(12))}">${getRasiValue(12)}</div>`;
-                html += `<div class="overall-bav-mini-cell top-2${getCellClassWithHighlight(1, getRasiValue(1))}">${getRasiValue(1)}</div>`;
-                html += `<div class="overall-bav-mini-cell top-3${getCellClassWithHighlight(2, getRasiValue(2))}">${getRasiValue(2)}</div>`;
-                html += `<div class="overall-bav-mini-cell top-4${getCellClassWithHighlight(3, getRasiValue(3))}">${getRasiValue(3)}</div>`;
+                html += `<div class="overall-bav-mini-cell top-1 ${getCellClassWithHighlight(12, getRasiValue(12))}">${getRasiValue(12)}</div>`;
+                html += `<div class="overall-bav-mini-cell top-2 ${getCellClassWithHighlight(1, getRasiValue(1))}">${getRasiValue(1)}</div>`;
+                html += `<div class="overall-bav-mini-cell top-3 ${getCellClassWithHighlight(2, getRasiValue(2))}">${getRasiValue(2)}</div>`;
+                html += `<div class="overall-bav-mini-cell top-4 ${getCellClassWithHighlight(3, getRasiValue(3))}">${getRasiValue(3)}</div>`;
                 
                 // Row 2: Kumbam(11), CENTRAL (spans 2), Kadagam(4)
-                html += `<div class="overall-bav-mini-cell middle-left${getCellClassWithHighlight(11, getRasiValue(11))}">${getRasiValue(11)}</div>`;
+                html += `<div class="overall-bav-mini-cell middle-left ${getCellClassWithHighlight(11, getRasiValue(11))}">${getRasiValue(11)}</div>`;
                 html += `<div class="overall-bav-mini-cell central ${centralClass}">
                     <div class="planet-name">${planetNames[planet]}</div>
                     <div class="total">Total: ${total}</div>
                 </div>`;
-                html += `<div class="overall-bav-mini-cell middle-right${getCellClassWithHighlight(4, getRasiValue(4))}">${getRasiValue(4)}</div>`;
+                html += `<div class="overall-bav-mini-cell middle-right ${getCellClassWithHighlight(4, getRasiValue(4))}">${getRasiValue(4)}</div>`;
                 
                 // Row 3: Magaram(10), CENTRAL (spans 2), Simmam(5)
-                html += `<div class="overall-bav-mini-cell row3-left${getCellClassWithHighlight(10, getRasiValue(10))}">${getRasiValue(10)}</div>`;
+                html += `<div class="overall-bav-mini-cell row3-left ${getCellClassWithHighlight(10, getRasiValue(10))}">${getRasiValue(10)}</div>`;
                 // Center already rendered, skip
-                html += `<div class="overall-bav-mini-cell row3-right${getCellClassWithHighlight(5, getRasiValue(5))}">${getRasiValue(5)}</div>`;
+                html += `<div class="overall-bav-mini-cell row3-right ${getCellClassWithHighlight(5, getRasiValue(5))}">${getRasiValue(5)}</div>`;
                 
                 // Bottom row: Dhanusu(9), Viruchigam(8), Thulam(7), Kanni(6)
-                html += `<div class="overall-bav-mini-cell bottom-1${getCellClassWithHighlight(9, getRasiValue(9))}">${getRasiValue(9)}</div>`;
-                html += `<div class="overall-bav-mini-cell bottom-2${getCellClassWithHighlight(8, getRasiValue(8))}">${getRasiValue(8)}</div>`;
-                html += `<div class="overall-bav-mini-cell bottom-3${getCellClassWithHighlight(7, getRasiValue(7))}">${getRasiValue(7)}</div>`;
-                html += `<div class="overall-bav-mini-cell bottom-4${getCellClassWithHighlight(6, getRasiValue(6))}">${getRasiValue(6)}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-1 ${getCellClassWithHighlight(9, getRasiValue(9))}">${getRasiValue(9)}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-2 ${getCellClassWithHighlight(8, getRasiValue(8))}">${getRasiValue(8)}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-3 ${getCellClassWithHighlight(7, getRasiValue(7))}">${getRasiValue(7)}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-4 ${getCellClassWithHighlight(6, getRasiValue(6))}">${getRasiValue(6)}</div>`;
                 
                 html += `</div></div>`;
             });
@@ -1723,30 +1733,30 @@
             
             // Fixed RASI Layout (same as BAV grids):
             // Top row: Meenam(12), Mesham(1), Rishabam(2), Mithunam(3)
-            html += `<div class="overall-bav-mini-cell top-1${getSAVCellClass(getSAVRasiValue(12))}">${getSAVRasiValue(12)}</div>`;
-            html += `<div class="overall-bav-mini-cell top-2${getSAVCellClass(getSAVRasiValue(1))}">${getSAVRasiValue(1)}</div>`;
-            html += `<div class="overall-bav-mini-cell top-3${getSAVCellClass(getSAVRasiValue(2))}">${getSAVRasiValue(2)}</div>`;
-            html += `<div class="overall-bav-mini-cell top-4${getSAVCellClass(getSAVRasiValue(3))}">${getSAVRasiValue(3)}</div>`;
+            html += `<div class="overall-bav-mini-cell top-1 ${getSAVCellClass(getSAVRasiValue(12))}">${getSAVRasiValue(12)}</div>`;
+            html += `<div class="overall-bav-mini-cell top-2 ${getSAVCellClass(getSAVRasiValue(1))}">${getSAVRasiValue(1)}</div>`;
+            html += `<div class="overall-bav-mini-cell top-3 ${getSAVCellClass(getSAVRasiValue(2))}">${getSAVRasiValue(2)}</div>`;
+            html += `<div class="overall-bav-mini-cell top-4 ${getSAVCellClass(getSAVRasiValue(3))}">${getSAVRasiValue(3)}</div>`;
             
             // Row 2: Kumbam(11), CENTRAL (spans 2), Kadagam(4)
-            html += `<div class="overall-bav-mini-cell middle-left${getSAVCellClass(getSAVRasiValue(11))}">${getSAVRasiValue(11)}</div>`;
+            html += `<div class="overall-bav-mini-cell middle-left ${getSAVCellClass(getSAVRasiValue(11))}">${getSAVRasiValue(11)}</div>`;
             html += `<div class="overall-bav-mini-cell central ${savCentralClass}">
                 <div class="planet-name">Sarva</div>
                 <div class="planet-name">Ashtakavarga</div>
                 <div class="total">Total: ${savTotal}</div>
             </div>`;
-            html += `<div class="overall-bav-mini-cell middle-right${getSAVCellClass(getSAVRasiValue(4))}">${getSAVRasiValue(4)}</div>`;
+            html += `<div class="overall-bav-mini-cell middle-right ${getSAVCellClass(getSAVRasiValue(4))}">${getSAVRasiValue(4)}</div>`;
             
             // Row 3: Magaram(10), CENTRAL (spans 2), Simmam(5)
-            html += `<div class="overall-bav-mini-cell row3-left${getSAVCellClass(getSAVRasiValue(10))}">${getSAVRasiValue(10)}</div>`;
+            html += `<div class="overall-bav-mini-cell row3-left ${getSAVCellClass(getSAVRasiValue(10))}">${getSAVRasiValue(10)}</div>`;
             // Center already rendered, skip
-            html += `<div class="overall-bav-mini-cell row3-right${getSAVCellClass(getSAVRasiValue(5))}">${getSAVRasiValue(5)}</div>`;
+            html += `<div class="overall-bav-mini-cell row3-right ${getSAVCellClass(getSAVRasiValue(5))}">${getSAVRasiValue(5)}</div>`;
             
             // Bottom row: Dhanusu(9), Viruchigam(8), Thulam(7), Kanni(6)
-            html += `<div class="overall-bav-mini-cell bottom-1${getSAVCellClass(getSAVRasiValue(9))}">${getSAVRasiValue(9)}</div>`;
-            html += `<div class="overall-bav-mini-cell bottom-2${getSAVCellClass(getSAVRasiValue(8))}">${getSAVRasiValue(8)}</div>`;
-            html += `<div class="overall-bav-mini-cell bottom-3${getSAVCellClass(getSAVRasiValue(7))}">${getSAVRasiValue(7)}</div>`;
-            html += `<div class="overall-bav-mini-cell bottom-4${getSAVCellClass(getSAVRasiValue(6))}">${getSAVRasiValue(6)}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-1 ${getSAVCellClass(getSAVRasiValue(9))}">${getSAVRasiValue(9)}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-2 ${getSAVCellClass(getSAVRasiValue(8))}">${getSAVRasiValue(8)}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-3 ${getSAVCellClass(getSAVRasiValue(7))}">${getSAVRasiValue(7)}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-4 ${getSAVCellClass(getSAVRasiValue(6))}">${getSAVRasiValue(6)}</div>`;
             
             html += `</div></div>`;
             html += `</div>`;
