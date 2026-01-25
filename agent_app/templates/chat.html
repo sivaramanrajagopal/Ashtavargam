@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Vedic Astrology AI Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #343541;
+            color: #ececf1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #202123;
+            padding: 15px 20px;
+            border-bottom: 1px solid #4d4d4f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .header h1 {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-header {
+            padding: 8px 16px;
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 6px;
+            color: #ececf1;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+        
+        .btn-header:hover {
+            background: #565869;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #40414f;
+            border-radius: 12px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #565869;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5em;
+            color: #ececf1;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: #ececf1;
+        }
+        
+        .modal-section {
+            margin-bottom: 30px;
+        }
+        
+        .modal-section h3 {
+            color: #10a37f;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #343541;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .data-table th {
+            background: #202123;
+            color: #ececf1;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #565869;
+        }
+        
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #565869;
+            color: #d1d5db;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:hover {
+            background: #2d2d2d;
+        }
+        
+        .dasha-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .dasha-card {
+            background: #343541;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #10a37f;
+        }
+        
+        .dasha-card-label {
+            font-size: 0.85em;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+        
+        .dasha-card-value {
+            font-size: 1.1em;
+            color: #ececf1;
+            font-weight: 600;
+        }
+        
+        .loading-modal {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+        }
+        
+        .rag-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .rag-green {
+            background: #10a37f;
+        }
+        
+        .rag-amber {
+            background: #f59e0b;
+        }
+        
+        .rag-red {
+            background: #ef4444;
+        }
+        
+        /* Tree Structure Styles */
+        .dasha-tree {
+            margin-top: 20px;
+        }
+        
+        .tree-node {
+            margin-bottom: 2px;
+        }
+        
+        .tree-parent {
+            background: #343541;
+            border: 1px solid #565869;
+            border-radius: 6px;
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        
+        .tree-parent:hover {
+            background: #3d3e4f;
+        }
+        
+        .tree-parent.expanded {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: none;
+        }
+        
+        .tree-toggle {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #9ca3af;
+            font-size: 0.9em;
+            transition: transform 0.2s;
+        }
+        
+        .tree-parent.expanded .tree-toggle {
+            transform: rotate(90deg);
+        }
+        
+        .tree-label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            color: #ececf1;
+        }
+        
+        .tree-children {
+            display: none;
+            background: #2d2d2d;
+            border: 1px solid #565869;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 5px 0;
+        }
+        
+        .tree-parent.expanded + .tree-children {
+            display: block;
+        }
+        
+        .tree-child {
+            padding: 10px 15px 10px 50px;
+            border-bottom: 1px solid #40414f;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.2s;
+        }
+        
+        .tree-child:last-child {
+            border-bottom: none;
+        }
+        
+        .tree-child:hover {
+            background: #343541;
+        }
+        
+        .tree-child.current {
+            background: rgba(16, 163, 127, 0.2);
+            border-left: 3px solid #10a37f;
+            font-weight: 600;
+        }
+        
+        .tree-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 120px 1fr 1fr 100px;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .tree-info-label {
+            font-size: 0.85em;
+            color: #9ca3af;
+        }
+        
+        .tree-info-value {
+            color: #d1d5db;
+        }
+        
+        .tree-child .tree-info {
+            grid-template-columns: 1fr 1fr 100px;
+        }
+        
+        .tree-child .tree-info-value:first-child {
+            font-weight: 500;
+            color: #ececf1;
+        }
+        
+        .setup-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .setup-section.hidden {
+            display: none;
+        }
+        
+        .setup-form {
+            background: #40414f;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .setup-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #d1d5db;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #565869;
+            border: 1px solid #6e6e80;
+            border-radius: 6px;
+            color: #ececf1;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #10a37f;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #10a37f;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: #0d8f6e;
+        }
+        
+        .btn-primary:disabled {
+            background: #565869;
+            cursor: not-allowed;
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .chat-container.hidden {
+            display: none;
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+        
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .messages-container::-webkit-scrollbar-track {
+            background: #343541;
+        }
+        
+        .messages-container::-webkit-scrollbar-thumb {
+            background: #565869;
+            border-radius: 4px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .message.user {
+            background: #343541;
+        }
+        
+        .message.assistant {
+            background: #444654;
+        }
+        
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .message.user .message-avatar {
+            background: #10a37f;
+        }
+        
+        .message.assistant .message-avatar {
+            background: #5436da;
+        }
+        
+        .message-content {
+            flex: 1;
+            line-height: 1.6;
+        }
+        
+        .message-content pre {
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .message-content code {
+            background: #2d2d2d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .citations {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #565869;
+            font-size: 0.85em;
+            color: #9ca3af;
+        }
+        
+        .citations strong {
+            color: #d1d5db;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 20px 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .typing-indicator.hidden {
+            display: none;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .suggestions {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .suggestions.hidden {
+            display: none;
+        }
+        
+        .suggestions-title {
+            font-size: 0.9em;
+            color: #9ca3af;
+            margin-bottom: 10px;
+        }
+        
+        .suggestion-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .suggestion-btn {
+            padding: 10px 16px;
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 6px;
+            color: #ececf1;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+        
+        .suggestion-btn:hover {
+            background: #565869;
+        }
+        
+        .input-container {
+            padding: 20px;
+            background: #343541;
+            border-top: 1px solid #4d4d4f;
+            flex-shrink: 0;
+        }
+        
+        .input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .input-box {
+            flex: 1;
+            padding: 14px;
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 12px;
+            color: #ececf1;
+            font-size: 16px;
+            resize: none;
+            min-height: 50px;
+            max-height: 200px;
+            font-family: inherit;
+        }
+        
+        .input-box:focus {
+            outline: none;
+            border-color: #10a37f;
+        }
+        
+        .input-box::placeholder {
+            color: #9ca3af;
+        }
+        
+        .send-btn {
+            padding: 14px 24px;
+            background: #10a37f;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .send-btn:hover {
+            background: #0d8f6e;
+        }
+        
+        .send-btn:disabled {
+            background: #565869;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            background: #dc2626;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 10px 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .message {
+                padding: 15px 10px;
+            }
+            
+            .input-wrapper {
+                padding: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>🕉️ Vedic Astrology AI Chat</h1>
+        <div class="header-actions">
+            <button class="btn-header" id="dashaGocharaBtn" disabled>📊 Dasha & Gochara</button>
+            <button class="btn-header" id="dashaBhuktiBtn" disabled>📅 Dasha Bhukti</button>
+            <button class="btn-header" id="transitDateBtn" disabled>📆 Transit Date</button>
+            <button class="btn-header" onclick="resetChat()">New Chat</button>
+            <button class="btn-header" onclick="showSetup()">Change Details</button>
+        </div>
+    </div>
+    
+    <!-- Setup Section -->
+    <div class="setup-section" id="setupSection">
+        <div class="setup-form">
+            <h2>Enter Your Birth Details</h2>
+            <form id="birthForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name (Optional)</label>
+                        <input type="text" id="name" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time of Birth *</label>
+                        <input type="time" id="tob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Place</label>
+                        <input type="text" id="place" placeholder="City, Country">
+                    </div>
+                    <div class="form-group">
+                        <label>Latitude *</label>
+                        <input type="number" id="lat" step="0.0001" placeholder="e.g., 13.0827" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude *</label>
+                        <input type="number" id="lon" step="0.0001" placeholder="e.g., 80.2707" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Timezone Offset *</label>
+                        <input type="number" id="tz_offset" step="0.1" value="5.5" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" id="startBtn">Start Chat</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Chat Container -->
+    <div class="chat-container hidden" id="chatContainer">
+        <div class="messages-container" id="messagesContainer">
+            <!-- Messages will be added here -->
+        </div>
+        
+        <div class="suggestions hidden" id="suggestions">
+            <div class="suggestions-title">Suggested questions:</div>
+            <div class="suggestion-buttons" id="suggestionButtons"></div>
+        </div>
+        
+        <div class="typing-indicator hidden" id="typingIndicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+        
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    class="input-box" 
+                    placeholder="Ask me anything about your chart..."
+                    rows="1"
+                ></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dasha & Gochara Modal -->
+    <div class="modal-overlay" id="dashaGocharaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Current Dasha & Gochara (Transits)</h2>
+                <button class="modal-close" onclick="closeModal('dashaGocharaModal')">&times;</button>
+            </div>
+            <div id="modalBody">
+                <div class="loading-modal">
+                    <p>Loading Dasha and Gochara data...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dasha Bhukti Table Modal -->
+    <div class="modal-overlay" id="dashaBhuktiModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📅 Dasha Bhukti Periods</h2>
+                <button class="modal-close" onclick="closeModal('dashaBhuktiModal')">&times;</button>
+            </div>
+            <div id="dashaBhuktiModalBody">
+                <div class="loading-modal">
+                    <p>Loading Dasha Bhukti table...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transit Date Picker Modal -->
+    <div class="modal-overlay" id="transitDateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📆 Planetary Transits for Selected Date</h2>
+                <button class="modal-close" onclick="closeModal('transitDateModal')">&times;</button>
+            </div>
+            <div id="transitDateModalBody">
+                <div class="modal-section">
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                        <label style="color: #d1d5db; font-weight: 500;">Select Date:</label>
+                        <input type="date" id="transitDatePicker" style="padding: 10px; background: #343541; border: 1px solid #565869; border-radius: 6px; color: #ececf1; font-size: 1em;">
+                        <button class="btn-header" onclick="fetchTransitsForDate()" style="padding: 10px 20px;">View Transits</button>
+                    </div>
+                    <div id="transitDateResults">
+                        <div class="loading-modal">
+                            <p>Select a date and click "View Transits" to see planetary transits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = window.location.origin;
+        const DASHA_GOCHARA_API = 'http://localhost:8001'; // Dasha/Gochara API base URL
+        let sessionId = null;
+        let isProcessing = false;
+        let birthData = null; // Store birth data for modal
+        
+        // Generic modal close function (must be defined early for inline onclick handlers)
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        // Make functions globally available for inline onclick handlers
+        window.closeModal = closeModal;
+        
+        // Auto-resize textarea
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+        });
+        
+        // Enter to send (Shift+Enter for new line)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Form submission
+        document.getElementById('birthForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await startChat();
+        });
+        
+        async function startChat() {
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+            btn.textContent = 'Initializing...';
+            
+            try {
+                birthData = {
+                    dob: document.getElementById('dob').value,
+                    tob: document.getElementById('tob').value,
+                    lat: parseFloat(document.getElementById('lat').value),
+                    lon: parseFloat(document.getElementById('lon').value),
+                    tz_offset: parseFloat(document.getElementById('tz_offset').value),
+                    name: document.getElementById('name').value || undefined,
+                    place: document.getElementById('place').value || undefined
+                };
+                
+                const response = await fetch(`${API_BASE}/api/chat/start`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({birth_data: birthData})
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to start chat');
+                }
+                
+                const data = await response.json();
+                sessionId = data.session_id;
+                
+                // Hide setup, show chat
+                document.getElementById('setupSection').classList.add('hidden');
+                document.getElementById('chatContainer').classList.remove('hidden');
+                
+                // Show welcome message
+                addMessage('assistant', data.message);
+                
+                // Show suggestions
+                showSuggestions(data.suggestions);
+                
+                // Enable all header buttons
+                document.getElementById('dashaGocharaBtn').disabled = false;
+                document.getElementById('dashaBhuktiBtn').disabled = false;
+                document.getElementById('transitDateBtn').disabled = false;
+                
+            } catch (error) {
+                showError('Failed to start chat. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'Start Chat';
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || isProcessing || !sessionId) return;
+            
+            // Clear input
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Add user message
+            addMessage('user', message);
+            
+            // Hide suggestions
+            document.getElementById('suggestions').classList.add('hidden');
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Disable input
+            isProcessing = true;
+            document.getElementById('sendBtn').disabled = true;
+            messageInput.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/chat/message`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: message
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({detail: response.statusText}));
+                    throw new Error(errorData.detail || 'Failed to get response');
+                }
+                
+                const data = await response.json();
+                
+                // Hide typing
+                hideTyping();
+                
+                // Add assistant message
+                addMessage('assistant', data.response, data.citations);
+                
+                // Show suggestions if available
+                if (data.suggestions && data.suggestions.length > 0) {
+                    showSuggestions(data.suggestions);
+                }
+                
+            } catch (error) {
+                hideTyping();
+                showError(`Error: ${error.message}`);
+            } finally {
+                isProcessing = false;
+                document.getElementById('sendBtn').disabled = false;
+                messageInput.disabled = false;
+                messageInput.focus();
+            }
+        }
+        
+        function addMessage(role, content, citations = []) {
+            const container = document.getElementById('messagesContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const avatar = role === 'user' ? '👤' : '🕉️';
+            const avatarBg = role === 'user' ? '#10a37f' : '#5436da';
+            
+            let citationsHtml = '';
+            if (citations && citations.length > 0) {
+                citationsHtml = `<div class="citations"><strong>Sources:</strong> ${citations.join(', ')}</div>`;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar" style="background: ${avatarBg}">${avatar}</div>
+                <div class="message-content">
+                    ${formatMessage(content)}
+                    ${citationsHtml}
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function formatMessage(text) {
+            // Simple markdown-like formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        function showSuggestions(suggestions) {
+            const container = document.getElementById('suggestionButtons');
+            container.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const btn = document.createElement('button');
+                btn.className = 'suggestion-btn';
+                btn.textContent = suggestion;
+                btn.onclick = () => {
+                    document.getElementById('messageInput').value = suggestion;
+                    sendMessage();
+                };
+                container.appendChild(btn);
+            });
+            
+            document.getElementById('suggestions').classList.remove('hidden');
+        }
+        
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.remove('hidden');
+            const container = document.getElementById('messagesContainer');
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.add('hidden');
+        }
+        
+        function showError(message) {
+            const container = document.getElementById('messagesContainer');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            container.appendChild(errorDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function resetChat() {
+            if (confirm('Start a new chat? This will clear the conversation history.')) {
+                if (sessionId) {
+                    fetch(`${API_BASE}/api/chat/reset/${sessionId}`, {method: 'POST'})
+                        .catch(() => {});
+                }
+                location.reload();
+            }
+        }
+        
+        function showSetup() {
+            document.getElementById('chatContainer').classList.add('hidden');
+            document.getElementById('setupSection').classList.remove('hidden');
+        }
+        
+        // Make functions globally available for inline onclick handlers
+        window.resetChat = resetChat;
+        window.showSetup = showSetup;
+        
+        // Generic modal close function (must be defined before modals use it)
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        // Dasha & Gochara Modal
+        const dashaGocharaBtn = document.getElementById('dashaGocharaBtn');
+        if (dashaGocharaBtn) {
+            dashaGocharaBtn.addEventListener('click', () => {
+                if (!birthData) {
+                    alert('Please start a chat session first');
+                    return;
+                }
+                openDashaGocharaModal();
+            });
+        }
+        
+        // Close modals on overlay click
+        ['dashaGocharaModal', 'dashaBhuktiModal', 'transitDateModal'].forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target.id === modalId) {
+                        closeModal(modalId);
+                    }
+                });
+            }
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal('dashaGocharaModal');
+                closeModal('dashaBhuktiModal');
+                closeModal('transitDateModal');
+            }
+        });
+        
+        // Dasha Bhukti button
+        const dashaBhuktiBtn = document.getElementById('dashaBhuktiBtn');
+        if (dashaBhuktiBtn) {
+            dashaBhuktiBtn.addEventListener('click', () => {
+                if (!birthData) {
+                    alert('Please start a chat session first');
+                    return;
+                }
+                try {
+                    openDashaBhuktiModal();
+                } catch (error) {
+                    console.error('Error opening Dasha Bhukti modal:', error);
+                    alert('Error opening Dasha Bhukti popup: ' + error.message);
+                }
+            });
+        }
+        
+        // Transit Date button
+        const transitDateBtn = document.getElementById('transitDateBtn');
+        if (transitDateBtn) {
+            transitDateBtn.addEventListener('click', () => {
+                if (!birthData) {
+                    alert('Please start a chat session first');
+                    return;
+                }
+                try {
+                    openTransitDatePickerModal();
+                } catch (error) {
+                    console.error('Error opening Transit Date modal:', error);
+                    alert('Error opening Transit Date popup: ' + error.message);
+                }
+            });
+        }
+        
+        async function openDashaGocharaModal() {
+            const modal = document.getElementById('dashaGocharaModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div class="loading-modal"><p>Loading Dasha and Gochara data...</p></div>';
+            
+            try {
+                // Fetch Dasha data
+                const dashaResponse = await fetch(`${DASHA_GOCHARA_API}/api/v1/dasha/current`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        dob: birthData.dob,
+                        tob: birthData.tob,
+                        lat: birthData.lat,
+                        lon: birthData.lon,
+                        tz_offset: birthData.tz_offset
+                    })
+                });
+                
+                // Fetch Gochara data
+                const gocharaResponse = await fetch(`${DASHA_GOCHARA_API}/api/v1/gochara/current`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        dob: birthData.dob,
+                        tob: birthData.tob,
+                        lat: birthData.lat,
+                        lon: birthData.lon,
+                        tz_offset: birthData.tz_offset
+                    })
+                });
+                
+                if (!dashaResponse.ok || !gocharaResponse.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                
+                const dashaData = await dashaResponse.json();
+                const gocharaData = await gocharaResponse.json();
+                
+                // Render the modal content
+                renderDashaGocharaModal(dashaData, gocharaData);
+                
+            } catch (error) {
+                modalBody.innerHTML = `
+                    <div class="loading-modal">
+                        <p style="color: #ef4444;">Error loading data: ${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the Dasha/Gochara API is running on port 8001</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderDashaGocharaModal(dashaData, gocharaData) {
+            const modalBody = document.getElementById('modalBody');
+            
+            // Format Dasha info
+            const dashaHtml = `
+                <div class="modal-section">
+                    <h3>🕉️ Current Dasha Period</h3>
+                    <div class="dasha-info">
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">Current Dasha</div>
+                            <div class="dasha-card-value">${dashaData.current_dasa || 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">Current Bhukti</div>
+                            <div class="dasha-card-value">${dashaData.current_bhukti || 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">Start Date</div>
+                            <div class="dasha-card-value">${dashaData.start_date || 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">End Date</div>
+                            <div class="dasha-card-value">${dashaData.end_date || 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">Remaining Years</div>
+                            <div class="dasha-card-value">${dashaData.remaining_years ? dashaData.remaining_years.toFixed(2) : 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card">
+                            <div class="dasha-card-label">Current Age</div>
+                            <div class="dasha-card-value">${dashaData.age ? dashaData.age.toFixed(2) : 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Format Gochara table using reusable function
+            const transitAnalysis = gocharaData.transit_analysis || [];
+            const overallHealth = gocharaData.overall_health || {};
+            
+            const gocharaHtml = `
+                <div class="modal-section">
+                    <h3>🌍 Current Gochara (Transits)</h3>
+                    ${renderTransitTable(transitAnalysis, overallHealth, true)}
+                </div>
+            `;
+            
+            modalBody.innerHTML = dashaHtml + gocharaHtml;
+        }
+        
+        // Extract reusable transit table rendering
+        function renderTransitTable(transitAnalysis, overallHealth, showExplanation = true) {
+            const overallRag = overallHealth.rag || {};
+            const overallStatus = overallRag.status || overallRag.label || overallHealth.status || 'N/A';
+            const overallStatusLabel = overallRag.label || overallRag.status || 'N/A';
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <div class="dasha-card" style="display: inline-block; margin-right: 15px;">
+                        <div class="dasha-card-label">Overall Health Score</div>
+                        <div class="dasha-card-value">${overallHealth.average_score ? overallHealth.average_score.toFixed(1) : 'N/A'}/100</div>
+                    </div>
+                    <div class="dasha-card" style="display: inline-block;">
+                        <div class="dasha-card-label">Status</div>
+                        <div class="dasha-card-value">${overallStatusLabel}</div>
+                    </div>
+                    ${overallHealth.green_count !== undefined ? `
+                    <div class="dasha-card" style="display: inline-block; margin-left: 15px;">
+                        <div class="dasha-card-label">Planets: 🟢 ${overallHealth.green_count || 0} | 🟡 ${overallHealth.amber_count || 0} | 🔴 ${overallHealth.red_count || 0}</div>
+                    </div>
+                    ` : ''}
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Planet</th>
+                            <th>Natal House</th>
+                            <th>Transit House</th>
+                            <th>Transit Sign</th>
+                            <th>Nakshatra</th>
+                            <th>Pada</th>
+                            <th>Score</th>
+                            <th>RAG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            transitAnalysis.forEach(transit => {
+                const rag = transit.rag || {};
+                const ragStatus = rag.status || 'N/A';
+                const ragClass = ragStatus === 'GREEN' ? 'rag-green' : 
+                                ragStatus === 'AMBER' ? 'rag-amber' : 'rag-red';
+                
+                html += `
+                    <tr>
+                        <td><strong>${transit.planet}</strong></td>
+                        <td>H${transit.natal_house}</td>
+                        <td>H${transit.transit_house}</td>
+                        <td>${transit.transit_sign || 'N/A'}</td>
+                        <td>${transit.nakshatra || 'N/A'}</td>
+                        <td>${transit.pada || 'N/A'}</td>
+                        <td>${transit.score ? transit.score.toFixed(1) : 'N/A'}</td>
+                        <td><span class="rag-indicator ${ragClass}"></span>${ragStatus}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            if (showExplanation) {
+                html += `
+                    <div style="margin-top: 25px; padding: 20px; background: #343541; border-radius: 8px; border-left: 4px solid #10a37f;">
+                        <h4 style="color: #10a37f; margin-bottom: 15px; font-size: 1.1em;">📊 How Scores & RAG Status Are Calculated</h4>
+                        <div style="color: #d1d5db; line-height: 1.8; font-size: 0.9em;">
+                            <p><strong>Transit Score (0-100):</strong> Calculated based on multiple factors:</p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>House Quality (60% weight):</strong>
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>Kendra + Trikona (House 1): 100 points</li>
+                                        <li>Trikona (Houses 5, 9): 90 points</li>
+                                        <li>Kendra (Houses 4, 7, 10): 80 points</li>
+                                        <li>Upachaya (Houses 3, 6, 10, 11): 70 points</li>
+                                        <li>Dusthana (Houses 6, 8, 12): 30 points</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Planetary Dignity (40% weight):</strong>
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>Exalted: 100 points</li>
+                                        <li>Own Sign: 90 points</li>
+                                        <li>Friend's Sign: 70 points</li>
+                                        <li>Neutral: 50 points</li>
+                                        <li>Enemy's Sign: 30 points</li>
+                                        <li>Debilitated: 10 points</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Planetary Nature Modifiers:</strong> Benefic planets get +10 in auspicious houses, Malefic planets get +10 in Upachaya houses</li>
+                                <li><strong>Retrograde Modifier:</strong> 0.9x multiplier if planet is retrograde (except Rahu/Ketu)</li>
+                            </ul>
+                            <p style="margin-top: 15px;"><strong>RAG Status:</strong></p>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>🟢 GREEN (Score ≥ 70):</strong> Positive/Supportive transit - favorable period for the house matters</li>
+                                <li><strong>🟡 AMBER (Score 40-69):</strong> Neutral/Mixed transit - balanced influences, requires careful approach</li>
+                                <li><strong>🔴 RED (Score < 40):</strong> Challenging transit - difficult period, exercise caution</li>
+                            </ul>
+                            <p style="margin-top: 15px; color: #9ca3af; font-size: 0.85em;">
+                                <em>Note: Overall Health Score is the average of all planetary transit scores. Status is determined by the overall average score using the same RAG thresholds.</em>
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+        
+        async function openDashaBhuktiModal() {
+            const modal = document.getElementById('dashaBhuktiModal');
+            const modalBody = document.getElementById('dashaBhuktiModalBody');
+            
+            if (!modal || !modalBody) {
+                console.error('Modal elements not found');
+                alert('Error: Modal elements not found');
+                return;
+            }
+            
+            if (!birthData) {
+                alert('Please start a chat session first');
+                return;
+            }
+            
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div class="loading-modal"><p>Loading Dasha Bhukti table...</p></div>';
+            
+            try {
+                console.log('Fetching Dasha Bhukti data...');
+                console.log('Birth data:', {dob: birthData.dob, tob: birthData.tob, lat: birthData.lat, lon: birthData.lon});
+                
+                // First, check if API is accessible
+                try {
+                    const healthCheck = await fetch(`${DASHA_GOCHARA_API}/health`);
+                    if (!healthCheck.ok) {
+                        throw new Error('API health check failed');
+                    }
+                    console.log('✅ API is accessible');
+                } catch (e) {
+                    throw new Error(`Cannot reach Dasha/Gochara API at ${DASHA_GOCHARA_API}. Is the server running?`);
+                }
+                
+                // Fetch current Dasha to highlight (optional, don't fail if this fails)
+                let currentDasha = null;
+                try {
+                    const currentDashaResponse = await fetch(`${DASHA_GOCHARA_API}/api/v1/dasha/current`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            dob: birthData.dob,
+                            tob: birthData.tob,
+                            lat: birthData.lat,
+                            lon: birthData.lon,
+                            tz_offset: birthData.tz_offset
+                        })
+                    });
+                    
+                    if (currentDashaResponse.ok) {
+                        currentDasha = await currentDashaResponse.json();
+                        console.log('✅ Current Dasha fetched');
+                    } else {
+                        console.warn('⚠️ Current Dasha fetch failed (optional)');
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch current Dasha (optional):', e);
+                }
+                
+                // Fetch Dasha Bhukti table
+                const apiUrl = `${DASHA_GOCHARA_API}/api/v1/dasha/bhukti`;
+                console.log('Fetching from:', apiUrl);
+                
+                const requestBody = {
+                    dob: birthData.dob,
+                    tob: birthData.tob,
+                    lat: birthData.lat,
+                    lon: birthData.lon,
+                    tz_offset: birthData.tz_offset
+                };
+                console.log('Request body:', requestBody);
+                
+                const bhuktiResponse = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                console.log('Response status:', bhuktiResponse.status, bhuktiResponse.statusText);
+                
+                if (!bhuktiResponse.ok) {
+                    const errorText = await bhuktiResponse.text();
+                    console.error('Error response:', errorText);
+                    let errorDetail = errorText;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorDetail = errorJson.detail || errorText;
+                    } catch (e) {
+                        // Not JSON, use as is
+                    }
+                    throw new Error(`API Error (${bhuktiResponse.status}): ${errorDetail}`);
+                }
+                
+                const bhuktiData = await bhuktiResponse.json();
+                console.log('✅ Dasha Bhukti data received:', {
+                    birth_nakshatra: bhuktiData.birth_nakshatra,
+                    periods_count: bhuktiData.dasa_bhukti_table?.length || 0
+                });
+                
+                // Render the table
+                renderDashaBhuktiTable(bhuktiData, currentDasha);
+                
+            } catch (error) {
+                console.error('❌ Error in openDashaBhuktiModal:', error);
+                modalBody.innerHTML = `
+                    <div class="loading-modal">
+                        <p style="color: #ef4444;">Error loading data: ${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the Dasha/Gochara API is running on port 8001</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #9ca3af;">API URL: ${DASHA_GOCHARA_API}</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #9ca3af;">Check browser console (F12) for detailed error logs.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderDashaBhuktiTable(bhuktiData, currentDasha) {
+            const modalBody = document.getElementById('dashaBhuktiModalBody');
+            const table = bhuktiData.dasa_bhukti_table || [];
+            const currentDasa = currentDasha ? currentDasha.current_dasa : null;
+            const currentBhukti = currentDasha ? currentDasha.current_bhukti : null;
+            
+            // Group periods by Maha Dasha
+            const groupedByDasa = {};
+            table.forEach(period => {
+                if (!groupedByDasa[period.maha_dasa]) {
+                    groupedByDasa[period.maha_dasa] = [];
+                }
+                groupedByDasa[period.maha_dasa].push(period);
+            });
+            
+            // Calculate total duration for each Maha Dasha
+            const dasaTotals = {};
+            Object.keys(groupedByDasa).forEach(dasa => {
+                const periods = groupedByDasa[dasa];
+                const firstPeriod = periods[0];
+                const lastPeriod = periods[periods.length - 1];
+                dasaTotals[dasa] = {
+                    start_date: firstPeriod.start_date,
+                    end_date: lastPeriod.end_date,
+                    duration: periods.reduce((sum, p) => sum + (p.duration || 0), 0)
+                };
+            });
+            
+            let html = `
+                <div class="modal-section">
+                    <div style="margin-bottom: 20px;">
+                        <div class="dasha-card" style="display: inline-block; margin-right: 15px;">
+                            <div class="dasha-card-label">Birth Nakshatra</div>
+                            <div class="dasha-card-value">${bhuktiData.birth_nakshatra || 'N/A'}</div>
+                        </div>
+                        <div class="dasha-card" style="display: inline-block;">
+                            <div class="dasha-card-label">Birth Pada</div>
+                            <div class="dasha-card-value">${bhuktiData.birth_pada || 'N/A'}</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px; padding: 10px; background: #343541; border-radius: 6px; border-left: 4px solid #10a37f;">
+                        <p style="margin: 0; color: #9ca3af; font-size: 0.9em;">
+                            <strong style="color: #ececf1;">Click on a Maha Dasha</strong> to expand/collapse and view its Bhukti periods
+                        </p>
+                    </div>
+                    <div class="dasha-tree">
+            `;
+            
+            // Render tree structure
+            Object.keys(groupedByDasa).forEach((dasa, dasaIndex) => {
+                const periods = groupedByDasa[dasa];
+                const total = dasaTotals[dasa];
+                const isCurrentDasa = currentDasa === dasa;
+                const shouldExpand = isCurrentDasa; // Auto-expand current Dasha
+                
+                html += `
+                    <div class="tree-node">
+                        <div class="tree-parent ${shouldExpand ? 'expanded' : ''}" onclick="toggleDashaNode(this)" data-dasa="${dasa}">
+                            <span class="tree-toggle">▶</span>
+                            <div class="tree-label">
+                                <span style="color: ${isCurrentDasa ? '#10a37f' : '#ececf1'}; font-size: 1.1em;">${dasa} Dasha</span>
+                                <div class="tree-info">
+                                    <div>
+                                        <div class="tree-info-label">Start</div>
+                                        <div class="tree-info-value">${total.start_date || 'N/A'}</div>
+                                    </div>
+                                    <div>
+                                        <div class="tree-info-label">End</div>
+                                        <div class="tree-info-value">${total.end_date || 'N/A'}</div>
+                                    </div>
+                                    <div>
+                                        <div class="tree-info-label">Total</div>
+                                        <div class="tree-info-value">${total.duration ? total.duration.toFixed(2) : 'N/A'} yrs</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tree-children" ${shouldExpand ? '' : 'style="display: none;"'}>
+                `;
+                
+                periods.forEach(period => {
+                    const isCurrent = currentDasa && currentBhukti && 
+                                     period.maha_dasa === currentDasa && 
+                                     period.bhukti === currentBhukti;
+                    
+                    html += `
+                        <div class="tree-child ${isCurrent ? 'current' : ''}">
+                            <div class="tree-info">
+                                <div class="tree-info-value">${period.bhukti}</div>
+                                <div class="tree-info-value">${period.start_date || 'N/A'}</div>
+                                <div class="tree-info-value">${period.end_date || 'N/A'}</div>
+                                <div class="tree-info-value">${period.duration ? period.duration.toFixed(2) : 'N/A'} yrs</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    ${currentDasa && currentBhukti ? `
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(16, 163, 127, 0.1); border-left: 4px solid #10a37f; border-radius: 4px;">
+                        <p style="color: #10a37f; margin: 0;">
+                            <strong>Current Period:</strong> ${currentDasa} Dasha - ${currentBhukti} Bhukti (highlighted in green)
+                        </p>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            modalBody.innerHTML = html;
+        }
+        
+        // Toggle function for expanding/collapsing Dasha nodes
+        function toggleDashaNode(element) {
+            element.classList.toggle('expanded');
+            const children = element.nextElementSibling;
+            if (children && children.classList.contains('tree-children')) {
+                if (element.classList.contains('expanded')) {
+                    children.style.display = 'block';
+                } else {
+                    children.style.display = 'none';
+                }
+            }
+        }
+        
+        // Make toggle function globally available
+        window.toggleDashaNode = toggleDashaNode;
+        
+        function openTransitDatePickerModal() {
+            const modal = document.getElementById('transitDateModal');
+            const datePicker = document.getElementById('transitDatePicker');
+            const resultsDiv = document.getElementById('transitDateResults');
+            
+            if (!modal || !datePicker || !resultsDiv) {
+                console.error('Transit Date modal elements not found');
+                alert('Error: Modal elements not found');
+                return;
+            }
+            
+            if (!birthData) {
+                alert('Please start a chat session first');
+                return;
+            }
+            
+            // Set default to today
+            const today = new Date().toISOString().split('T')[0];
+            datePicker.value = today;
+            datePicker.max = ''; // Allow future dates
+            datePicker.min = ''; // Allow past dates
+            
+            modal.classList.add('active');
+            
+            // Reset results
+            resultsDiv.innerHTML = '<div class="loading-modal"><p>Select a date and click "View Transits" to see planetary transits</p></div>';
+            
+            // Remove any existing event listeners to avoid duplicates
+            const newDatePicker = datePicker.cloneNode(true);
+            datePicker.parentNode.replaceChild(newDatePicker, datePicker);
+            
+            // Allow Enter key to trigger fetch
+            document.getElementById('transitDatePicker').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    fetchTransitsForDate();
+                }
+            });
+        }
+        
+        async function fetchTransitsForDate() {
+            const datePicker = document.getElementById('transitDatePicker');
+            const resultsDiv = document.getElementById('transitDateResults');
+            
+            if (!datePicker || !resultsDiv) {
+                console.error('Transit date picker elements not found');
+                alert('Error: Date picker elements not found');
+                return;
+            }
+            
+            if (!birthData) {
+                alert('Please start a chat session first');
+                return;
+            }
+            
+            const selectedDate = datePicker.value;
+            
+            if (!selectedDate) {
+                alert('Please select a date');
+                return;
+            }
+            
+            resultsDiv.innerHTML = '<div class="loading-modal"><p>Loading transits for ' + selectedDate + '...</p></div>';
+            
+            try {
+                console.log('Fetching transits for date:', selectedDate);
+                
+                // Check API health first
+                try {
+                    const healthCheck = await fetch(`${DASHA_GOCHARA_API}/health`);
+                    if (!healthCheck.ok) {
+                        throw new Error('API health check failed');
+                    }
+                    console.log('✅ API is accessible');
+                } catch (e) {
+                    throw new Error(`Cannot reach Dasha/Gochara API at ${DASHA_GOCHARA_API}. Is the server running?`);
+                }
+                
+                // FastAPI query parameters need to be in the URL
+                const url = `${DASHA_GOCHARA_API}/api/v1/gochara/calculate${selectedDate ? `?transit_date=${selectedDate}` : ''}`;
+                console.log('Fetching from:', url);
+                
+                const requestBody = {
+                    dob: birthData.dob,
+                    tob: birthData.tob,
+                    lat: birthData.lat,
+                    lon: birthData.lon,
+                    tz_offset: birthData.tz_offset
+                };
+                console.log('Request body:', requestBody);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                console.log('Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    let errorDetail = errorText;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorDetail = errorJson.detail || errorText;
+                    } catch (e) {
+                        // Not JSON, use as is
+                    }
+                    throw new Error(`API Error (${response.status}): ${errorDetail}`);
+                }
+                
+                const gocharaData = await response.json();
+                console.log('✅ Transit data received:', {
+                    transit_date: gocharaData.transit_date,
+                    transit_count: gocharaData.transit_analysis?.length || 0,
+                    health_score: gocharaData.overall_health?.average_score
+                });
+                
+                // Render transit table
+                const transitHtml = `
+                    <div class="modal-section">
+                        <h3>🌍 Planetary Transits for ${selectedDate}</h3>
+                        ${renderTransitTable(gocharaData.transit_analysis || [], gocharaData.overall_health || {}, true)}
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML = transitHtml;
+                
+            } catch (error) {
+                console.error('❌ Error in fetchTransitsForDate:', error);
+                resultsDiv.innerHTML = `
+                    <div class="loading-modal">
+                        <p style="color: #ef4444;">Error loading transits: ${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the Dasha/Gochara API is running on port 8001</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #9ca3af;">API URL: ${DASHA_GOCHARA_API}</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #9ca3af;">Check browser console (F12) for detailed error logs.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Make fetchTransitsForDate globally available for inline onclick
+        window.fetchTransitsForDate = fetchTransitsForDate;
+    </script>
+</body>
+</html>
+

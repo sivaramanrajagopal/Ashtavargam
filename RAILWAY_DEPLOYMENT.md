@@ -1,69 +1,107 @@
-# Railway Deployment Guide
+# Railway Deployment Guide for Agent App
 
-## Quick Deploy to Railway
+## Prerequisites
 
-1. **Install Railway CLI** (optional but recommended):
-   ```bash
-   npm i -g @railway/cli
-   ```
+1. Railway account (https://railway.app)
+2. Supabase project set up (see `setup_supabase.md`)
+3. OpenAI API key
+4. BAV/SAV API and Dasha/Gochara API deployed (or local URLs)
 
-2. **Login to Railway**:
-   ```bash
-   railway login
-   ```
+## Step 1: Create Railway Project
 
-3. **Initialize Railway Project**:
-   ```bash
-   railway init
-   ```
+1. Go to Railway dashboard
+2. Click "New Project"
+3. Select "Deploy from GitHub repo" (recommended) or "Empty Project"
 
-4. **Deploy**:
-   ```bash
-   railway up
-   ```
+## Step 2: Configure Environment Variables
 
-## Manual Deployment via GitHub
+In Railway project settings, add these environment variables:
 
-1. **Push code to GitHub repository**
+```
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-service-role-key
+OPENAI_API_KEY=your-openai-api-key
+BAV_SAV_API_URL=https://your-bav-sav-api.railway.app
+DASHA_GOCHARA_API_URL=https://your-dasha-gochara-api.railway.app
+PORT=8080
+```
 
-2. **Go to Railway Dashboard** (https://railway.app)
+## Step 3: Configure Build Settings
 
-3. **Create New Project** → **Deploy from GitHub repo**
+1. In Railway project, go to Settings
+2. Set **Root Directory** (if needed): `/`
+3. Set **Build Command**: `pip install -r requirements_agent.txt`
+4. Set **Start Command**: `uvicorn agent_app.main:app --host 0.0.0.0 --port $PORT`
 
-4. **Select your repository**
+Or use the `Procfile.agent`:
+- Railway will automatically detect `Procfile.agent` if present
+- Or manually set the start command
 
-5. **Railway will automatically detect**:
-   - Python runtime
-   - `Procfile` for web process
-   - `requirements.txt` for dependencies
+## Step 4: Deploy
 
-6. **Set Environment Variables** (if needed):
-   - `PORT` - Automatically set by Railway
-   - `FLASK_ENV` - Set to `production` for production deployments
+1. Connect your GitHub repository
+2. Railway will automatically deploy on push
+3. Or manually trigger deployment
 
-## Configuration Files
+## Step 5: Verify Deployment
 
-- **Procfile**: Defines the web process (`web: python app_complete.py`)
-- **requirements.txt**: Python dependencies including Flask, pyswisseph, gunicorn
-- **app_complete.py**: Main application (automatically reads `PORT` from environment)
+1. Check Railway logs for any errors
+2. Visit your Railway URL (e.g., `https://your-app.railway.app`)
+3. Test the `/health` endpoint
+4. Test the `/api/agent/query` endpoint
 
-## Verification
+## Step 6: Populate Knowledge Base
 
-After deployment, Railway will provide a public URL. Test the app:
-- Home page: `/`
-- Results page: `/ashtakavarga-prokerala`
+After deployment, run the knowledge base population script:
 
-## Mobile & Tablet Support
+```bash
+# SSH into Railway instance or run locally with production Supabase credentials
+python agent_app/knowledge/populate_knowledge_base.py
+```
 
-The app is fully responsive with:
-- Mobile-friendly forms and inputs
-- Scrollable tables on small screens
-- Adaptive grid layouts for BAV charts
-- Touch-optimized navigation
+Or create a one-time deployment script that runs on first deploy.
 
 ## Troubleshooting
 
-- **Build fails**: Check `requirements.txt` - ensure all dependencies are listed
-- **App doesn't start**: Check logs in Railway dashboard
-- **Port issues**: Railway automatically sets `PORT` environment variable
+### Import Errors
+- Ensure all dependencies are in `requirements_agent.txt`
+- Check that Python version is compatible (3.9+)
 
+### Environment Variables
+- Verify all required variables are set in Railway
+- Check for typos in variable names
+- Ensure Supabase and OpenAI keys are valid
+
+### API Connection Issues
+- Verify BAV/SAV and Dasha/Gochara API URLs are correct
+- Check if APIs are accessible from Railway
+- Test API endpoints directly
+
+### Supabase Connection
+- Verify Supabase URL and key
+- Check if pgvector extension is enabled
+- Ensure `vedic_knowledge` table exists
+
+## Production Checklist
+
+- [ ] All environment variables set
+- [ ] Knowledge base populated
+- [ ] API endpoints tested
+- [ ] CORS configured (if needed)
+- [ ] Logging configured
+- [ ] Error handling in place
+- [ ] Health check endpoint working
+- [ ] Frontend accessible
+
+## Custom Domain (Optional)
+
+1. In Railway project, go to Settings → Domains
+2. Add custom domain
+3. Configure DNS records as instructed
+
+## Monitoring
+
+- Check Railway logs regularly
+- Monitor API response times
+- Track OpenAI API usage
+- Monitor Supabase usage

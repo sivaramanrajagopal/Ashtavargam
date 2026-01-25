@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕉️ Vedic Astrology AI Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .input-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .query-section {
+            margin-top: 20px;
+        }
+        
+        .query-section textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .dashboard-section {
+            display: none;
+            padding: 30px;
+        }
+        
+        .dashboard-section.active {
+            display: block;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab.active {
+            background: white;
+            border-color: #667eea;
+            border-bottom-color: white;
+            color: #667eea;
+        }
+        
+        .house-content {
+            display: none;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .house-content.active {
+            display: block;
+        }
+        
+        .house-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .house-title {
+            font-size: 1.8em;
+            color: #333;
+        }
+        
+        .sav-badge {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .sav-strong {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .sav-moderate {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .sav-weak {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .data-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .data-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .data-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .interpretation-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .interpretation-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .interpretation-text {
+            color: #555;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        
+        .citations {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .overview-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .overview-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .overview-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+            
+            .data-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕉️ Vedic Astrology AI Dashboard</h1>
+            <p>Comprehensive AI-Powered Astrological Analysis</p>
+        </div>
+        
+        <div class="input-section" id="inputSection">
+            <h2>Enter Birth Details</h2>
+            <form id="birthForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name (Optional)</label>
+                        <input type="text" id="name" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time of Birth *</label>
+                        <input type="time" id="tob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Place</label>
+                        <input type="text" id="place" placeholder="City, Country">
+                    </div>
+                    <div class="form-group">
+                        <label>Latitude *</label>
+                        <input type="number" id="lat" step="0.0001" placeholder="e.g., 13.0827" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude *</label>
+                        <input type="number" id="lon" step="0.0001" placeholder="e.g., 80.2707" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Timezone Offset *</label>
+                        <input type="number" id="tz_offset" step="0.1" value="5.5" step="0.1" required>
+                    </div>
+                </div>
+                
+                <div class="query-section">
+                    <label><strong>Ask a Question (Optional)</strong></label>
+                    <textarea id="query" placeholder="e.g., 'What will happen in my 7th house?' or 'Tell me about my current Dasha'"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="queryBtn">Ask Agent</button>
+                    <button type="button" class="btn btn-secondary" id="dashboardBtn">Get Full Dashboard</button>
+                </div>
+            </form>
+            
+            <div id="responseArea"></div>
+        </div>
+        
+        <div class="dashboard-section" id="dashboardSection">
+            <div class="tabs" id="houseTabs">
+                <div class="tab active" data-house="overview">Overview</div>
+                <div class="tab" data-house="1">House 1</div>
+                <div class="tab" data-house="2">House 2</div>
+                <div class="tab" data-house="3">House 3</div>
+                <div class="tab" data-house="4">House 4</div>
+                <div class="tab" data-house="5">House 5</div>
+                <div class="tab" data-house="6">House 6</div>
+                <div class="tab" data-house="7">House 7</div>
+                <div class="tab" data-house="8">House 8</div>
+                <div class="tab" data-house="9">House 9</div>
+                <div class="tab" data-house="10">House 10</div>
+                <div class="tab" data-house="11">House 11</div>
+                <div class="tab" data-house="12">House 12</div>
+            </div>
+            
+            <div id="houseContents">
+                <!-- House contents will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = window.location.origin;
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showHouse(tab.dataset.house);
+            });
+        });
+        
+        function showHouse(houseNum) {
+            const contents = document.getElementById('houseContents');
+            if (houseNum === 'overview') {
+                renderOverview();
+                // Populate overview if dashboard data exists
+                if (window.dashboardData) {
+                    populateOverview(window.dashboardData);
+                }
+            } else {
+                renderHouse(parseInt(houseNum));
+                // Populate house data if dashboard data exists
+                if (window.dashboardData) {
+                    renderHouseData(parseInt(houseNum), window.dashboardData);
+                }
+            }
+        }
+        
+        function renderOverview() {
+            const contents = document.getElementById('houseContents');
+            contents.innerHTML = `
+                <div class="house-content active">
+                    <h2>Chart Overview</h2>
+                    <div class="overview-grid" id="overviewGrid">
+                        <div class="overview-card">
+                            <h4>Overall SAV</h4>
+                            <div class="value" id="overallSav">-</div>
+                        </div>
+                        <div class="overview-card">
+                            <h4>Current Dasha</h4>
+                            <div class="value" id="currentDasha">-</div>
+                        </div>
+                        <div class="overview-card">
+                            <h4>Transit Health</h4>
+                            <div class="value" id="transitHealth">-</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function populateOverview(data) {
+            // Overall SAV
+            if (data.bav_sav_data && data.bav_sav_data.sav_total) {
+                document.getElementById('overallSav').textContent = data.bav_sav_data.sav_total;
+            }
+            
+            // Current Dasha
+            if (data.dasha_data && data.dasha_data.current_dasa) {
+                document.getElementById('currentDasha').textContent = 
+                    `${data.dasha_data.current_dasa}${data.dasha_data.current_bhukti ? ' - ' + data.dasha_data.current_bhukti : ''}`;
+            }
+            
+            // Transit Health
+            if (data.gochara_data && data.gochara_data.overall_health) {
+                const health = data.gochara_data.overall_health;
+                document.getElementById('transitHealth').textContent = 
+                    `${health.average_score || 'N/A'}/100 (${health.rag?.status || 'N/A'})`;
+            }
+        }
+        
+        function renderHouse(houseNum) {
+            const contents = document.getElementById('houseContents');
+            contents.innerHTML = `
+                <div class="house-content active">
+                    <div class="house-header">
+                        <h2 class="house-title">House ${houseNum}</h2>
+                        <div class="sav-badge" id="savBadge${houseNum}">Loading...</div>
+                    </div>
+                    <div class="data-cards">
+                        <div class="data-card">
+                            <h3>BAV/SAV Data</h3>
+                            <p id="bavSavData${houseNum}">Loading...</p>
+                        </div>
+                        <div class="data-card">
+                            <h3>Dasha Analysis</h3>
+                            <p id="dashaData${houseNum}">Loading...</p>
+                        </div>
+                        <div class="data-card">
+                            <h3>Gochara Analysis</h3>
+                            <p id="gocharaData${houseNum}">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="interpretation-section">
+                        <h3>AI Interpretation</h3>
+                        <div class="interpretation-text" id="interpretation${houseNum}">Loading interpretation...</div>
+                        <div class="citations" id="citations${houseNum}"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Form submission
+        document.getElementById('birthForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await handleQuery();
+        });
+        
+        document.getElementById('dashboardBtn').addEventListener('click', async () => {
+            await handleDashboard();
+        });
+        
+        async function handleQuery() {
+            const birthData = getBirthData();
+            const query = document.getElementById('query').value;
+            
+            if (!query.trim()) {
+                alert('Please enter a question');
+                return;
+            }
+            
+            showLoading('Processing your query...');
+            
+            try {
+                // Check if server is reachable first
+                const healthCheck = await fetch(`${API_BASE}/health`).catch(() => null);
+                if (!healthCheck || !healthCheck.ok) {
+                    throw new Error('Server is not reachable. Please ensure the server is running on port 8080.');
+                }
+                
+                const response = await fetch(`${API_BASE}/api/agent/query`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query, birth_data: birthData}),
+                    signal: AbortSignal.timeout(120000) // 2 minute timeout
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({detail: response.statusText}));
+                    throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                showResponse(data);
+            } catch (error) {
+                console.error('Query error:', error);
+                let errorMessage = 'Error: ';
+                
+                if (error.name === 'AbortError' || error.message.includes('timeout')) {
+                    errorMessage += 'Request timed out. Please try again.';
+                } else if (error.message.includes('fetch') || error.message.includes('not reachable')) {
+                    errorMessage += 'Failed to connect to server. Please ensure the server is running on port 8080.';
+                } else {
+                    errorMessage += (error.message || 'Unknown error');
+                }
+                
+                showError(errorMessage);
+            }
+        }
+        
+        async function handleDashboard() {
+            const birthData = getBirthData();
+            
+            // Validate birth data
+            if (!birthData.dob || !birthData.tob || !birthData.lat || !birthData.lon) {
+                showError('Please fill in all required fields (DOB, TOB, Latitude, Longitude)');
+                return;
+            }
+            
+            showLoading('Generating complete dashboard...');
+            
+            try {
+                // Check if server is reachable first
+                const healthCheck = await fetch(`${API_BASE}/health`).catch(() => null);
+                if (!healthCheck || !healthCheck.ok) {
+                    throw new Error('Server is not reachable. Please ensure the server is running on port 8080.');
+                }
+                
+                const response = await fetch(`${API_BASE}/api/agent/dashboard`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({birth_data: birthData}),
+                    signal: AbortSignal.timeout(300000) // 5 minute timeout for dashboard generation
+                });
+                
+                // Check if response is ok
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({detail: response.statusText}));
+                    throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Validate response structure
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Invalid response format from server');
+                }
+                
+                // Check for required fields
+                if (!data.houses || !Array.isArray(data.houses)) {
+                    throw new Error('Missing or invalid houses data in response');
+                }
+                
+                if (data.houses.length !== 12) {
+                    console.warn(`Expected 12 houses, got ${data.houses.length}`);
+                }
+                
+                showDashboard(data);
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                let errorMessage = 'Error generating dashboard: ';
+                
+                if (error.name === 'AbortError' || error.message.includes('timeout')) {
+                    errorMessage += 'Request timed out. The dashboard generation is taking longer than expected. Please try again.';
+                } else if (error.message.includes('fetch')) {
+                    errorMessage += 'Failed to connect to server. Please ensure the server is running on port 8080.';
+                } else if (error.message.includes('not reachable')) {
+                    errorMessage = error.message;
+                } else {
+                    errorMessage += (error.message || 'Unknown error');
+                }
+                
+                showError(errorMessage);
+            }
+        }
+        
+        function getBirthData() {
+            return {
+                dob: document.getElementById('dob').value,
+                tob: document.getElementById('tob').value,
+                lat: parseFloat(document.getElementById('lat').value),
+                lon: parseFloat(document.getElementById('lon').value),
+                tz_offset: parseFloat(document.getElementById('tz_offset').value),
+                name: document.getElementById('name').value || null,
+                place: document.getElementById('place').value || null
+            };
+        }
+        
+        function showLoading(message) {
+            const area = document.getElementById('responseArea');
+            area.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        function showResponse(data) {
+            const area = document.getElementById('responseArea');
+            area.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h3>Agent Response</h3>
+                    <p style="white-space: pre-wrap; line-height: 1.8; margin: 15px 0;">${data.response}</p>
+                    ${data.citations.length > 0 ? `<p style="color: #666; font-size: 0.9em;"><strong>Sources:</strong> ${data.citations.join(', ')}</p>` : ''}
+                </div>
+            `;
+        }
+        
+        function showError(message) {
+            const area = document.getElementById('responseArea');
+            area.innerHTML = `<div class="error">${message}</div>`;
+        }
+        
+        function showDashboard(data) {
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('dashboardSection').classList.add('active');
+            
+            // Store dashboard data globally
+            window.dashboardData = data;
+            
+            // Render overview first
+            renderOverview();
+            populateOverview(data);
+        }
+        
+        function renderHouseData(houseNum, dashboardData) {
+            // This function is called to populate house data when tab is shown
+            // It will be called from showHouse() when a house tab is clicked
+            const house = dashboardData.houses.find(h => h.house_number === houseNum);
+            if (!house) {
+                console.warn(`House ${houseNum} data not found`);
+                return;
+            }
+            
+            // Update SAV badge
+            const savBadge = document.getElementById(`savBadge${houseNum}`);
+            if (savBadge) {
+                const savPoints = house.sav_points;
+                if (savPoints !== null && savPoints !== undefined) {
+                    let strength = 'moderate';
+                    let strengthClass = 'sav-moderate';
+                    if (savPoints >= 30) {
+                        strength = 'strong';
+                        strengthClass = 'sav-strong';
+                    } else if (savPoints < 22) {
+                        strength = 'weak';
+                        strengthClass = 'sav-weak';
+                    }
+                    savBadge.textContent = `SAV: ${savPoints} (${strength})`;
+                    savBadge.className = `sav-badge ${strengthClass}`;
+                } else {
+                    savBadge.textContent = 'SAV: N/A';
+                    savBadge.className = 'sav-badge';
+                }
+            }
+            
+            // Update BAV/SAV Data
+            const bavSavData = document.getElementById(`bavSavData${houseNum}`);
+            if (bavSavData) {
+                if (house.bav_contributions && Object.keys(house.bav_contributions).length > 0) {
+                    let html = `<strong>SAV Points:</strong> ${house.sav_points !== null && house.sav_points !== undefined ? house.sav_points : 'N/A'}<br><br>`;
+                    html += `<strong>Individual BAV Contributions:</strong><br>`;
+                    for (const [planet, points] of Object.entries(house.bav_contributions)) {
+                        html += `• ${planet}: ${points} points<br>`;
+                    }
+                    bavSavData.innerHTML = html;
+                } else {
+                    bavSavData.innerHTML = `<strong>SAV Points:</strong> ${house.sav_points !== null && house.sav_points !== undefined ? house.sav_points : 'N/A'}`;
+                }
+            }
+            
+            // Update Dasha Data
+            const dashaData = document.getElementById(`dashaData${houseNum}`);
+            if (dashaData && dashboardData.dasha_data) {
+                const dasha = dashboardData.dasha_data;
+                dashaData.innerHTML = `
+                    <strong>Current Dasha:</strong> ${dasha.current_dasa || 'N/A'}<br>
+                    <strong>Current Bhukti:</strong> ${dasha.current_bhukti || 'N/A'}<br>
+                    <strong>Remaining:</strong> ${dasha.remaining_years ? dasha.remaining_years.toFixed(2) : 'N/A'} years
+                `;
+            } else if (dashaData) {
+                dashaData.textContent = 'Dasha data not available';
+            }
+            
+            // Update Gochara Data
+            const gocharaData = document.getElementById(`gocharaData${houseNum}`);
+            if (gocharaData && dashboardData.gochara_data) {
+                const gochara = dashboardData.gochara_data;
+                const health = gochara.overall_health || {};
+                gocharaData.innerHTML = `
+                    <strong>Overall Health:</strong> ${health.average_score || 'N/A'}/100<br>
+                    <strong>Status:</strong> ${health.rag?.status || 'N/A'}<br>
+                    <strong>Green:</strong> ${health.green_count || 0} | 
+                    <strong>Amber:</strong> ${health.amber_count || 0} | 
+                    <strong>Red:</strong> ${health.red_count || 0}
+                `;
+            } else if (gocharaData) {
+                gocharaData.textContent = 'Gochara data not available';
+            }
+            
+            // Update Interpretation
+            const interpretation = document.getElementById(`interpretation${houseNum}`);
+            if (interpretation && house.interpretation) {
+                interpretation.textContent = house.interpretation;
+            } else if (interpretation) {
+                interpretation.textContent = 'Interpretation not available';
+            }
+        }
+    </script>
+</body>
+</html>
+
