@@ -30,5 +30,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 
 # Run the application
-CMD ["uvicorn", "agent_app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Railway will override this with startCommand from railway.toml
+# But we provide a default that reads PORT from environment
+CMD ["python", "-m", "uvicorn", "agent_app.main:app", "--host", "0.0.0.0", "--port", "8080"]
 

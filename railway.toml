@@ -3,7 +3,7 @@ builder = "dockerfile"
 dockerfilePath = "Dockerfile.agent"
 
 [deploy]
-startCommand = "uvicorn agent_app.main:app --host 0.0.0.0 --port $PORT"
+startCommand = "bash start_railway.sh"
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
