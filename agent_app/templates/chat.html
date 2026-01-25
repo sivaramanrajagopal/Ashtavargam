@@ -653,17 +653,160 @@
             margin-right: auto;
         }
         
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
+            .header {
+                padding: 12px 10px;
+                flex-wrap: wrap;
+            }
+            
+            .header h1 {
+                font-size: 1em;
+                margin-bottom: 8px;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 6px;
+                justify-content: center;
+            }
+            
+            .btn-header {
+                padding: 6px 10px;
+                font-size: 0.75em;
+                flex: 1 1 auto;
+                min-width: 80px;
+            }
+            
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .setup-form {
+                padding: 20px;
             }
             
             .message {
                 padding: 15px 10px;
+                gap: 12px;
+            }
+            
+            .message-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+            
+            .message-content {
+                font-size: 0.9em;
             }
             
             .input-wrapper {
                 padding: 0 10px;
+            }
+            
+            .input-box {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .send-btn {
+                padding: 10px 16px;
+            }
+            
+            .modal-content {
+                max-width: 95vw;
+                padding: 20px;
+                max-height: 95vh;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.2em;
+            }
+            
+            .modal-close {
+                font-size: 1.5em;
+                padding: 5px;
+            }
+            
+            .dasha-card {
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            .data-table {
+                font-size: 0.85em;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 8px 6px;
+            }
+            
+            .suggestions {
+                padding: 0 10px;
+            }
+            
+            .suggestion-btn {
+                font-size: 0.85em;
+                padding: 8px 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 0.9em;
+            }
+            
+            .btn-header {
+                font-size: 0.7em;
+                padding: 5px 8px;
+                min-width: 70px;
+            }
+            
+            .message {
+                padding: 12px 8px;
+            }
+            
+            .message-content {
+                font-size: 0.85em;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+            
+            .modal-header {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .modal-header h2 {
+                font-size: 1em;
+            }
+            
+            .tree-parent {
+                padding: 10px 12px;
+            }
+            
+            .tree-label {
+                font-size: 0.9em;
+            }
+            
+            .tree-info {
+                grid-template-columns: 1fr !important;
+                gap: 8px;
+            }
+            
+            .tree-child {
+                padding: 8px 12px 8px 40px;
+            }
+            
+            .tree-child .tree-info {
+                grid-template-columns: 1fr !important;
             }
         }
     </style>

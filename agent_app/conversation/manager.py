@@ -4,9 +4,17 @@ Manages conversation state, chart data caching, and message history
 """
 
 import uuid
+import os
 from typing import Dict, List, Optional
 from datetime import datetime
 from agent_app.graphs.astrology_agent_graph import agent_graph
+
+# Try to import tiktoken for token counting, fallback if not available
+try:
+    import tiktoken
+    TIKTOKEN_AVAILABLE = True
+except ImportError:
+    TIKTOKEN_AVAILABLE = False
 
 
 class ConversationManager:
@@ -15,6 +23,20 @@ class ConversationManager:
     def __init__(self):
         # In-memory storage (in production, use Redis or database)
         self.sessions: Dict[str, Dict] = {}
+        
+        # Context window management
+        self.max_messages = int(os.getenv("MAX_MESSAGES", "50"))  # Hard limit on messages
+        self.max_tokens = int(os.getenv("MAX_TOKENS", "8000"))  # Token limit (leave room for response)
+        self.recent_messages_count = int(os.getenv("RECENT_MESSAGES_COUNT", "10"))  # Always keep last N messages
+        
+        # Initialize token encoding if available
+        if TIKTOKEN_AVAILABLE:
+            try:
+                self.encoding = tiktoken.encoding_for_model("gpt-4o-mini")  # Match the model used
+            except:
+                self.encoding = None
+        else:
+            self.encoding = None
     
     def start_conversation(self, birth_data: Dict) -> str:
         """
@@ -61,9 +83,63 @@ class ConversationManager:
         
         return session_id
     
+    def _count_tokens(self, text: str) -> int:
+        """Count tokens in text"""
+        if not text:
+            return 0
+        
+        if self.encoding:
+            try:
+                return len(self.encoding.encode(text))
+            except:
+                # Fallback: rough estimate (1 token ≈ 4 characters)
+                return len(text) // 4
+        else:
+            # Fallback: rough estimate (1 token ≈ 4 characters)
+            return len(text) // 4
+    
+    def _truncate_messages(self, messages: List[Dict]) -> List[Dict]:
+        """Truncate messages to fit token limit while preserving recent messages"""
+        if not messages:
+            return []
+        
+        # Separate system message if present
+        system_msg = None
+        other_messages = []
+        for msg in messages:
+            if msg.get('role') == 'system':
+                system_msg = msg
+            else:
+                other_messages.append(msg)
+        
+        # Always keep recent messages
+        recent_messages = other_messages[-self.recent_messages_count:] if len(other_messages) > self.recent_messages_count else other_messages
+        
+        # Count tokens in recent messages
+        total_tokens = 0
+        truncated = []
+        
+        # Start from most recent and work backwards
+        for msg in reversed(recent_messages):
+            content = msg.get('content', '')
+            tokens = self._count_tokens(content)
+            
+            if total_tokens + tokens > self.max_tokens:
+                # Stop if adding this message would exceed limit
+                break
+            
+            total_tokens += tokens
+            truncated.insert(0, msg)  # Insert at beginning to maintain order
+        
+        # Add system message at start if present
+        if system_msg:
+            truncated.insert(0, system_msg)
+        
+        return truncated
+    
     def add_message(self, session_id: str, role: str, content: str, metadata: Optional[Dict] = None) -> None:
         """
-        Add a message to conversation history
+        Add a message to conversation history with automatic truncation
         
         Args:
             session_id: Session identifier
@@ -83,16 +159,43 @@ class ConversationManager:
         
         self.sessions[session_id]["messages"].append(message)
         self.sessions[session_id]["last_activity"] = datetime.now().isoformat()
+        
+        # Apply message count limit
+        messages = self.sessions[session_id]["messages"]
+        if len(messages) > self.max_messages:
+            # Keep system message + recent messages
+            system_msg = None
+            other_messages = []
+            for msg in messages:
+                if msg.get('role') == 'system':
+                    system_msg = msg
+                else:
+                    other_messages.append(msg)
+            
+            # Keep last N-1 messages (excluding system)
+            recent = other_messages[-(self.max_messages-1):] if system_msg else other_messages[-self.max_messages:]
+            self.sessions[session_id]["messages"] = ([system_msg] + recent) if system_msg else recent
+        
+        # Also truncate by tokens
+        self.sessions[session_id]["messages"] = self._truncate_messages(
+            self.sessions[session_id]["messages"]
+        )
     
     def get_conversation(self, session_id: str) -> Optional[Dict]:
         """Get full conversation state"""
         return self.sessions.get(session_id)
     
     def get_messages(self, session_id: str) -> List[Dict]:
-        """Get conversation messages"""
+        """Get conversation messages with automatic truncation"""
         if session_id not in self.sessions:
             return []
-        return self.sessions[session_id]["messages"]
+        
+        messages = self.sessions[session_id]["messages"]
+        
+        # Apply truncation
+        messages = self._truncate_messages(messages)
+        
+        return messages
     
     def update_chart_cache(self, session_id: str, chart_data: Dict) -> None:
         """
@@ -177,11 +280,11 @@ class ConversationManager:
         self.add_message(session_id, "user", user_message)
         
         # Prepare agent state with conversation context
-        # Include recent messages for context
-        recent_messages = previous_messages[-5:] if len(previous_messages) > 5 else previous_messages
+        # Get messages (already truncated by get_messages or add_message)
+        # Use all available messages (they're already limited)
         conversation_context = "\n".join([
             f"{msg['role']}: {msg['content']}" 
-            for msg in recent_messages
+            for msg in previous_messages
         ])
         
         # Build query with conversation context
