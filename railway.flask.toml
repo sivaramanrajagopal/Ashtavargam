@@ -1,0 +1,15 @@
+# Railway configuration for OLD Flask App
+# Use this if you want to deploy the Flask app as a separate service
+# To use: Rename this to railway.toml when deploying Flask app service
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"  # Uses original Dockerfile
+
+[deploy]
+startCommand = "python app_complete.py"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
