@@ -22,6 +22,10 @@ RUN pip install --no-cache-dir -r requirements_agent.txt
 COPY agent_app/ ./agent_app/
 COPY setup_supabase.md .
 
+# Copy start script
+COPY start_railway.sh .
+RUN chmod +x start_railway.sh
+
 # Expose port
 EXPOSE 8080
 
@@ -31,6 +35,6 @@ ENV PORT=8080
 
 # Run the application
 # Railway will override this with startCommand from railway.toml
-# But we provide a default that reads PORT from environment
-CMD ["python", "-m", "uvicorn", "agent_app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Default CMD uses the start script
+CMD ["./start_railway.sh"]
 
