@@ -543,3 +543,178 @@ def calculate_transits(dob: str, tob: str, lat: float, lon: float, tz_offset: fl
         'house_rankings': house_rankings
     }
 
+
+def calculate_auspicious_dates(dob: str, tob: str, lat: float, lon: float, tz_offset: float,
+                               month: str, sav_chart: List[int] = None, top_n: int = 10) -> Dict:
+    """
+    Calculate auspicious dates for a given month based on Gochara and BAV/SAV.
+    
+    Args:
+        dob: Date of birth (YYYY-MM-DD)
+        tob: Time of birth (HH:MM)
+        lat: Latitude
+        lon: Longitude
+        tz_offset: Timezone offset
+        month: Month in YYYY-MM format (e.g., "2024-01")
+        sav_chart: SAV chart (12 houses) to factor into scoring, optional
+        top_n: Number of top dates to return (default 10)
+    
+    Returns:
+        Dict with top dates, scores, RAG status, and reasons
+    """
+    import calendar
+    
+    # Parse month
+    year, month_num = map(int, month.split('-'))
+    
+    # Get all dates in the month
+    num_days = calendar.monthrange(year, month_num)[1]
+    dates_in_month = [
+        f"{year}-{month_num:02d}-{day:02d}"
+        for day in range(1, num_days + 1)
+    ]
+    
+    # Calculate natal chart once (for all dates)
+    natal_data, planet_connections, natal_asc_deg = calculate_natal_chart(dob, tob, lat, lon, tz_offset)
+    natal_dict = {pc['Planet']: pc for pc in planet_connections}
+    
+    # Calculate date scores
+    date_scores = []
+    
+    for date_str in dates_in_month:
+        try:
+            # Calculate transits for this date
+            transit_result = calculate_transits(dob, tob, lat, lon, tz_offset, date_str)
+            
+            overall_health = transit_result.get('overall_health', {})
+            transit_analysis = transit_result.get('transit_analysis', [])
+            
+            base_score = overall_health.get('average_score', 50.0)
+            sav_modifier = 0.0
+            sav_reasons = []
+            
+            # Factor in BAV/SAV if provided
+            if sav_chart and len(sav_chart) == 12:
+                # Check SAV for transit houses
+                for transit in transit_analysis:
+                    transit_house = transit.get('transit_house', 0)
+                    if 1 <= transit_house <= 12:
+                        sav_points = sav_chart[transit_house - 1]
+                        
+                        # High SAV (>30) boosts score
+                        if sav_points >= 30:
+                            sav_modifier += 5.0
+                            sav_reasons.append(f"H{transit_house} (SAV {sav_points})")
+                        # Low SAV (<22) reduces score
+                        elif sav_points < 22:
+                            sav_modifier -= 3.0
+                            sav_reasons.append(f"H{transit_house} (SAV {sav_points})")
+            
+            # Apply modifier (cap at ±15 points)
+            final_score = max(0, min(100, base_score + sav_modifier))
+            
+            # Get RAG status
+            rag = get_rag_status(final_score)
+            
+            # Extract detailed explanations
+            top_planets = sorted(
+                transit_analysis,
+                key=lambda x: x.get('score', 0),
+                reverse=True
+            )[:5]  # Top 5 planets for detailed explanation
+            
+            reasons = []
+            detailed_explanations = []
+            planetary_details = []
+            
+            for planet_data in top_planets:
+                planet = planet_data.get('planet', '')
+                score = planet_data.get('score', 0)
+                transit_house = planet_data.get('transit_house', 0)
+                natal_house = planet_data.get('natal_house', 0)
+                rag_status = planet_data.get('rag', {}).get('status', '')
+                transit_sign = planet_data.get('transit_sign', '')
+                nakshatra = planet_data.get('nakshatra', '')
+                
+                # Short reason for display
+                if score >= 70:
+                    reasons.append(f"{planet} in H{transit_house} ({rag_status})")
+                
+                # Detailed explanation
+                explanation = f"{planet} transiting {transit_sign} in House {transit_house}"
+                if natal_house:
+                    explanation += f" (natal position: House {natal_house})"
+                explanation += f" with score {score:.1f}/100 ({rag_status})"
+                if nakshatra:
+                    explanation += f" in {nakshatra} Nakshatra"
+                
+                detailed_explanations.append(explanation)
+                
+                # Store planetary details
+                planetary_details.append({
+                    'planet': planet,
+                    'transit_house': transit_house,
+                    'natal_house': natal_house,
+                    'transit_sign': transit_sign,
+                    'score': round(score, 1),
+                    'rag': rag_status,
+                    'nakshatra': nakshatra
+                })
+            
+            # Add SAV explanation
+            sav_explanation = ""
+            if sav_reasons:
+                reasons.append(f"SAV: {', '.join(sav_reasons[:2])}")
+                if len(sav_reasons) > 0:
+                    sav_explanation = f"Strong SAV houses ({', '.join(sav_reasons[:3])}) enhance planetary transits, boosting overall auspiciousness."
+            
+            # Create comprehensive explanation
+            comprehensive_explanation = ""
+            if detailed_explanations:
+                comprehensive_explanation = "This date is auspicious because: "
+                comprehensive_explanation += "; ".join(detailed_explanations[:3])
+                if sav_explanation:
+                    comprehensive_explanation += f" Additionally, {sav_explanation}"
+            
+            date_scores.append({
+                'date': date_str,
+                'score': round(final_score, 1),
+                'base_score': round(base_score, 1),
+                'sav_modifier': round(sav_modifier, 2) if sav_chart else 0.0,
+                'rag': rag,
+                'reasons': reasons[:5],  # Top 5 short reasons
+                'detailed_explanation': comprehensive_explanation,
+                'planetary_details': planetary_details,
+                'sav_explanation': sav_explanation,
+                'overall_health': overall_health,
+                'transit_count': len(transit_analysis),
+                'green_count': overall_health.get('green_count', 0),
+                'amber_count': overall_health.get('amber_count', 0),
+                'red_count': overall_health.get('red_count', 0)
+            })
+        except Exception as e:
+            # Skip dates that fail calculation
+            print(f"Error calculating date {date_str}: {e}")
+            continue
+    
+    # Sort by date (ascending - chronological order)
+    date_scores.sort(key=lambda x: x['date'])
+    
+    # Get top N dates by score (but keep them in chronological order)
+    # First, identify top N by score
+    sorted_by_score = sorted(date_scores, key=lambda x: x['score'], reverse=True)
+    top_n_dates_by_score = sorted_by_score[:top_n]
+    top_n_dates_set = {d['date'] for d in top_n_dates_by_score}
+    
+    # Filter all dates to only include top N, then sort chronologically
+    top_dates_chronological = [d for d in date_scores if d['date'] in top_n_dates_set]
+    top_dates_chronological.sort(key=lambda x: x['date'])
+    
+    return {
+        'month': month,
+        'total_dates_analyzed': len(date_scores),
+        'top_5': top_dates_chronological[:5],
+        'top_10': top_dates_chronological[:10] if top_n >= 10 else top_dates_chronological,
+        'all_dates': date_scores  # All dates in chronological order
+    }
+

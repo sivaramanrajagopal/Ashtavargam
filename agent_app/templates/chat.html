@@ -1179,6 +1179,126 @@
                 grid-template-columns: 1fr !important;
             }
         }
+        
+        /* Auspicious Dates Tooltip and Explanation Card Styles */
+        .explanation-tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: #10a37f;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+        
+        .explanation-tooltip:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip-content {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: #ececf1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #565869;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+        
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+        
+        .explanation-card {
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid #10a37f;
+        }
+        
+        .explanation-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .explanation-card-title {
+            color: #10a37f;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        .explanation-card-content {
+            color: #d1d5db;
+            font-size: 0.9em;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .explanation-card-content.expanded {
+            max-height: 500px;
+            margin-top: 10px;
+        }
+        
+        .planetary-detail-item {
+            background: #343541;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 5px 0;
+            border-left: 3px solid #10a37f;
+        }
+        
+        .planetary-detail-item strong {
+            color: #10a37f;
+        }
+        
+        .date-card {
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .date-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 163, 127, 0.3);
+        }
+        
+        .info-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            background: #10a37f;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 8px;
+            cursor: help;
+        }
     </style>
 </head>
 <body>
@@ -1187,6 +1307,7 @@
         <h1>🕉️ Vedic Astrology AI Chat</h1>
         <div class="header-actions">
             <button class="btn-header" id="ashtakavargaBtn" disabled>🔢 Ashtakavarga</button>
+            <button class="btn-header" id="auspiciousDatesBtn" disabled>📅 Auspicious Dates</button>
             <button class="btn-header" id="dashaGocharaBtn" disabled>📊 Dasha & Gochara</button>
             <button class="btn-header" id="dashaBhuktiBtn" disabled>📅 Dasha Bhukti</button>
             <button class="btn-header" id="transitDateBtn" disabled>📆 Transit Date</button>
@@ -1334,6 +1455,30 @@
         </div>
     </div>
     
+    <!-- Auspicious Dates Modal -->
+    <div class="modal-overlay" id="auspiciousDatesModal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h2>📅 Auspicious Dates</h2>
+                <button class="modal-close" onclick="closeModal('auspiciousDatesModal')">&times;</button>
+            </div>
+            <div id="auspiciousDatesModalBody">
+                <div class="modal-section">
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                        <label style="color: #d1d5db; font-weight: 500;">Select Month:</label>
+                        <input type="month" id="auspiciousMonthPicker" style="padding: 10px; background: #343541; border: 1px solid #565869; border-radius: 6px; color: #ececf1; font-size: 1em;">
+                        <button class="btn-header" onclick="fetchAuspiciousDates()" style="padding: 10px 20px;">Get Dates</button>
+                    </div>
+                    <div id="auspiciousDatesResults">
+                        <div class="loading-modal">
+                            <p>Select a month and click "Get Dates" to see auspicious dates</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         const API_BASE = window.location.origin;
         const DASHA_GOCHARA_API = 'http://localhost:8001'; // Dasha/Gochara API base URL
@@ -1415,6 +1560,7 @@
                 
                 // Enable all header buttons
                 document.getElementById('ashtakavargaBtn').disabled = false;
+                document.getElementById('auspiciousDatesBtn').disabled = false;
                 document.getElementById('dashaGocharaBtn').disabled = false;
                 document.getElementById('dashaBhuktiBtn').disabled = false;
                 document.getElementById('transitDateBtn').disabled = false;
@@ -1599,7 +1745,7 @@
         }
         
         // Close modals on overlay click
-        ['ashtakavargaModal', 'dashaGocharaModal', 'dashaBhuktiModal', 'transitDateModal'].forEach(modalId => {
+        ['ashtakavargaModal', 'auspiciousDatesModal', 'dashaGocharaModal', 'dashaBhuktiModal', 'transitDateModal'].forEach(modalId => {
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.addEventListener('click', (e) => {
@@ -1614,6 +1760,7 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal('ashtakavargaModal');
+                closeModal('auspiciousDatesModal');
                 closeModal('dashaGocharaModal');
                 closeModal('dashaBhuktiModal');
                 closeModal('transitDateModal');
@@ -1947,6 +2094,312 @@
         
         // Make showPlanetTab globally available
         window.showPlanetTab = showPlanetTab;
+        
+        // Auspicious Dates Button Click Handler
+        const auspiciousDatesBtn = document.getElementById('auspiciousDatesBtn');
+        if (auspiciousDatesBtn) {
+            auspiciousDatesBtn.addEventListener('click', () => {
+                openAuspiciousDatesModal();
+            });
+        }
+        
+        async function openAuspiciousDatesModal() {
+            if (!birthData) {
+                alert('Please start a chat session first by entering your birth details.');
+                return;
+            }
+            
+            const modal = document.getElementById('auspiciousDatesModal');
+            const modalBody = document.getElementById('auspiciousDatesModalBody');
+            
+            if (!modal || !modalBody) {
+                console.error('Auspicious Dates modal elements not found');
+                return;
+            }
+            
+            modal.classList.add('active');
+            
+            // Set default month to current month
+            const now = new Date();
+            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const monthPicker = document.getElementById('auspiciousMonthPicker');
+            if (monthPicker) {
+                monthPicker.value = currentMonth;
+            }
+        }
+        
+        async function fetchAuspiciousDates() {
+            if (!birthData) {
+                alert('Please start a chat session first');
+                return;
+            }
+            
+            const monthPicker = document.getElementById('auspiciousMonthPicker');
+            const resultsDiv = document.getElementById('auspiciousDatesResults');
+            
+            if (!monthPicker || !resultsDiv) {
+                console.error('Auspicious dates elements not found');
+                return;
+            }
+            
+            const selectedMonth = monthPicker.value;
+            if (!selectedMonth) {
+                alert('Please select a month');
+                return;
+            }
+            
+            resultsDiv.innerHTML = '<div class="loading-modal"><p>Calculating auspicious dates for ' + selectedMonth + '...</p></div>';
+            
+            try {
+                // First, get SAV chart from BAV/SAV API
+                let savChart = null;
+                try {
+                    const bavSavResponse = await fetch(`${BAV_SAV_API}/api/v1/calculate/full`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            dob: birthData.dob,
+                            tob: birthData.tob,
+                            latitude: birthData.lat,
+                            longitude: birthData.lon,
+                            tz_offset: birthData.tz_offset
+                        })
+                    });
+                    
+                    if (bavSavResponse.ok) {
+                        const bavSavData = await bavSavResponse.json();
+                        savChart = bavSavData.sav_chart || null;
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch SAV chart (will calculate without it):', e);
+                }
+                
+                // Fetch auspicious dates
+                const response = await fetch(`${DASHA_GOCHARA_API}/api/v1/gochara/auspicious-dates`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        dob: birthData.dob,
+                        tob: birthData.tob,
+                        lat: birthData.lat,
+                        lon: birthData.lon,
+                        tz_offset: birthData.tz_offset,
+                        month: selectedMonth,
+                        sav_chart: savChart,
+                        top_n: 10
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                renderAuspiciousDates(data);
+                
+            } catch (error) {
+                console.error('Error fetching auspicious dates:', error);
+                resultsDiv.innerHTML = `
+                    <div class="loading-modal">
+                        <p style="color: #ef4444;">Error loading auspicious dates: ${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the Dasha/Gochara API is running</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderAuspiciousDates(data) {
+            const resultsDiv = document.getElementById('auspiciousDatesResults');
+            if (!resultsDiv) return;
+            
+            let html = '';
+            
+            // Top 5 Dates Table with Explanations
+            html += '<div class="modal-section">';
+            html += '<h3 style="color: #10a37f; margin-bottom: 15px;">🌟 Top 5 Auspicious Dates (Chronological Order)</h3>';
+            html += '<table class="data-table">';
+            html += '<thead><tr><th>Date</th><th>Score</th><th>RAG</th><th>Key Reasons</th><th>Details</th></tr></thead>';
+            html += '<tbody>';
+            
+            data.top_5.forEach((dateInfo, idx) => {
+                const rag = dateInfo.rag || {};
+                const ragStatus = rag.status || 'N/A';
+                const ragClass = ragStatus === 'GREEN' ? 'rag-green' : 
+                                ragStatus === 'AMBER' ? 'rag-amber' : 'rag-red';
+                const ragEmoji = rag.emoji || '';
+                
+                const dateObj = new Date(dateInfo.date);
+                const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                const dateId = `date-${idx}`;
+                const explanationId = `explanation-${idx}`;
+                
+                html += `<tr>`;
+                html += `<td><strong>${formattedDate}</strong></td>`;
+                html += `<td>${dateInfo.score.toFixed(1)}/100</td>`;
+                html += `<td><span class="rag-indicator ${ragClass}"></span>${ragEmoji} ${ragStatus}</td>`;
+                html += `<td style="font-size: 0.9em; color: #9ca3af;">${(dateInfo.reasons || []).slice(0, 2).join(', ')}</td>`;
+                html += `<td>`;
+                html += `<span class="explanation-tooltip" onclick="toggleExplanation('${explanationId}')">`;
+                html += `ℹ️ <span class="tooltip-content">Click to see detailed explanation</span>`;
+                html += `</span>`;
+                html += `</td>`;
+                html += `</tr>`;
+                
+                // Add explanation card below the row
+                if (dateInfo.detailed_explanation || dateInfo.planetary_details) {
+                    html += `<tr id="${explanationId}" style="display: none;"><td colspan="5">`;
+                    html += `<div class="explanation-card">`;
+                    html += `<div class="explanation-card-header" onclick="toggleExplanation('${explanationId}')">`;
+                    html += `<div class="explanation-card-title">📖 Why is this date auspicious?</div>`;
+                    html += `<div style="color: #9ca3af;">▼</div>`;
+                    html += `</div>`;
+                    html += `<div class="explanation-card-content" id="${explanationId}-content">`;
+                    
+                    if (dateInfo.detailed_explanation) {
+                        html += `<p style="margin-bottom: 10px;">${dateInfo.detailed_explanation}</p>`;
+                    }
+                    
+                    if (dateInfo.planetary_details && dateInfo.planetary_details.length > 0) {
+                        html += `<div style="margin-top: 10px;"><strong style="color: #10a37f;">Planetary Influences:</strong></div>`;
+                        dateInfo.planetary_details.forEach(planet => {
+                            html += `<div class="planetary-detail-item">`;
+                            html += `<strong>${planet.planet}:</strong> Transiting House ${planet.transit_house} `;
+                            if (planet.natal_house) {
+                                html += `(Natal: H${planet.natal_house}) `;
+                            }
+                            html += `in ${planet.transit_sign} `;
+                            if (planet.nakshatra) {
+                                html += `- ${planet.nakshatra} `;
+                            }
+                            html += `| Score: ${planet.score}/100 (${planet.rag})`;
+                            html += `</div>`;
+                        });
+                    }
+                    
+                    if (dateInfo.sav_explanation) {
+                        html += `<div style="margin-top: 10px; padding: 8px; background: #1a202c; border-radius: 6px; border-left: 3px solid #10a37f;">`;
+                        html += `<strong style="color: #10a37f;">SAV Influence:</strong> ${dateInfo.sav_explanation}`;
+                        html += `</div>`;
+                    }
+                    
+                    html += `</div>`;
+                    html += `</div>`;
+                    html += `</td></tr>`;
+                }
+            });
+            
+            html += '</tbody></table>';
+            html += '</div>';
+            
+            // Top 10 Dates Cards with Explanations
+            html += '<div class="modal-section" style="margin-top: 25px;">';
+            html += '<h3 style="color: #10a37f; margin-bottom: 15px;">📋 Top 10 Auspicious Dates (Chronological Order)</h3>';
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">';
+            
+            data.top_10.forEach((dateInfo, idx) => {
+                const rag = dateInfo.rag || {};
+                const ragStatus = rag.status || 'N/A';
+                const ragClass = ragStatus === 'GREEN' ? 'rag-green' : 
+                                ragStatus === 'AMBER' ? 'rag-amber' : 'rag-red';
+                const ragEmoji = rag.emoji || '';
+                
+                const dateObj = new Date(dateInfo.date);
+                const day = dateObj.getDate();
+                const monthName = dateObj.toLocaleDateString('en-US', { month: 'short' });
+                const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                
+                const cardId = `card-${idx}`;
+                const cardExplanationId = `card-explanation-${idx}`;
+                
+                html += `<div class="date-card" style="background: #343541; border: 1px solid #565869; border-radius: 6px; padding: 12px; ${ragStatus === 'GREEN' ? 'border-left: 4px solid #10a37f;' : ''}">`;
+                html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">`;
+                html += `<div><strong style="font-size: 1.1em;">${day} ${monthName}</strong><span style="color: #9ca3af; font-size: 0.85em; margin-left: 5px;">${weekday}</span></div>`;
+                html += `<div><span class="rag-indicator ${ragClass}"></span>${ragEmoji}</div>`;
+                html += `</div>`;
+                html += `<div style="color: #10a37f; font-weight: bold; margin-bottom: 5px;">Score: ${dateInfo.score.toFixed(1)}/100</div>`;
+                html += `<div style="font-size: 0.85em; color: #9ca3af; margin-bottom: 8px;">`;
+                html += `<div>🟢 ${dateInfo.green_count} | 🟡 ${dateInfo.amber_count} | 🔴 ${dateInfo.red_count}</div>`;
+                if (dateInfo.reasons && dateInfo.reasons.length > 0) {
+                    html += `<div style="margin-top: 5px;">${dateInfo.reasons[0]}</div>`;
+                }
+                html += `</div>`;
+                
+                // Add explanation toggle
+                if (dateInfo.detailed_explanation || dateInfo.planetary_details) {
+                    html += `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #565869;">`;
+                    html += `<div class="explanation-card-header" onclick="toggleExplanation('${cardExplanationId}')" style="cursor: pointer;">`;
+                    html += `<span class="explanation-card-title" style="font-size: 0.85em;">ℹ️ Why auspicious?</span>`;
+                    html += `<span style="color: #9ca3af; font-size: 0.8em;">▼</span>`;
+                    html += `</div>`;
+                    html += `<div class="explanation-card-content" id="${cardExplanationId}-content">`;
+                    
+                    if (dateInfo.detailed_explanation) {
+                        html += `<p style="font-size: 0.85em; margin-bottom: 8px; color: #d1d5db;">${dateInfo.detailed_explanation}</p>`;
+                    }
+                    
+                    if (dateInfo.planetary_details && dateInfo.planetary_details.length > 0) {
+                        dateInfo.planetary_details.slice(0, 3).forEach(planet => {
+                            html += `<div style="font-size: 0.8em; color: #9ca3af; margin: 3px 0;">`;
+                            html += `• ${planet.planet} in H${planet.transit_house} (${planet.rag})`;
+                            html += `</div>`;
+                        });
+                    }
+                    
+                    html += `</div>`;
+                    html += `</div>`;
+                }
+                
+                html += `</div>`;
+            });
+            
+            html += '</div>';
+            html += '</div>';
+            
+            // Summary
+            html += '<div class="modal-section" style="margin-top: 25px; padding: 15px; background: #343541; border-radius: 8px; border-left: 4px solid #10a37f;">';
+            html += '<h4 style="color: #10a37f; margin-bottom: 10px;">📊 Summary</h4>';
+            html += `<p style="color: #d1d5db; font-size: 0.9em;">Analyzed ${data.total_dates_analyzed} dates in ${data.month}</p>`;
+            html += `<p style="color: #d1d5db; font-size: 0.9em; margin-top: 5px;">Dates are sorted chronologically (ascending order). Scores indicate overall auspiciousness based on planetary transits and SAV house strengths.</p>`;
+            html += `<p style="color: #d1d5db; font-size: 0.9em; margin-top: 5px;">🟢 GREEN (≥70): Highly auspicious | 🟡 AMBER (40-69): Moderately auspicious | 🔴 RED (<40): Less auspicious</p>`;
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function toggleExplanation(id) {
+            const element = document.getElementById(id);
+            const content = document.getElementById(id + '-content');
+            
+            if (element && content) {
+                // For table row explanations
+                if (element.style.display === 'none' || element.style.display === '') {
+                    element.style.display = 'table-row';
+                    setTimeout(() => content.classList.add('expanded'), 10);
+                } else {
+                    content.classList.remove('expanded');
+                    setTimeout(() => element.style.display = 'none', 300);
+                }
+            } else if (content) {
+                // For card explanations (standalone content div)
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                } else {
+                    content.classList.add('expanded');
+                }
+            }
+        }
+        
+        // Make toggleExplanation globally available
+        window.toggleExplanation = toggleExplanation;
+        
+        // Make fetchAuspiciousDates globally available
+        window.fetchAuspiciousDates = fetchAuspiciousDates;
         
         // Dasha Bhukti button
         const dashaBhuktiBtn = document.getElementById('dashaBhuktiBtn');

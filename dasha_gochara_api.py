@@ -15,7 +15,7 @@ from calculators.dasha_calculator import (
     generate_dasa_bhukti_table,
     get_current_dasa_bhukti
 )
-from calculators.transit_calculator import calculate_transits
+from calculators.transit_calculator import calculate_transits, calculate_auspicious_dates
 
 app = FastAPI(
     title="Dasha/Gochara API",
@@ -106,6 +106,42 @@ class GocharaResponse(BaseModel):
     overall_health: Dict
     transit_analysis: List[TransitAnalysis]
     house_rankings: List[Dict]
+
+
+class AuspiciousDate(BaseModel):
+    date: str
+    score: float
+    base_score: float
+    sav_modifier: float
+    rag: Dict
+    reasons: List[str]
+    detailed_explanation: str
+    planetary_details: List[Dict]
+    sav_explanation: str
+    overall_health: Dict
+    transit_count: int
+    green_count: int
+    amber_count: int
+    red_count: int
+
+
+class AuspiciousDatesRequest(BaseModel):
+    dob: str = Field(..., description="Date of birth in YYYY-MM-DD format")
+    tob: str = Field(..., description="Time of birth in HH:MM format")
+    lat: float = Field(..., description="Latitude", ge=-90, le=90)
+    lon: float = Field(..., description="Longitude", ge=-180, le=180)
+    tz_offset: float = Field(..., description="Timezone offset from UTC")
+    month: str = Field(..., description="Month in YYYY-MM format (e.g., 2024-01)")
+    sav_chart: Optional[List[int]] = Field(None, description="SAV chart (12 houses) to factor into scoring")
+    top_n: int = Field(10, description="Number of top dates to return", ge=1, le=31)
+
+
+class AuspiciousDatesResponse(BaseModel):
+    month: str
+    total_dates_analyzed: int
+    top_5: List[AuspiciousDate]
+    top_10: List[AuspiciousDate]
+    all_dates: List[AuspiciousDate]
 
 
 class HealthResponse(BaseModel):
@@ -257,6 +293,52 @@ async def get_current_gochara(birth_data: BirthData):
     Convenience endpoint that always uses today's date for transit analysis.
     """
     return await calculate_gochara(birth_data, transit_date=None)
+
+
+@app.post("/api/v1/gochara/auspicious-dates", response_model=AuspiciousDatesResponse)
+async def get_auspicious_dates(request: AuspiciousDatesRequest):
+    """
+    Calculate auspicious dates for a given month based on Gochara and BAV/SAV.
+    
+    Returns top 5 and top 10 dates ranked by transit scores, factoring in:
+    - Planetary transits and their scores
+    - SAV (Sarvashtakavarga) house strengths
+    - Overall transit health
+    
+    **Scoring Logic:**
+    - Base score: Average of all planetary transit scores
+    - SAV Modifier: 
+      - +5 points if planet transits house with SAV ≥30 (strong)
+      - -3 points if planet transits house with SAV <22 (weak)
+    - Final score: Base score + SAV modifier (capped at 0-100)
+    
+    **RAG Status:**
+    - GREEN (≥70): Highly auspicious
+    - AMBER (40-69): Moderately auspicious
+    - RED (<40): Less auspicious
+    """
+    try:
+        result = calculate_auspicious_dates(
+            dob=request.dob,
+            tob=request.tob,
+            lat=request.lat,
+            lon=request.lon,
+            tz_offset=request.tz_offset,
+            month=request.month,
+            sav_chart=request.sav_chart,
+            top_n=request.top_n
+        )
+        
+        # Convert to response models
+        return AuspiciousDatesResponse(
+            month=result['month'],
+            total_dates_analyzed=result['total_dates_analyzed'],
+            top_5=[AuspiciousDate(**date) for date in result['top_5']],
+            top_10=[AuspiciousDate(**date) for date in result['top_10']],
+            all_dates=[AuspiciousDate(**date) for date in result['all_dates']]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Calculation error: {str(e)}")
 
 
 if __name__ == "__main__":
