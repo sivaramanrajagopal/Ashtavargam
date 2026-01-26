@@ -300,6 +300,376 @@
             font-weight: 600;
         }
         
+        /* Ashtakavarga Modal Styles */
+        .ashtakavarga-container {
+            padding: 20px 0;
+        }
+        
+        .planet-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #565869;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .planet-tab {
+            padding: 10px 18px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: #9ca3af;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+        
+        .planet-tab:hover {
+            color: #ececf1;
+            background: #343541;
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .planet-tab.active {
+            color: #10a37f;
+            border-bottom-color: #10a37f;
+        }
+        
+        .bav-section {
+            display: none;
+        }
+        
+        .bav-section.active {
+            display: block;
+        }
+        
+        .bav-grid-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .bav-grid {
+            display: grid;
+            grid-template-columns: 100px 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px 100px;
+            gap: 5px;
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+        
+        .bav-cell {
+            background: #343541;
+            border: 2px solid #565869;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ececf1;
+            position: relative;
+            min-width: 100px;
+            min-height: 100px;
+        }
+        
+        .bav-cell.planet-natural-house {
+            background: rgba(16, 163, 127, 0.3);
+            border: 3px solid #10a37f;
+            box-shadow: 0 0 8px rgba(16, 163, 127, 0.5);
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house {
+            background: rgba(16, 163, 127, 0.4) !important;
+            border: 3px solid #10a37f !important;
+            box-shadow: 0 0 10px rgba(16, 163, 127, 0.6) !important;
+            font-weight: 900;
+            transform: scale(1.05);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.high {
+            background: rgba(16, 163, 127, 0.5) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.medium {
+            background: rgba(16, 163, 127, 0.4) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.low {
+            background: rgba(16, 163, 127, 0.35) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .bav-cell.high {
+            background: rgba(16, 163, 127, 0.2);
+            color: #10a37f;
+        }
+        
+        .bav-cell.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .bav-cell.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .bav-cell.central {
+            grid-column: 2 / 4;
+            grid-row: 2 / 4;
+            background: #2d2d2d;
+            border: 3px solid #f59e0b;
+            flex-direction: column;
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        .bav-cell.central .planet-name {
+            color: #10a37f;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .bav-cell.central .total {
+            color: #f59e0b;
+            font-size: 16px;
+        }
+        
+        .bav-cell.top-1 { grid-column: 1; grid-row: 1; }
+        .bav-cell.top-2 { grid-column: 2; grid-row: 1; }
+        .bav-cell.top-3 { grid-column: 3; grid-row: 1; }
+        .bav-cell.top-4 { grid-column: 4; grid-row: 1; }
+        .bav-cell.middle-left { grid-column: 1; grid-row: 2; }
+        .bav-cell.middle-right { grid-column: 4; grid-row: 2; }
+        .bav-cell.row3-left { grid-column: 1; grid-row: 3; }
+        .bav-cell.row3-right { grid-column: 4; grid-row: 3; }
+        .bav-cell.bottom-1 { grid-column: 1; grid-row: 4; }
+        .bav-cell.bottom-2 { grid-column: 2; grid-row: 4; }
+        .bav-cell.bottom-3 { grid-column: 3; grid-row: 4; }
+        .bav-cell.bottom-4 { grid-column: 4; grid-row: 4; }
+        
+        .bav-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #343541;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .bav-table th {
+            background: #10a37f;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #565869;
+        }
+        
+        .bav-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid #565869;
+            color: #ececf1;
+        }
+        
+        .bav-table tr:nth-child(even) {
+            background: #2d2d2d;
+        }
+        
+        .bav-table .rashi-name {
+            text-align: left;
+            font-weight: bold;
+            background: #40414f;
+        }
+        
+        .bav-table .total-row {
+            background: rgba(16, 163, 127, 0.2);
+            font-weight: bold;
+        }
+        
+        .bav-table .total-col {
+            background: rgba(245, 158, 11, 0.2);
+            font-weight: bold;
+        }
+        
+        .sav-grid-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .sav-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 5px;
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .sav-cell {
+            background: #343541;
+            border: 2px solid #565869;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ececf1;
+        }
+        
+        .sav-cell.central {
+            grid-column: 2 / 4;
+            grid-row: 2 / 4;
+            background: #2d2d2d;
+            border: 3px solid #f59e0b;
+            flex-direction: column;
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        .sav-cell.central .title {
+            color: #10a37f;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sav-cell.central .total {
+            color: #f59e0b;
+            font-size: 16px;
+        }
+        
+        .sav-cell.high {
+            background: rgba(16, 163, 127, 0.2);
+            color: #10a37f;
+        }
+        
+        .sav-cell.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+        
+        .sav-cell.low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .overall-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .overall-bav-card, .overall-sav-container {
+            background: #2d2d2d;
+            border: 1px solid #565869;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .overall-bav-card h3, .overall-sav-container h3 {
+            color: #10a37f;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .overall-bav-mini-grid {
+            display: grid;
+            grid-template-columns: 60px 60px 60px 60px;
+            grid-template-rows: 60px 60px 60px 60px;
+            gap: 4px;
+            background: #343541;
+            padding: 8px;
+            border-radius: 8px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .overall-bav-mini-cell {
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ececf1;
+            min-width: 60px;
+            min-height: 60px;
+        }
+        
+        .overall-bav-mini-cell.central {
+            grid-column: 2 / 4;
+            grid-row: 2 / 4;
+            flex-direction: column;
+            padding: 8px;
+            font-size: 11px;
+        }
+        
+        .overall-bav-mini-cell.central .planet-name {
+            color: #10a37f;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .overall-bav-mini-cell.central .total {
+            color: #f59e0b;
+            font-size: 12px;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house {
+            background: rgba(16, 163, 127, 0.5) !important;
+            border: 3px solid #10a37f !important;
+            box-shadow: 0 0 12px rgba(16, 163, 127, 0.8) !important;
+            font-weight: 900;
+            transform: scale(1.08);
+            z-index: 10;
+            position: relative;
+            color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.high {
+            background: rgba(16, 163, 127, 0.6) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.medium {
+            background: rgba(16, 163, 127, 0.5) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.planet-natural-house.low {
+            background: rgba(16, 163, 127, 0.45) !important;
+            border-color: #10a37f !important;
+        }
+        
+        .overall-bav-mini-cell.top-1 { grid-column: 1; grid-row: 1; }
+        .overall-bav-mini-cell.top-2 { grid-column: 2; grid-row: 1; }
+        .overall-bav-mini-cell.top-3 { grid-column: 3; grid-row: 1; }
+        .overall-bav-mini-cell.top-4 { grid-column: 4; grid-row: 1; }
+        .overall-bav-mini-cell.middle-left { grid-column: 1; grid-row: 2; }
+        .overall-bav-mini-cell.middle-right { grid-column: 4; grid-row: 2; }
+        .overall-bav-mini-cell.row3-left { grid-column: 1; grid-row: 3; }
+        .overall-bav-mini-cell.row3-right { grid-column: 4; grid-row: 3; }
+        .overall-bav-mini-cell.bottom-1 { grid-column: 1; grid-row: 4; }
+        .overall-bav-mini-cell.bottom-2 { grid-column: 2; grid-row: 4; }
+        .overall-bav-mini-cell.bottom-3 { grid-column: 3; grid-row: 4; }
+        .overall-bav-mini-cell.bottom-4 { grid-column: 4; grid-row: 4; }
+        
         .tree-info {
             flex: 1;
             display: grid;
@@ -816,6 +1186,7 @@
     <div class="header">
         <h1>🕉️ Vedic Astrology AI Chat</h1>
         <div class="header-actions">
+            <button class="btn-header" id="ashtakavargaBtn" disabled>🔢 Ashtakavarga</button>
             <button class="btn-header" id="dashaGocharaBtn" disabled>📊 Dasha & Gochara</button>
             <button class="btn-header" id="dashaBhuktiBtn" disabled>📅 Dasha Bhukti</button>
             <button class="btn-header" id="transitDateBtn" disabled>📆 Transit Date</button>
@@ -948,9 +1319,25 @@
         </div>
     </div>
     
+    <!-- Ashtakavarga Modal -->
+    <div class="modal-overlay" id="ashtakavargaModal">
+        <div class="modal-content" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h2>🔢 Complete Ashtakavarga Chart</h2>
+                <button class="modal-close" onclick="closeModal('ashtakavargaModal')">&times;</button>
+            </div>
+            <div id="ashtakavargaModalBody">
+                <div class="loading-modal">
+                    <p>Loading Ashtakavarga data...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         const API_BASE = window.location.origin;
         const DASHA_GOCHARA_API = 'http://localhost:8001'; // Dasha/Gochara API base URL
+        const BAV_SAV_API = 'http://localhost:8000'; // BAV/SAV API base URL
         let sessionId = null;
         let isProcessing = false;
         let birthData = null; // Store birth data for modal
@@ -1027,6 +1414,7 @@
                 showSuggestions(data.suggestions);
                 
                 // Enable all header buttons
+                document.getElementById('ashtakavargaBtn').disabled = false;
                 document.getElementById('dashaGocharaBtn').disabled = false;
                 document.getElementById('dashaBhuktiBtn').disabled = false;
                 document.getElementById('transitDateBtn').disabled = false;
@@ -1211,7 +1599,7 @@
         }
         
         // Close modals on overlay click
-        ['dashaGocharaModal', 'dashaBhuktiModal', 'transitDateModal'].forEach(modalId => {
+        ['ashtakavargaModal', 'dashaGocharaModal', 'dashaBhuktiModal', 'transitDateModal'].forEach(modalId => {
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.addEventListener('click', (e) => {
@@ -1225,11 +1613,340 @@
         // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
+                closeModal('ashtakavargaModal');
                 closeModal('dashaGocharaModal');
                 closeModal('dashaBhuktiModal');
                 closeModal('transitDateModal');
             }
         });
+        
+        // Ashtakavarga Button Click Handler
+        const ashtakavargaBtn = document.getElementById('ashtakavargaBtn');
+        if (ashtakavargaBtn) {
+            ashtakavargaBtn.addEventListener('click', () => {
+                openAshtakavargaModal();
+            });
+        }
+        
+        async function openAshtakavargaModal() {
+            if (!birthData) {
+                alert('Please start a chat session first by entering your birth details.');
+                return;
+            }
+            
+            const modal = document.getElementById('ashtakavargaModal');
+            const modalBody = document.getElementById('ashtakavargaModalBody');
+            
+            if (!modal || !modalBody) {
+                console.error('Ashtakavarga modal elements not found');
+                return;
+            }
+            
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div class="loading-modal"><p>Loading Ashtakavarga data...</p></div>';
+            
+            try {
+                // Fetch BAV/SAV data from API
+                const response = await fetch(`${BAV_SAV_API}/api/v1/calculate/full`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        dob: birthData.dob,
+                        tob: birthData.tob,
+                        latitude: birthData.lat,
+                        longitude: birthData.lon,
+                        tz_offset: birthData.tz_offset,
+                        name: birthData.name || null,
+                        place: birthData.place || null
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                renderAshtakavargaModal(data);
+                
+            } catch (error) {
+                console.error('Error fetching Ashtakavarga data:', error);
+                modalBody.innerHTML = `
+                    <div class="loading-modal">
+                        <p style="color: #ef4444;">Error loading Ashtakavarga data: ${error.message}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the BAV/SAV API is running</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderAshtakavargaModal(data) {
+            const modalBody = document.getElementById('ashtakavargaModalBody');
+            if (!modalBody) return;
+            
+            const bavCharts = data.bav_charts || {};
+            const savChart = data.sav_chart || [];
+            const planetaryPositions = data.planetary_positions || {};
+            const ascRasi = planetaryPositions['ASCENDANT'] || 1;
+            
+            // Planet names mapping
+            const planetNames = {
+                'SUN': 'Sun', 'MOON': 'Moon', 'MARS': 'Mars', 'MERCURY': 'Mercury',
+                'JUPITER': 'Jupiter', 'VENUS': 'Venus', 'SATURN': 'Saturn', 'ASCENDANT': 'Ascendant'
+            };
+            
+            // Rashi names (South Indian style)
+            const rashiNames = ['Mesha', 'Vrishabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 
+                               'Tula', 'Vrischika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
+            
+            // Contributing planets for BAV table
+            const contributingPlanets = ['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Ascendant'];
+            
+            let html = '<div class="ashtakavarga-container">';
+            
+            // Render Overall section only (no tabs needed)
+            html += '<div class="bav-section active" id="bav-OVERALL">';
+            html += renderOverallSection(bavCharts, savChart, planetaryPositions, planetNames, rashiNames);
+            html += '</div>';
+            
+            html += '</div>';
+            
+            modalBody.innerHTML = html;
+        }
+        
+        function renderBAVSection(planet, chart, planetaryPositions, planetNames, rashiNames, contributingPlanets) {
+            const ascRasi = planetaryPositions['ASCENDANT'] || 1;
+            const planetRasi = planetaryPositions[planet] || 0;
+            
+            // Convert house-based chart to RASI-based
+            const rasiChart = new Array(12).fill(0);
+            for (let house = 1; house <= 12; house++) {
+                const houseRasi = ((ascRasi - 1 + house - 1) % 12) + 1;
+                const rasiIdx = houseRasi - 1;
+                rasiChart[rasiIdx] = chart[house - 1];
+            }
+            
+            const total = rasiChart.reduce((a, b) => a + b, 0);
+            
+            function getCellClass(rasiNum, value) {
+                let classes = '';
+                if (rasiNum === planetRasi) classes += ' planet-natural-house';
+                if (value > 4) classes += ' high';
+                else if (value < 4) classes += ' low';
+                else classes += ' medium';
+                return classes;
+            }
+            
+            let html = `<h3 style="color: #10a37f; margin-bottom: 20px;">${planetNames[planet]} Ashtakavarga</h3>`;
+            
+            // BAV Grid (4x4 with central cell)
+            html += '<div class="bav-grid-container"><div class="bav-grid">';
+            html += `<div class="bav-cell top-1${getCellClass(12, rasiChart[11])}">${rasiChart[11]}</div>`;
+            html += `<div class="bav-cell top-2${getCellClass(1, rasiChart[0])}">${rasiChart[0]}</div>`;
+            html += `<div class="bav-cell top-3${getCellClass(2, rasiChart[1])}">${rasiChart[1]}</div>`;
+            html += `<div class="bav-cell top-4${getCellClass(3, rasiChart[2])}">${rasiChart[2]}</div>`;
+            html += `<div class="bav-cell middle-left${getCellClass(11, rasiChart[10])}">${rasiChart[10]}</div>`;
+            html += `<div class="bav-cell central"><div class="planet-name">${planetNames[planet]}</div><div class="total">Total: ${total}</div></div>`;
+            html += `<div class="bav-cell middle-right${getCellClass(4, rasiChart[3])}">${rasiChart[3]}</div>`;
+            html += `<div class="bav-cell row3-left${getCellClass(10, rasiChart[9])}">${rasiChart[9]}</div>`;
+            html += `<div class="bav-cell row3-right${getCellClass(5, rasiChart[4])}">${rasiChart[4]}</div>`;
+            html += `<div class="bav-cell bottom-1${getCellClass(9, rasiChart[8])}">${rasiChart[8]}</div>`;
+            html += `<div class="bav-cell bottom-2${getCellClass(8, rasiChart[7])}">${rasiChart[7]}</div>`;
+            html += `<div class="bav-cell bottom-3${getCellClass(7, rasiChart[6])}">${rasiChart[6]}</div>`;
+            html += `<div class="bav-cell bottom-4${getCellClass(6, rasiChart[5])}">${rasiChart[5]}</div>`;
+            html += '</div></div>';
+            
+            // BAV Table (simplified - showing RASI values)
+            html += '<table class="bav-table"><thead><tr><th>Rashi</th><th>Points</th></tr></thead><tbody>';
+            for (let i = 0; i < 12; i++) {
+                const rasiNum = i + 1;
+                html += `<tr><td class="rashi-name">${rashiNames[i]}</td><td>${rasiChart[i]}</td></tr>`;
+            }
+            html += `<tr class="total-row"><td class="rashi-name">Total</td><td class="total-col">${total}</td></tr>`;
+            html += '</tbody></table>';
+            
+            return html;
+        }
+        
+        function renderSAVSection(savChart, planetaryPositions, rashiNames) {
+            const ascRasi = planetaryPositions['ASCENDANT'] || 1;
+            
+            // Convert house-based SAV to RASI-based
+            const savRasiChart = new Array(12).fill(0);
+            for (let house = 1; house <= 12; house++) {
+                const houseRasi = ((ascRasi - 1 + house - 1) % 12) + 1;
+                const rasiIdx = houseRasi - 1;
+                savRasiChart[rasiIdx] = savChart[house - 1];
+            }
+            
+            const total = savRasiChart.reduce((a, b) => a + b, 0);
+            const avg = total / 12;
+            let centralClass = 'medium';
+            if (avg >= 30) centralClass = 'high';
+            else if (avg < 22) centralClass = 'low';
+            
+            function getSAVCellClass(value) {
+                if (value >= 30) return 'high';
+                if (value < 22) return 'low';
+                return 'medium';
+            }
+            
+            let html = '<h3 style="color: #10a37f; margin-bottom: 20px;">Sarvashtakavarga (SAV)</h3>';
+            
+            // SAV Grid (4x4 with central cell)
+            html += '<div class="sav-grid-container"><div class="sav-grid">';
+            html += `<div class="sav-cell">${savRasiChart[8]}</div>`; // 9
+            html += `<div class="sav-cell">${savRasiChart[9]}</div>`; // 10
+            html += `<div class="sav-cell">${savRasiChart[10]}</div>`; // 11
+            html += `<div class="sav-cell">${savRasiChart[11]}</div>`; // 12
+            html += `<div class="sav-cell">${savRasiChart[6]}</div>`; // 7
+            html += `<div class="sav-cell central ${centralClass}"><div class="title">Sarva</div><div class="title">Ashtakavarga</div><div class="total">Total: ${total}</div></div>`;
+            html += `<div class="sav-cell">${savRasiChart[0]}</div>`; // 1
+            html += `<div class="sav-cell">${savRasiChart[7]}</div>`; // 8
+            html += `<div class="sav-cell">${savRasiChart[1]}</div>`; // 2
+            html += `<div class="sav-cell">${savRasiChart[2]}</div>`; // 3
+            html += `<div class="sav-cell">${savRasiChart[3]}</div>`; // 4
+            html += `<div class="sav-cell">${savRasiChart[4]}</div>`; // 5
+            html += `<div class="sav-cell">${savRasiChart[5]}</div>`; // 6
+            html += '</div></div>';
+            
+            // SAV Table
+            html += '<table class="bav-table"><thead><tr><th>Rashi</th><th>SAV Points</th><th>Strength</th></tr></thead><tbody>';
+            for (let i = 0; i < 12; i++) {
+                const value = savRasiChart[i];
+                let strength = 'Moderate';
+                if (value >= 30) strength = 'Strong';
+                else if (value < 22) strength = 'Weak';
+                html += `<tr><td class="rashi-name">${rashiNames[i]}</td><td>${value}</td><td>${strength}</td></tr>`;
+            }
+            html += `<tr class="total-row"><td class="rashi-name">Total</td><td class="total-col">${total}</td><td>-</td></tr>`;
+            html += '</tbody></table>';
+            
+            return html;
+        }
+        
+        function renderOverallSection(bavCharts, savChart, planetaryPositions, planetNames, rashiNames) {
+            const ascRasi = planetaryPositions['ASCENDANT'] || 1;
+            
+            let html = '<h3 style="color: #10a37f; margin-bottom: 20px;">Overall BAV and SAV Comparison</h3>';
+            html += '<p style="color: #9ca3af; margin-bottom: 20px; font-size: 0.9em;">Planet positions are highlighted in <span style="color: #10a37f; font-weight: bold;">green</span> to show where each planet is naturally seated in your birth chart.</p>';
+            html += '<div class="overall-grid">';
+            
+            // Render all BAV charts side by side
+            const planets = ['SUN', 'MOON', 'MARS', 'MERCURY', 'JUPITER', 'VENUS', 'SATURN', 'ASCENDANT'];
+            planets.forEach(planet => {
+                const chart = bavCharts[planet] || [];
+                if (chart.length === 0) return;
+                
+                const rasiChart = new Array(12).fill(0);
+                for (let house = 1; house <= 12; house++) {
+                    const houseRasi = ((ascRasi - 1 + house - 1) % 12) + 1;
+                    const rasiIdx = houseRasi - 1;
+                    rasiChart[rasiIdx] = chart[house - 1];
+                }
+                
+                const total = rasiChart.reduce((a, b) => a + b, 0);
+                const planetRasi = planetaryPositions[planet] || 0;
+                
+                // Get RASI name for the planet's position
+                const planetRasiName = planetRasi > 0 ? rashiNames[planetRasi - 1] : '';
+                
+                function getCellClass(rasiNum, value) {
+                    let classes = '';
+                    // Enhanced highlighting for planet's natural position
+                    if (rasiNum === planetRasi) {
+                        classes += ' planet-natural-house';
+                    }
+                    if (value > 4) classes += ' high';
+                    else if (value < 4) classes += ' low';
+                    else classes += ' medium';
+                    return classes;
+                }
+                
+                html += '<div class="overall-bav-card">';
+                html += `<h3>${planetNames[planet]}${planetRasiName ? ` <span style="color: #10a37f; font-size: 0.8em;">(${planetRasiName})</span>` : ''}</h3>`;
+                html += '<div class="overall-bav-mini-grid">';
+                html += `<div class="overall-bav-mini-cell top-1${getCellClass(12, rasiChart[11])}" title="Meena (Rasi 12)">${rasiChart[11]}</div>`;
+                html += `<div class="overall-bav-mini-cell top-2${getCellClass(1, rasiChart[0])}" title="Mesha (Rasi 1)">${rasiChart[0]}</div>`;
+                html += `<div class="overall-bav-mini-cell top-3${getCellClass(2, rasiChart[1])}" title="Vrishabha (Rasi 2)">${rasiChart[1]}</div>`;
+                html += `<div class="overall-bav-mini-cell top-4${getCellClass(3, rasiChart[2])}" title="Mithuna (Rasi 3)">${rasiChart[2]}</div>`;
+                html += `<div class="overall-bav-mini-cell middle-left${getCellClass(11, rasiChart[10])}" title="Kumbha (Rasi 11)">${rasiChart[10]}</div>`;
+                html += `<div class="overall-bav-mini-cell central"><div class="planet-name">${planetNames[planet]}</div><div class="total">${total}</div>${planetRasiName ? `<div style="font-size: 10px; color: #10a37f; margin-top: 3px;">In ${planetRasiName}</div>` : ''}</div>`;
+                html += `<div class="overall-bav-mini-cell middle-right${getCellClass(4, rasiChart[3])}" title="Karka (Rasi 4)">${rasiChart[3]}</div>`;
+                html += `<div class="overall-bav-mini-cell row3-left${getCellClass(10, rasiChart[9])}" title="Makara (Rasi 10)">${rasiChart[9]}</div>`;
+                html += `<div class="overall-bav-mini-cell row3-right${getCellClass(5, rasiChart[4])}" title="Simha (Rasi 5)">${rasiChart[4]}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-1${getCellClass(9, rasiChart[8])}" title="Dhanu (Rasi 9)">${rasiChart[8]}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-2${getCellClass(8, rasiChart[7])}" title="Vrischika (Rasi 8)">${rasiChart[7]}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-3${getCellClass(7, rasiChart[6])}" title="Tula (Rasi 7)">${rasiChart[6]}</div>`;
+                html += `<div class="overall-bav-mini-cell bottom-4${getCellClass(6, rasiChart[5])}" title="Kanya (Rasi 6)">${rasiChart[5]}</div>`;
+                html += '</div></div>';
+            });
+            
+            // Add SAV
+            const savRasiChart = new Array(12).fill(0);
+            for (let house = 1; house <= 12; house++) {
+                const houseRasi = ((ascRasi - 1 + house - 1) % 12) + 1;
+                const rasiIdx = houseRasi - 1;
+                savRasiChart[rasiIdx] = savChart[house - 1];
+            }
+            
+            const savTotal = savRasiChart.reduce((a, b) => a + b, 0);
+            const savAvg = savTotal / 12;
+            let savCentralClass = 'medium';
+            if (savAvg >= 30) savCentralClass = 'high';
+            else if (savAvg < 22) savCentralClass = 'low';
+            
+            function getSAVCellClass(value) {
+                if (value >= 30) return 'high';
+                if (value < 22) return 'low';
+                return 'medium';
+            }
+            
+            html += '<div class="overall-sav-container">';
+            html += '<h3>Sarvashtakavarga (SAV)</h3>';
+            html += '<div class="overall-bav-mini-grid">';
+            html += `<div class="overall-bav-mini-cell top-1 ${getSAVCellClass(savRasiChart[11])}">${savRasiChart[11]}</div>`;
+            html += `<div class="overall-bav-mini-cell top-2 ${getSAVCellClass(savRasiChart[0])}">${savRasiChart[0]}</div>`;
+            html += `<div class="overall-bav-mini-cell top-3 ${getSAVCellClass(savRasiChart[1])}">${savRasiChart[1]}</div>`;
+            html += `<div class="overall-bav-mini-cell top-4 ${getSAVCellClass(savRasiChart[2])}">${savRasiChart[2]}</div>`;
+            html += `<div class="overall-bav-mini-cell middle-left ${getSAVCellClass(savRasiChart[10])}">${savRasiChart[10]}</div>`;
+            html += `<div class="overall-bav-mini-cell central ${savCentralClass}"><div class="planet-name">SAV</div><div class="total">${savTotal}</div></div>`;
+            html += `<div class="overall-bav-mini-cell middle-right ${getSAVCellClass(savRasiChart[3])}">${savRasiChart[3]}</div>`;
+            html += `<div class="overall-bav-mini-cell row3-left ${getSAVCellClass(savRasiChart[9])}">${savRasiChart[9]}</div>`;
+            html += `<div class="overall-bav-mini-cell row3-right ${getSAVCellClass(savRasiChart[4])}">${savRasiChart[4]}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-1 ${getSAVCellClass(savRasiChart[8])}">${savRasiChart[8]}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-2 ${getSAVCellClass(savRasiChart[7])}">${savRasiChart[7]}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-3 ${getSAVCellClass(savRasiChart[6])}">${savRasiChart[6]}</div>`;
+            html += `<div class="overall-bav-mini-cell bottom-4 ${getSAVCellClass(savRasiChart[5])}">${savRasiChart[5]}</div>`;
+            html += '</div></div>';
+            
+            html += '</div>';
+            
+            return html;
+        }
+        
+        function showPlanetTab(planet) {
+            // Hide all sections
+            document.querySelectorAll('.bav-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.planet-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(`bav-${planet}`);
+            if (section) {
+                section.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Make showPlanetTab globally available
+        window.showPlanetTab = showPlanetTab;
         
         // Dasha Bhukti button
         const dashaBhuktiBtn = document.getElementById('dashaBhuktiBtn');
