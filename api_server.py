@@ -7,6 +7,7 @@ Safe to run alongside Flask app (different port)
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional
 from datetime import datetime
