@@ -2359,7 +2359,7 @@
                 html += `<tr>`;
                 html += `<td><strong>${formattedDate}</strong></td>`;
                 html += `<td>${dateInfo.score.toFixed(1)}/100</td>`;
-                html += `<td><span class="rag-indicator ${ragClass}"></span>${ragEmoji} ${ragStatus}</td>`;
+                html += `<td><span class="rag-indicator ${ragClass}"></span><span style="font-size: 0.9em;">${ragStatus}</span></td>`;
                 html += `<td style="font-size: 0.9em; color: #9ca3af;">${(dateInfo.reasons || []).slice(0, 2).join(', ')}</td>`;
                 html += `<td>`;
                 html += `<span class="explanation-tooltip" onclick="toggleExplanation('${explanationId}')">`;
@@ -2437,7 +2437,7 @@
                 html += `<div class="date-card" style="background: #343541; border: 1px solid #565869; border-radius: 6px; padding: 12px; ${ragStatus === 'GREEN' ? 'border-left: 4px solid #10a37f;' : ''}">`;
                 html += `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">`;
                 html += `<div><strong style="font-size: 1.1em;">${day} ${monthName}</strong><span style="color: #9ca3af; font-size: 0.85em; margin-left: 5px;">${weekday}</span></div>`;
-                html += `<div><span class="rag-indicator ${ragClass}"></span>${ragEmoji}</div>`;
+                html += `<div><span class="rag-indicator ${ragClass}"></span><span style="font-size: 0.85em; color: #9ca3af;">${ragStatus}</span></div>`;
                 html += `</div>`;
                 html += `<div style="color: #10a37f; font-weight: bold; margin-bottom: 5px;">Score: ${dateInfo.score.toFixed(1)}/100</div>`;
                 html += `<div style="font-size: 0.85em; color: #9ca3af; margin-bottom: 8px;">`;
