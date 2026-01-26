@@ -350,3 +350,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8001))
     uvicorn.run(app, host="0.0.0.0", port=port)
 
+# Trigger Dasha/Gochara API redeploy - 2026-01-26 17:18:21
