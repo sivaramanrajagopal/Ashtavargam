@@ -1,9 +1,13 @@
 [build]
 builder = "dockerfile"
-dockerfilePath = "Dockerfile.agent"
+# dockerfilePath removed - configure per service in Railway UI
+# Agent App: Dockerfile.agent
+# BAV/SAV API: Dockerfile (or empty)
 
 [deploy]
-startCommand = "python -m uvicorn agent_app.main:app --host 0.0.0.0 --port 8080"
+# startCommand removed - configure per service in Railway UI
+# Agent App: python -m uvicorn agent_app.main:app --host 0.0.0.0 --port 8080
+# BAV/SAV API: python3 -m uvicorn api_server:app --host 0.0.0.0 --port 8080
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
