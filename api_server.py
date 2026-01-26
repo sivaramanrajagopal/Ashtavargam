@@ -23,15 +23,15 @@ app = FastAPI(
 )
 
 # Enable CORS for AI agents and web clients
-# Note: When allow_credentials=True, cannot use allow_origins=["*"]
-# So we allow specific origins or set allow_credentials=False
+# Allow all origins for cross-origin requests
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
-    allow_credentials=False,  # Set to False to allow wildcard origins
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_credentials=False,  # Must be False when using wildcard origins
+    allow_methods=["*"],  # Allow all HTTP methods including OPTIONS
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"],  # Expose all headers
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Pydantic Models for Request/Response
