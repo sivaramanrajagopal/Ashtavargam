@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>🕉️ Vedic Astrology AI Chat</title>
     <style>
         * {
@@ -11,14 +13,27 @@
             box-sizing: border-box;
         }
         
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background: #343541;
             color: #ececf1;
-            height: 100vh;
+            min-height: 100vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         .header {
@@ -1340,15 +1355,15 @@
                     </div>
                     <div class="form-group">
                         <label>Latitude *</label>
-                        <input type="number" id="lat" step="0.0001" placeholder="e.g., 13.0827" required>
+                        <input type="number" id="lat" step="0.0001" placeholder="e.g., 13.0827" required inputmode="decimal">
                     </div>
                     <div class="form-group">
                         <label>Longitude *</label>
-                        <input type="number" id="lon" step="0.0001" placeholder="e.g., 80.2707" required>
+                        <input type="number" id="lon" step="0.0001" placeholder="e.g., 80.2707" required inputmode="decimal">
                     </div>
                     <div class="form-group">
                         <label>Timezone Offset *</label>
-                        <input type="number" id="tz_offset" step="0.1" value="5.5" required>
+                        <input type="number" id="tz_offset" step="0.1" value="5.5" required inputmode="decimal">
                     </div>
                 </div>
                 <button type="submit" class="btn-primary" id="startBtn">Start Chat</button>
@@ -1481,8 +1496,55 @@
     
     <script>
         const API_BASE = window.location.origin;
-        const DASHA_GOCHARA_API = 'http://localhost:8001'; // Dasha/Gochara API base URL
-        const BAV_SAV_API = 'http://localhost:8000'; // BAV/SAV API base URL
+        
+        // Dynamic API URL detection - use environment variable or detect from origin
+        // For production (Railway), use environment variables passed from backend
+        // For localhost, use localhost URLs
+        function getApiUrl(apiName, defaultPort) {
+            // Check if we're on Railway (production)
+            const isProduction = window.location.hostname.includes('railway.app') || 
+                                 window.location.hostname.includes('up.railway.app') ||
+                                 window.location.hostname !== 'localhost' && 
+                                 window.location.hostname !== '127.0.0.1';
+            
+            if (isProduction) {
+                // In production, APIs should be on separate Railway services
+                // Try to get from meta tag or use same origin with proxy
+                const metaTag = document.querySelector(`meta[name="${apiName}-url"]`);
+                if (metaTag) {
+                    return metaTag.content;
+                }
+                // Fallback: assume APIs are on same origin (if proxied) or use environment detection
+                // For now, use same origin - user should set environment variables in Railway
+                return window.location.origin;
+            } else {
+                // Localhost development
+                return `http://localhost:${defaultPort}`;
+            }
+        }
+        
+        // Try to get API URLs from backend config endpoint
+        let DASHA_GOCHARA_API = getApiUrl('dasha-gochara', 8001);
+        let BAV_SAV_API = getApiUrl('bav-sav', 8000);
+        
+        // Fetch API URLs from backend on load
+        (async function() {
+            try {
+                const configResponse = await fetch(`${API_BASE}/api/config`);
+                if (configResponse.ok) {
+                    const config = await configResponse.json();
+                    if (config.dasha_gochara_api_url) {
+                        DASHA_GOCHARA_API = config.dasha_gochara_api_url;
+                    }
+                    if (config.bav_sav_api_url) {
+                        BAV_SAV_API = config.bav_sav_api_url;
+                    }
+                }
+            } catch (e) {
+                console.log('Using default API URLs:', { DASHA_GOCHARA_API, BAV_SAV_API });
+            }
+        })();
+        
         let sessionId = null;
         let isProcessing = false;
         let birthData = null; // Store birth data for modal

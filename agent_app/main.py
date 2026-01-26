@@ -135,6 +135,15 @@ async def health_check():
     }
 
 
+@app.get("/api/config")
+async def get_config():
+    """Get frontend configuration including API URLs"""
+    return {
+        "dasha_gochara_api_url": os.getenv("DASHA_GOCHARA_API_URL", "http://localhost:8001"),
+        "bav_sav_api_url": os.getenv("BAV_SAV_API_URL", "http://localhost:8000")
+    }
+
+
 @app.get("/chat", response_class=HTMLResponse)
 async def chat_interface():
     """Serve the interactive chat interface"""
