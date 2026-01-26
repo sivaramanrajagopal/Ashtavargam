@@ -7,7 +7,7 @@ import os
 from typing import TypedDict, List, Optional, Dict, Annotated, Literal
 from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 from agent_app.tools.astrology_tools import get_all_tools

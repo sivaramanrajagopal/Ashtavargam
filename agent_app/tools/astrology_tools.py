@@ -6,7 +6,7 @@ Tools that the agent can use to call BAV/SAV, Dasha, and Gochara APIs
 import os
 import requests
 from typing import Dict, List, Optional
-from langchain.tools import tool
+from langchain_core.tools import tool
 from pydantic import BaseModel, Field
 
 
