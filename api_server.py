@@ -29,17 +29,45 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
     allow_credentials=False,  # Must be False when using wildcard origins
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],  # Explicitly list methods
+    allow_methods=["*"],  # Allow all HTTP methods including OPTIONS
     allow_headers=["*"],  # Allow all headers
     expose_headers=["*"],  # Expose all headers
     max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Add explicit OPTIONS handler for all routes (backup for CORS)
+# This ensures OPTIONS requests are handled even if middleware fails
+from fastapi.responses import Response
+
 @app.options("/{full_path:path}")
 async def options_handler(full_path: str):
-    """Handle OPTIONS requests for CORS preflight"""
-    from fastapi.responses import Response
+    """Handle OPTIONS requests for CORS preflight - explicit handler"""
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "false",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
+
+# Also add OPTIONS handler for root and health endpoints
+@app.options("/")
+async def root_options():
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
+
+@app.options("/health")
+async def health_options():
     return Response(
         status_code=200,
         headers={
