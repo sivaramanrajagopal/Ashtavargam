@@ -31,7 +31,8 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -799,7 +800,9 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 0; /* Allows flex child to shrink */
         }
         
         .chat-container.hidden {
@@ -1526,6 +1529,7 @@
         // Try to get API URLs from backend config endpoint
         let DASHA_GOCHARA_API = getApiUrl('dasha-gochara', 8001);
         let BAV_SAV_API = getApiUrl('bav-sav', 8000);
+        let apiUrlsReady = false;
         
         // Fetch API URLs from backend on load
         (async function() {
@@ -1535,15 +1539,34 @@
                     const config = await configResponse.json();
                     if (config.dasha_gochara_api_url) {
                         DASHA_GOCHARA_API = config.dasha_gochara_api_url;
+                        console.log('✅ DASHA_GOCHARA_API:', DASHA_GOCHARA_API);
                     }
                     if (config.bav_sav_api_url) {
                         BAV_SAV_API = config.bav_sav_api_url;
+                        console.log('✅ BAV_SAV_API:', BAV_SAV_API);
                     }
+                    apiUrlsReady = true;
+                } else {
+                    console.warn('Config endpoint returned non-OK status:', configResponse.status);
+                    apiUrlsReady = true; // Use defaults
                 }
             } catch (e) {
+                console.warn('Could not fetch API config, using defaults:', e);
                 console.log('Using default API URLs:', { DASHA_GOCHARA_API, BAV_SAV_API });
+                apiUrlsReady = true; // Use defaults
             }
         })();
+        
+        // Helper function to ensure API URLs are ready
+        async function ensureApiUrlsReady() {
+            if (!apiUrlsReady) {
+                // Wait up to 2 seconds for API URLs to be fetched
+                for (let i = 0; i < 20; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    if (apiUrlsReady) break;
+                }
+            }
+        }
         
         let sessionId = null;
         let isProcessing = false;
@@ -1592,6 +1615,8 @@
                     tob: document.getElementById('tob').value,
                     lat: parseFloat(document.getElementById('lat').value),
                     lon: parseFloat(document.getElementById('lon').value),
+                    latitude: parseFloat(document.getElementById('lat').value), // For BAV/SAV API
+                    longitude: parseFloat(document.getElementById('lon').value), // For BAV/SAV API
                     tz_offset: parseFloat(document.getElementById('tz_offset').value),
                     name: document.getElementById('name').value || undefined,
                     place: document.getElementById('place').value || undefined
@@ -1855,34 +1880,48 @@
             modalBody.innerHTML = '<div class="loading-modal"><p>Loading Ashtakavarga data...</p></div>';
             
             try {
+                // Ensure API URLs are ready
+                await ensureApiUrlsReady();
+                
+                // Prepare birth data - BAV/SAV API expects latitude/longitude
+                const requestData = {
+                    dob: birthData.dob,
+                    tob: birthData.tob,
+                    latitude: birthData.latitude || birthData.lat,
+                    longitude: birthData.longitude || birthData.lon,
+                    tz_offset: birthData.tz_offset,
+                    name: birthData.name || null,
+                    place: birthData.place || null
+                };
+                
+                console.log('Fetching BAV/SAV data from:', `${BAV_SAV_API}/api/v1/calculate/full`);
+                console.log('Request data:', { ...requestData, latitude: '***', longitude: '***' });
+                
                 // Fetch BAV/SAV data from API
                 const response = await fetch(`${BAV_SAV_API}/api/v1/calculate/full`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        dob: birthData.dob,
-                        tob: birthData.tob,
-                        latitude: birthData.lat,
-                        longitude: birthData.lon,
-                        tz_offset: birthData.tz_offset,
-                        name: birthData.name || null,
-                        place: birthData.place || null
-                    })
+                    body: JSON.stringify(requestData)
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('BAV/SAV API error:', response.status, errorText);
+                    throw new Error(`API error: ${response.status} - ${errorText.substring(0, 100)}`);
                 }
                 
                 const data = await response.json();
+                console.log('✅ BAV/SAV data received');
                 renderAshtakavargaModal(data);
                 
             } catch (error) {
-                console.error('Error fetching Ashtakavarga data:', error);
+                console.error('Error loading Ashtakavarga:', error);
                 modalBody.innerHTML = `
                     <div class="loading-modal">
                         <p style="color: #ef4444;">Error loading Ashtakavarga data: ${error.message}</p>
                         <p style="margin-top: 10px; font-size: 0.9em; color: #9ca3af;">Please ensure the BAV/SAV API is running</p>
+                        <p style="margin-top: 10px; font-size: 0.85em; color: #9ca3af;">API URL: ${BAV_SAV_API}</p>
+                        <p style="margin-top: 5px; font-size: 0.85em; color: #9ca3af;">Check browser console (F12) for detailed error logs.</p>
                     </div>
                 `;
             }
@@ -2213,47 +2252,63 @@
             resultsDiv.innerHTML = '<div class="loading-modal"><p>Calculating auspicious dates for ' + selectedMonth + '...</p></div>';
             
             try {
+                // Ensure API URLs are ready
+                await ensureApiUrlsReady();
+                
                 // First, get SAV chart from BAV/SAV API
                 let savChart = null;
                 try {
+                    const bavSavRequestData = {
+                        dob: birthData.dob,
+                        tob: birthData.tob,
+                        latitude: birthData.latitude || birthData.lat,
+                        longitude: birthData.longitude || birthData.lon,
+                        tz_offset: birthData.tz_offset
+                    };
+                    
+                    console.log('Fetching SAV chart from:', `${BAV_SAV_API}/api/v1/calculate/full`);
                     const bavSavResponse = await fetch(`${BAV_SAV_API}/api/v1/calculate/full`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            dob: birthData.dob,
-                            tob: birthData.tob,
-                            latitude: birthData.lat,
-                            longitude: birthData.lon,
-                            tz_offset: birthData.tz_offset
-                        })
+                        body: JSON.stringify(bavSavRequestData)
                     });
                     
                     if (bavSavResponse.ok) {
                         const bavSavData = await bavSavResponse.json();
                         savChart = bavSavData.sav_chart || null;
+                        console.log('✅ SAV chart fetched');
+                    } else {
+                        console.warn('Could not fetch SAV chart:', bavSavResponse.status);
                     }
                 } catch (e) {
                     console.warn('Could not fetch SAV chart (will calculate without it):', e);
                 }
                 
                 // Fetch auspicious dates
+                const requestData = {
+                    dob: birthData.dob,
+                    tob: birthData.tob,
+                    lat: birthData.lat || birthData.latitude,
+                    lon: birthData.lon || birthData.longitude,
+                    tz_offset: birthData.tz_offset,
+                    month: selectedMonth,
+                    sav_chart: savChart,
+                    top_n: 10
+                };
+                
+                console.log('Fetching auspicious dates from:', `${DASHA_GOCHARA_API}/api/v1/gochara/auspicious-dates`);
+                console.log('Request data:', { ...requestData, lat: '***', lon: '***' });
+                
                 const response = await fetch(`${DASHA_GOCHARA_API}/api/v1/gochara/auspicious-dates`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        dob: birthData.dob,
-                        tob: birthData.tob,
-                        lat: birthData.lat,
-                        lon: birthData.lon,
-                        tz_offset: birthData.tz_offset,
-                        month: selectedMonth,
-                        sav_chart: savChart,
-                        top_n: 10
-                    })
+                    body: JSON.stringify(requestData)
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('Auspicious dates API error:', response.status, errorText);
+                    throw new Error(`API error: ${response.status} - ${errorText.substring(0, 100)}`);
                 }
                 
                 const data = await response.json();
