@@ -24,12 +24,15 @@ app = FastAPI(
 )
 
 # CORS middleware
+# Note: When allow_credentials=True, cannot use allow_origins=["*"]
+# So we allow specific origins or set allow_credentials=False
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=False,  # Set to False to allow wildcard origins
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Initialize Swiss Ephemeris
