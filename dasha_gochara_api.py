@@ -347,7 +347,9 @@ async def get_auspicious_dates(request: AuspiciousDatesRequest):
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.environ.get("PORT", 8001))
+    # Railway sets PORT automatically, but we read it from environment
+    # Use fixed port 8080 as Railway handles port mapping
+    port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
 
 # Trigger Dasha/Gochara API redeploy - 2026-01-26 17:18:21
