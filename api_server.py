@@ -146,6 +146,21 @@ class HealthResponse(BaseModel):
 
 
 # API Endpoints
+# IMPORTANT: OPTIONS handlers must come BEFORE POST routes for proper CORS handling
+
+@app.options("/api/v1/calculate/full")
+async def calculate_full_options():
+    """Handle OPTIONS preflight for calculate/full endpoint - MUST be before POST route"""
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "false",
+            "Access-Control-Max-Age": "3600",
+        }
+    )
 
 @app.get("/", response_model=HealthResponse)
 async def root():
