@@ -287,3 +287,4 @@ if __name__ == "__main__":
     
     uvicorn.run(app, host="0.0.0.0", port=port)
 
+# Trigger BAV/SAV API redeploy - 2026-01-26 17:29:24
