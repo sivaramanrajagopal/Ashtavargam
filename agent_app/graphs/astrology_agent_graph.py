@@ -274,7 +274,7 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
         for house_num in selected_houses:
             chunks = rag_system.retrieve_context(
                 query=query,
-                top_k=3,
+                top_k=2,  # Reduced from 3 for faster retrieval
                 category=category,
                 house_number=house_num
             )
@@ -283,7 +283,7 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
         # General retrieval
         chunks = rag_system.retrieve_context(
             query=query,
-            top_k=5,
+            top_k=3,  # Reduced from 5 for faster retrieval
             category=category
         )
         context_chunks.extend(chunks)
