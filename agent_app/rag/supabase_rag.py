@@ -225,16 +225,10 @@ class SupabaseRAGSystem:
                 for chunk in context_chunks if chunk and isinstance(chunk, dict)
             ])
             
-            # Build prompt
-            system_prompt = """You are an expert Vedic astrologer. Provide accurate, 
-            traditional interpretations based on the provided context and chart data. 
-            Always cite your sources and be specific about which houses, planets, or 
-            periods you are discussing.
-            
-            CRITICAL: You MUST use the actual chart data provided. DO NOT give generic 
-            interpretations. Always reference specific SAV points, BAV contributions, 
-            Dasha periods, and transit data when available. If chart data is provided, 
-            you MUST use those exact numbers in your response."""
+            # Build prompt (condensed for faster processing)
+            system_prompt = """Expert Vedic astrologer. Use ACTUAL chart data provided. 
+            Reference specific SAV points, BAV contributions, Dasha periods, and transit data. 
+            DO NOT give generic interpretations."""
             
             # Format chart data with specific details
             chart_data_text = self._format_chart_data(chart_data) if chart_data else "No chart data provided"
@@ -334,38 +328,15 @@ ACTUAL CHART DATA (YOU MUST USE THESE EXACT NUMBERS - DO NOT GIVE GENERIC INTERP
 {house_specific_info}
 {dasha_specific_info}
 
-CRITICAL RULES FOR INTERPRETATION:
-1. SAV (Sarvashtakavarga) is the CORRECT TOTAL points for a house - it's the sum of 7 planets ONLY (excluding Ascendant).
-2. SAV = Sun + Moon + Mars + Mercury + Jupiter + Venus + Saturn (Ascendant is NOT included in SAV).
-3. When showing individual BAV points, list all 8 (7 planets + Ascendant) but clarify that SAV excludes Ascendant.
-4. DO NOT add all 8 BAV points together - SAV is the sum of 7 planets only.
-5. Use the SAV value as the primary indicator (e.g., "House 12 has 28 SAV points").
-6. Individual BAV points show which planets contribute strongly/weakly to that house.
-
-EXAMPLE: If House 12 has SAV of 28, and individual BAVs are:
-- Sun: 4, Moon: 4, Mars: 4, Mercury: 5, Jupiter: 5, Venus: 3, Saturn: 3, Ascendant: 5
-Then say: "House 12 has 28 SAV points. Individual planetary contributions: Sun 4, Moon 4, Mars 4, Mercury 5, Jupiter 5, Venus 3, Saturn 3, Ascendant 5 (not included in SAV)."
-The SAV of 28 = 4+4+4+5+5+3+3 (7 planets) = 28. Ascendant (5) is shown separately but NOT added to SAV.
-DO NOT say "total of 33 points" - that's wrong. The SAV of 28 is correct.
-
-MANDATORY REQUIREMENTS FOR YOUR RESPONSE:
-1. ALWAYS start with the ACTUAL SAV value from the data above (e.g., "Your 7th house has 28 SAV points")
-2. DO NOT say "if your house has X points" - use the ACTUAL numbers provided
-3. DO NOT give generic interpretations - be specific to the actual data
-4. List individual BAV contributions using the ACTUAL numbers provided
-5. **CRITICAL FOR DASHA QUERIES**: If Dasha data is shown above (in "CURRENT DASHA DATA" section or in chart data), 
-   you MUST state it explicitly. DO NOT say "Dasha is not mentioned" or "I need your birth details" - the data is provided above.
-   Example: "You are currently in {current_dasa} Dasha with {current_bhukti} Bhukti, which started on {start_date}."
-6. If Gochara data is provided, reference specific transits and scores
-7. Clearly state: "SAV is the sum of 7 planets, excluding Ascendant"
-8. Interpret based on ACTUAL SAV strength (>=30 Strong, >=28 Good, <22 Weak)
-9. Reference individual BAV points to explain planetary influences
-10. DO NOT add all 8 BAV points together - only 7 planets make SAV
-11. DO NOT give hypothetical scenarios - use only the actual data provided
-12. DO NOT ask for birth details if chart data is already provided above
-
-If chart data is missing, say so explicitly. DO NOT make up numbers or give generic interpretations.
-If Dasha data is shown above, you MUST use it - do not say it's not available."""
+RULES:
+1. SAV = sum of 7 planets ONLY (Sun+Moon+Mars+Mercury+Jupiter+Venus+Saturn). Ascendant NOT included.
+2. Start with ACTUAL SAV value (e.g., "Your 7th house has 28 SAV points")
+3. Use ACTUAL numbers - DO NOT say "if your house has X points"
+4. List BAV contributions with actual numbers
+5. For Dasha queries: State current Dasha/Bhukti explicitly if data provided
+6. SAV strength: >=30 Strong, >=28 Good, <22 Weak
+7. DO NOT add all 8 BAV points - only 7 planets make SAV
+8. DO NOT ask for birth details if chart data is provided"""
             
             # Call OpenAI with shorter response for dashboard
             response = self.openai.chat.completions.create(
