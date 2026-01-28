@@ -4,6 +4,7 @@ Intelligent agent that routes queries, calls APIs, retrieves RAG context, and ge
 """
 
 import os
+import time
 from typing import TypedDict, List, Optional, Dict, Annotated, Literal
 from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
@@ -108,11 +109,17 @@ def route_query(state: AgentState) -> AgentState:
 def calculate_chart_data(state: AgentState) -> AgentState:
     """Calculator node: Agent decides which APIs to call based on intent"""
     
+    calc_start = time.time()
     intent = state["query_intent"]
     birth_data = state.get("birth_data")
     
     if not birth_data:
         return state
+    
+    # Check if we already have cached data (from previous queries in same session)
+    existing_bav_sav = state.get("bav_sav_data")
+    existing_dasha = state.get("dasha_data")
+    existing_gochara = state.get("gochara_data")
     
     # Agent decision: Which APIs to call?
     # ALWAYS call BAV/SAV if query mentions houses or is general (might need chart data)
@@ -122,7 +129,8 @@ def calculate_chart_data(state: AgentState) -> AgentState:
         any(word in query_lower for word in ["house", "7th", "10th", "career", "marriage", "health", "wealth", "sav", "bav", "ashtakavarga"])
     )
     
-    if needs_bav_sav:
+    # Only call API if we don't have cached data
+    if needs_bav_sav and not existing_bav_sav:
         # Need BAV/SAV for house analysis
         try:
             import requests
@@ -144,11 +152,15 @@ def calculate_chart_data(state: AgentState) -> AgentState:
             # Debug: Print API request data
             print(f"🔍 Calling BAV/SAV API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('latitude')}, lon={api_birth_data.get('longitude')}")
             
+            api_start = time.time()
             response = requests.post(
                 f"{api_url}/api/v1/calculate/full",
                 json=api_birth_data,
                 timeout=30
             )
+            api_duration = time.time() - api_start
+            print(f"⏱️ BAV/SAV API call took {api_duration:.2f}s")
+            
             response.raise_for_status()
             bav_sav_result = response.json()
             if isinstance(bav_sav_result, dict) and "error" not in bav_sav_result and "detail" not in bav_sav_result:
@@ -167,7 +179,8 @@ def calculate_chart_data(state: AgentState) -> AgentState:
         any(word in query_lower for word in ["dasha", "dasa", "period", "bhukti", "when", "timing", "current"])
     )
     
-    if needs_dasha:
+    # Only call API if we don't have cached data
+    if needs_dasha and not existing_dasha:
         # Need Dasha for period analysis
         try:
             import requests
@@ -187,11 +200,15 @@ def calculate_chart_data(state: AgentState) -> AgentState:
             
             print(f"🔍 Calling Dasha API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('lat')}, lon={api_birth_data.get('lon')}")
             
+            api_start = time.time()
             response = requests.post(
                 f"{api_url}/api/v1/dasha/current",
                 json=api_birth_data,
                 timeout=30
             )
+            api_duration = time.time() - api_start
+            print(f"⏱️ Dasha API call took {api_duration:.2f}s")
+            
             response.raise_for_status()
             dasha_result = response.json()
             if isinstance(dasha_result, dict) and "error" not in dasha_result and "detail" not in dasha_result:
@@ -212,7 +229,8 @@ def calculate_chart_data(state: AgentState) -> AgentState:
         any(word in query_lower for word in ["gochara", "transit", "current", "now", "influence"])
     )
     
-    if needs_gochara:
+    # Only call API if we don't have cached data
+    if needs_gochara and not existing_gochara:
         # Need Gochara for transit analysis
         try:
             import requests
@@ -230,11 +248,15 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 "place": birth_data.get("place")
             }
             
+            api_start = time.time()
             response = requests.post(
                 f"{api_url}/api/v1/gochara/current",
                 json=api_birth_data,
                 timeout=30
             )
+            api_duration = time.time() - api_start
+            print(f"⏱️ Gochara API call took {api_duration:.2f}s")
+            
             response.raise_for_status()
             gochara_result = response.json()
             if isinstance(gochara_result, dict) and "error" not in gochara_result:
@@ -247,6 +269,21 @@ def calculate_chart_data(state: AgentState) -> AgentState:
             import traceback
             traceback.print_exc()
     
+    # Use cached data if available and API wasn't called
+    if needs_bav_sav and existing_bav_sav and not state.get("bav_sav_data"):
+        state["bav_sav_data"] = existing_bav_sav
+        print(f"✅ Using cached BAV/SAV data")
+    
+    if needs_dasha and existing_dasha and not state.get("dasha_data"):
+        state["dasha_data"] = existing_dasha
+        print(f"✅ Using cached Dasha data")
+    
+    if needs_gochara and existing_gochara and not state.get("gochara_data"):
+        state["gochara_data"] = existing_gochara
+        print(f"✅ Using cached Gochara data")
+    
+    calc_duration = time.time() - calc_start
+    print(f"⏱️ Total calculate_chart_data took {calc_duration:.2f}s")
     state["current_step"] = "calculated"
     return state
 
@@ -254,6 +291,7 @@ def calculate_chart_data(state: AgentState) -> AgentState:
 def retrieve_knowledge(state: AgentState) -> AgentState:
     """RAG Retrieval node: Retrieve relevant Vedic knowledge from Supabase"""
     
+    retrieve_start = time.time()
     query = state["user_query"]
     intent = state["query_intent"]
     selected_houses = state.get("selected_houses", [])
@@ -299,6 +337,8 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
             source += f" - {chunk['planet']}"
         state["citations"].append(source)
     
+    retrieve_duration = time.time() - retrieve_start
+    print(f"⏱️ retrieve_knowledge took {retrieve_duration:.2f}s")
     state["current_step"] = "retrieved"
     return state
 
@@ -306,6 +346,7 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
 def analyze_and_interpret(state: AgentState) -> AgentState:
     """Analysis node: Combine data and generate interpretation using OpenAI"""
     
+    analyze_start = time.time()
     query = state["user_query"]
     intent = state["query_intent"]
     rag_context = state.get("rag_context", [])
@@ -326,11 +367,14 @@ def analyze_and_interpret(state: AgentState) -> AgentState:
     
     # Generate interpretation using RAG system
     try:
+        llm_start = time.time()
         interpretation = rag_system.generate_interpretation(
             query=query,
             context_chunks=context_chunks,
             chart_data=chart_data
         )
+        llm_duration = time.time() - llm_start
+        print(f"⏱️ LLM call took {llm_duration:.2f}s")
         state["final_response"] = interpretation
     except Exception as e:
         # Fallback: Use LLM directly if RAG fails
@@ -376,9 +420,14 @@ Provide a comprehensive interpretation using the ACTUAL data above."""
             HumanMessage(content=user_prompt)
         ]
         
+        llm_start = time.time()
         response = llm.invoke(messages)
+        llm_duration = time.time() - llm_start
+        print(f"⏱️ LLM fallback call took {llm_duration:.2f}s")
         state["final_response"] = response.content
     
+    analyze_duration = time.time() - analyze_start
+    print(f"⏱️ Total analyze_and_interpret took {analyze_duration:.2f}s")
     state["current_step"] = "analyzed"
     return state
 

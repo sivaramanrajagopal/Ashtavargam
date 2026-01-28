@@ -267,6 +267,9 @@ class ConversationManager:
         Returns:
             Dictionary with response, citations, chart_data, etc.
         """
+        import time
+        process_start = time.time()
+        
         if session_id not in self.sessions:
             raise ValueError(f"Session {session_id} not found")
         
@@ -310,7 +313,10 @@ class ConversationManager:
         }
         
         # Run agent graph
+        agent_start = time.time()
         result = agent_graph.invoke(initial_state)
+        agent_duration = time.time() - agent_start
+        print(f"⏱️ Total agent_graph.invoke took {agent_duration:.2f}s")
         
         # Update chart cache if new data was retrieved
         if result.get("bav_sav_data") or result.get("dasha_data") or result.get("gochara_data"):
@@ -356,6 +362,9 @@ class ConversationManager:
             },
             "suggestions": self._generate_suggestions(context, result)
         }
+        
+        process_duration = time.time() - process_start
+        print(f"⏱️ Total process_message took {process_duration:.2f}s")
     
     def _extract_houses(self, query: str, response: str) -> List[int]:
         """Extract house numbers mentioned in query/response"""
