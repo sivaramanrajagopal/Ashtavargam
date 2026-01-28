@@ -376,7 +376,7 @@ If Dasha data is shown above, you MUST use it - do not say it's not available.""
                 ],
                 temperature=0.7,
                 max_tokens=800,  # Reduced from 1500 for faster generation
-                timeout=8  # 8 second timeout per house
+                timeout=5  # Reduced from 8s to 5s for faster response (gpt-4o-mini is fast)
             )
             
             return response.choices[0].message.content.strip()
