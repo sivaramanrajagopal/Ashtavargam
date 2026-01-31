@@ -141,9 +141,16 @@ class SupabaseRAGSystem:
             # Generate query embedding (with timeout protection)
             import time
             embed_start = time.time()
-            query_embedding = self.embed_text(query)
+            try:
+                query_embedding = self.embed_text(query)
+            except Exception as embed_error:
+                # If embedding fails, try to continue with empty context (graceful degradation)
+                print(f"⚠️ Embedding generation failed: {embed_error}")
+                print(f"⚠️ Continuing with empty context (RAG will be limited)")
+                return []  # Return empty context instead of failing completely
+            
             embed_duration = time.time() - embed_start
-            if embed_duration > 1.0:  # Log if embedding takes > 1s
+            if embed_duration > 2.0:  # Log if embedding takes > 2s
                 print(f"⏱️ Embedding generation took {embed_duration:.2f}s")
             
             # Build base query with filters
