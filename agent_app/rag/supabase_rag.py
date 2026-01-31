@@ -347,7 +347,7 @@ RULES:
                 ],
                 temperature=0.7,
                 max_tokens=800,  # Reduced from 1500 for faster generation
-                timeout=5  # Reduced from 8s to 5s for faster response (gpt-4o-mini is fast)
+                timeout=15  # Increased to 15s to avoid timeout (actual calls take ~10-12s)
             )
             
             return response.choices[0].message.content.strip()
