@@ -5,6 +5,7 @@ Intelligent agent that routes queries, calls APIs, retrieves RAG context, and ge
 
 import os
 import time
+import logging
 from typing import TypedDict, List, Optional, Dict, Annotated, Literal
 from langgraph.graph import StateGraph, END
 from langchain_openai import ChatOpenAI
@@ -13,6 +14,9 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 from agent_app.tools.astrology_tools import get_all_tools
 from agent_app.rag.supabase_rag import SupabaseRAGSystem
+
+# Configure logger for this module
+logger = logging.getLogger(__name__)
 
 
 # Initialize OpenAI LLM
@@ -149,8 +153,8 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 "place": birth_data.get("place")
             }
             
-            # Debug: Print API request data
-            print(f"🔍 Calling BAV/SAV API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('latitude')}, lon={api_birth_data.get('longitude')}", flush=True)
+            # Debug: Log API request data
+            logger.info(f"🔍 Calling BAV/SAV API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('latitude')}, lon={api_birth_data.get('longitude')}")
             
             api_start = time.time()
             response = requests.post(
@@ -159,17 +163,17 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 timeout=30
             )
             api_duration = time.time() - api_start
-            print(f"⏱️ BAV/SAV API call took {api_duration:.2f}s", flush=True)
+            logger.info(f"⏱️ BAV/SAV API call took {api_duration:.2f}s")
             
             response.raise_for_status()
             bav_sav_result = response.json()
             if isinstance(bav_sav_result, dict) and "error" not in bav_sav_result and "detail" not in bav_sav_result:
                 state["bav_sav_data"] = bav_sav_result
-                print(f"✅ BAV/SAV data retrieved: SAV total={bav_sav_result.get('sav_total', 'N/A')}, Houses={len(bav_sav_result.get('sav_chart', []))}", flush=True)
+                logger.info(f"✅ BAV/SAV data retrieved: SAV total={bav_sav_result.get('sav_total', 'N/A')}, Houses={len(bav_sav_result.get('sav_chart', []))}")
             else:
-                print(f"⚠️ BAV/SAV API returned error: {bav_sav_result}", flush=True)
+                logger.warning(f"⚠️ BAV/SAV API returned error: {bav_sav_result}")
         except Exception as e:
-            print(f"❌ Error calling BAV/SAV API: {e}", flush=True)
+            logger.error(f"❌ Error calling BAV/SAV API: {e}")
             import traceback
             traceback.print_exc()
     
@@ -198,7 +202,7 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 "place": birth_data.get("place")
             }
             
-            print(f"🔍 Calling Dasha API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('lat')}, lon={api_birth_data.get('lon')}", flush=True)
+            logger.info(f"🔍 Calling Dasha API with: dob={api_birth_data.get('dob')}, lat={api_birth_data.get('lat')}, lon={api_birth_data.get('lon')}")
             
             api_start = time.time()
             response = requests.post(
@@ -207,19 +211,19 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 timeout=30
             )
             api_duration = time.time() - api_start
-            print(f"⏱️ Dasha API call took {api_duration:.2f}s", flush=True)
+            logger.info(f"⏱️ Dasha API call took {api_duration:.2f}s")
             
             response.raise_for_status()
             dasha_result = response.json()
             if isinstance(dasha_result, dict) and "error" not in dasha_result and "detail" not in dasha_result:
                 state["dasha_data"] = dasha_result
-                print(f"✅ Dasha data retrieved: {dasha_result.get('current_dasa', 'N/A')} - {dasha_result.get('current_bhukti', 'N/A')}", flush=True)
+                logger.info(f"✅ Dasha data retrieved: {dasha_result.get('current_dasa', 'N/A')} - {dasha_result.get('current_bhukti', 'N/A')}")
             else:
-                print(f"⚠️ Dasha API returned error: {dasha_result}", flush=True)
+                logger.warning(f"⚠️ Dasha API returned error: {dasha_result}")
                 import traceback
                 traceback.print_exc()
         except Exception as e:
-            print(f"❌ Error calling Dasha API: {e}", flush=True)
+            logger.error(f"❌ Error calling Dasha API: {e}")
             import traceback
             traceback.print_exc()
     
@@ -255,35 +259,35 @@ def calculate_chart_data(state: AgentState) -> AgentState:
                 timeout=30
             )
             api_duration = time.time() - api_start
-            print(f"⏱️ Gochara API call took {api_duration:.2f}s", flush=True)
+            logger.info(f"⏱️ Gochara API call took {api_duration:.2f}s")
             
             response.raise_for_status()
             gochara_result = response.json()
             if isinstance(gochara_result, dict) and "error" not in gochara_result:
                 state["gochara_data"] = gochara_result
-                print(f"✅ Gochara data retrieved", flush=True)
+                logger.info(f"✅ Gochara data retrieved")
             else:
-                print(f"⚠️ Gochara API returned error: {gochara_result}", flush=True)
+                logger.warning(f"⚠️ Gochara API returned error: {gochara_result}")
         except Exception as e:
-            print(f"❌ Error calling Gochara API: {e}", flush=True)
+            logger.error(f"❌ Error calling Gochara API: {e}")
             import traceback
             traceback.print_exc()
     
     # Use cached data if available and API wasn't called
     if needs_bav_sav and existing_bav_sav and not state.get("bav_sav_data"):
         state["bav_sav_data"] = existing_bav_sav
-        print(f"✅ Using cached BAV/SAV data", flush=True)
+        logger.info(f"✅ Using cached BAV/SAV data")
     
     if needs_dasha and existing_dasha and not state.get("dasha_data"):
         state["dasha_data"] = existing_dasha
-        print(f"✅ Using cached Dasha data", flush=True)
+        logger.info(f"✅ Using cached Dasha data")
     
     if needs_gochara and existing_gochara and not state.get("gochara_data"):
         state["gochara_data"] = existing_gochara
-        print(f"✅ Using cached Gochara data", flush=True)
+        logger.info(f"✅ Using cached Gochara data")
     
     calc_duration = time.time() - calc_start
-    print(f"⏱️ Total calculate_chart_data took {calc_duration:.2f}s", flush=True)
+    logger.info(f"⏱️ Total calculate_chart_data took {calc_duration:.2f}s")
     state["current_step"] = "calculated"
     return state
 
@@ -338,7 +342,7 @@ def retrieve_knowledge(state: AgentState) -> AgentState:
         state["citations"].append(source)
     
     retrieve_duration = time.time() - retrieve_start
-    print(f"⏱️ retrieve_knowledge took {retrieve_duration:.2f}s", flush=True)
+    logger.info(f"⏱️ retrieve_knowledge took {retrieve_duration:.2f}s")
     state["current_step"] = "retrieved"
     return state
 
@@ -374,11 +378,11 @@ def analyze_and_interpret(state: AgentState) -> AgentState:
             chart_data=chart_data
         )
         llm_duration = time.time() - llm_start
-        print(f"⏱️ LLM call took {llm_duration:.2f}s", flush=True)
+        logger.info(f"⏱️ LLM call took {llm_duration:.2f}s")
         state["final_response"] = interpretation
     except Exception as e:
         # Fallback: Use LLM directly if RAG fails
-        print(f"RAG generation failed, using LLM directly: {e}", flush=True)
+        logger.warning(f"RAG generation failed, using LLM directly: {e}")
         import traceback
         traceback.print_exc()
         
@@ -423,11 +427,11 @@ Provide a comprehensive interpretation using the ACTUAL data above."""
         llm_start = time.time()
         response = llm.invoke(messages)
         llm_duration = time.time() - llm_start
-        print(f"⏱️ LLM fallback call took {llm_duration:.2f}s", flush=True)
+        logger.info(f"⏱️ LLM fallback call took {llm_duration:.2f}s")
         state["final_response"] = response.content
     
     analyze_duration = time.time() - analyze_start
-    print(f"⏱️ Total analyze_and_interpret took {analyze_duration:.2f}s", flush=True)
+    logger.info(f"⏱️ Total analyze_and_interpret took {analyze_duration:.2f}s")
     state["current_step"] = "analyzed"
     return state
 
