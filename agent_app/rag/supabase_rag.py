@@ -60,7 +60,8 @@ class SupabaseRAGSystem:
         try:
             response = self.openai.embeddings.create(
                 model=self.embedding_model,
-                input=text
+                input=text,
+                timeout=10  # 10s timeout for embeddings (usually very fast, but network can be slow)
             )
             return response.data[0].embedding
         except Exception as e:
