@@ -44,7 +44,7 @@ class SupabaseRAGSystem:
         # Initialize OpenAI with timeout configuration
         self.openai = OpenAI(
             api_key=self.openai_key,
-            timeout=10.0,  # Default timeout for all requests (10 seconds)
+            timeout=30.0,  # Increased to 30s for production (network latency can be higher)
             max_retries=2  # Retry up to 2 times on failure
         )
         
