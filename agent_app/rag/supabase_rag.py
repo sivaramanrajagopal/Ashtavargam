@@ -4,6 +4,7 @@ Uses Supabase PG Vector with OpenAI embeddings
 """
 
 import os
+import sys
 from typing import List, Dict, Optional
 from supabase import create_client, Client
 from openai import OpenAI
@@ -41,23 +42,23 @@ class SupabaseRAGSystem:
         
         # Validate Supabase key format (should be JWT token)
         if not self.supabase_key.startswith('eyJ'):
-            print(f"⚠️ WARNING: Supabase key doesn't look like a JWT token. Make sure you're using service_role key, not anon key.")
-            print(f"⚠️ Current key starts with: {self.supabase_key[:10] if len(self.supabase_key) > 10 else 'too short'}...")
+            print(f"⚠️ WARNING: Supabase key doesn't look like a JWT token. Make sure you're using service_role key, not anon key.", flush=True)
+            print(f"⚠️ Current key starts with: {self.supabase_key[:10] if len(self.supabase_key, flush=True) > 10 else 'too short'}...", flush=True)
         
         # Log key status (first 10 chars only for security)
         key_preview = self.supabase_key[:10] + "..." if len(self.supabase_key) > 10 else "INVALID"
-        print(f"🔑 Supabase key configured: {key_preview} (length: {len(self.supabase_key)})")
-        print(f"🔗 Supabase URL: {self.supabase_url}")
+        print(f"🔑 Supabase key configured: {key_preview} (length: {len(self.supabase_key)})", flush=True)
+        print(f"🔗 Supabase URL: {self.supabase_url}", flush=True)
         
         # Initialize clients with connection test
         try:
             self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
             # Test connection
             test_result = self.supabase.table("vedic_knowledge").select("id").limit(1).execute()
-            print(f"✅ Supabase connection successful!")
+            print(f"✅ Supabase connection successful!", flush=True)
         except Exception as e:
-            print(f"❌ Supabase connection failed: {str(e)}")
-            print(f"❌ Please check SUPABASE_URL and SUPABASE_KEY in Railway environment variables")
+            print(f"❌ Supabase connection failed: {str(e)}", flush=True)
+            print(f"❌ Please check SUPABASE_URL and SUPABASE_KEY in Railway environment variables", flush=True)
             raise
         # Initialize OpenAI with timeout configuration
         self.openai = OpenAI(
@@ -91,11 +92,11 @@ class SupabaseRAGSystem:
             )
             duration = time.time() - start_time
             if duration > 2.0:  # Log if embedding takes > 2s
-                print(f"⚠️ Embedding took {duration:.2f}s (slower than expected)")
+                print(f"⚠️ Embedding took {duration:.2f}s (slower than expected)", flush=True)
             return response.data[0].embedding
         except Exception as e:
             duration = time.time() - start_time
-            print(f"❌ Embedding failed after {duration:.2f}s: {str(e)}")
+            print(f"❌ Embedding failed after {duration:.2f}s: {str(e)}", flush=True)
             # Re-raise with more context
             raise Exception(f"Error generating embedding after {duration:.2f}s: {str(e)}")
     
@@ -163,13 +164,13 @@ class SupabaseRAGSystem:
                 query_embedding = self.embed_text(query)
             except Exception as embed_error:
                 # If embedding fails, try to continue with empty context (graceful degradation)
-                print(f"⚠️ Embedding generation failed: {embed_error}")
-                print(f"⚠️ Continuing with empty context (RAG will be limited)")
+                print(f"⚠️ Embedding generation failed: {embed_error}", flush=True)
+                print(f"⚠️ Continuing with empty context (RAG will be limited)", flush=True)
                 return []  # Return empty context instead of failing completely
             
             embed_duration = time.time() - embed_start
             if embed_duration > 2.0:  # Log if embedding takes > 2s
-                print(f"⏱️ Embedding generation took {embed_duration:.2f}s")
+                print(f"⏱️ Embedding generation took {embed_duration:.2f}s", flush=True)
             
             # Build base query with filters
             query = self.supabase.table("vedic_knowledge").select("id, content, metadata, category, house_number, planet")
@@ -209,7 +210,7 @@ class SupabaseRAGSystem:
             
         except Exception as e:
             # Fallback: return empty list on error
-            print(f"Error retrieving context: {str(e)}")
+            print(f"Error retrieving context: {str(e)}", flush=True)
             return []
     
     def retrieve_context_advanced(self, query: str, top_k: int = 5,
@@ -243,7 +244,7 @@ class SupabaseRAGSystem:
             
         except Exception as e:
             # Fallback to basic retrieval
-            print(f"Advanced retrieval failed, using basic: {str(e)}")
+            print(f"Advanced retrieval failed, using basic: {str(e)}", flush=True)
             return self.retrieve_context(query, top_k, category, house_number, planet)
     
     def generate_interpretation(self, query: str, context_chunks: List[Dict], 
