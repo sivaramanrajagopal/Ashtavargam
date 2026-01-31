@@ -43,7 +43,7 @@ class SupabaseRAGSystem:
         # Validate Supabase key format (should be JWT token)
         if not self.supabase_key.startswith('eyJ'):
             print(f"⚠️ WARNING: Supabase key doesn't look like a JWT token. Make sure you're using service_role key, not anon key.", flush=True)
-            print(f"⚠️ Current key starts with: {self.supabase_key[:10] if len(self.supabase_key, flush=True) > 10 else 'too short'}...", flush=True)
+            print(f"⚠️ Current key starts with: {self.supabase_key[:10] if len(self.supabase_key) > 10 else 'too short'}...", flush=True)
         
         # Log key status (first 10 chars only for security)
         key_preview = self.supabase_key[:10] + "..." if len(self.supabase_key) > 10 else "INVALID"
