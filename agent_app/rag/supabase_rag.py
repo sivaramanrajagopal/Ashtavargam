@@ -374,7 +374,7 @@ RULES:
                 ],
                 temperature=0.7,
                 max_tokens=800,  # Reduced from 1500 for faster generation
-                timeout=15  # Increased to 15s to avoid timeout (actual calls take ~10-12s)
+                timeout=30  # Increased to 30s for production (network latency can be higher)
             )
             
             return response.choices[0].message.content.strip()
