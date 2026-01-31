@@ -124,8 +124,13 @@ class SupabaseRAGSystem:
             List of relevant knowledge chunks with content and metadata
         """
         try:
-            # Generate query embedding
+            # Generate query embedding (with timeout protection)
+            import time
+            embed_start = time.time()
             query_embedding = self.embed_text(query)
+            embed_duration = time.time() - embed_start
+            if embed_duration > 1.0:  # Log if embedding takes > 1s
+                print(f"⏱️ Embedding generation took {embed_duration:.2f}s")
             
             # Build base query with filters
             query = self.supabase.table("vedic_knowledge").select("id, content, metadata, category, house_number, planet")
