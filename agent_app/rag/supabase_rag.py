@@ -50,16 +50,23 @@ class SupabaseRAGSystem:
         print(f"🔑 Supabase key configured: {key_preview} (length: {len(self.supabase_key)})", flush=True)
         print(f"🔗 Supabase URL: {self.supabase_url}", flush=True)
         
-        # Initialize clients with connection test
+        # Initialize clients with connection test (non-blocking - don't fail startup if Supabase is down)
         try:
             self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
-            # Test connection
-            test_result = self.supabase.table("vedic_knowledge").select("id").limit(1).execute()
-            print(f"✅ Supabase connection successful!", flush=True)
+            # Test connection (non-blocking - warn but don't fail)
+            try:
+                test_result = self.supabase.table("vedic_knowledge").select("id").limit(1).execute()
+                print(f"✅ Supabase connection successful!", flush=True)
+            except Exception as test_error:
+                # Don't fail startup - just warn (RAG will fail gracefully later)
+                print(f"⚠️ Supabase connection test failed: {str(test_error)}", flush=True)
+                print(f"⚠️ Service will start but RAG may not work. Check SUPABASE_URL and SUPABASE_KEY.", flush=True)
         except Exception as e:
-            print(f"❌ Supabase connection failed: {str(e)}", flush=True)
+            # Only fail if we can't even create the client
+            print(f"❌ Failed to create Supabase client: {str(e)}", flush=True)
             print(f"❌ Please check SUPABASE_URL and SUPABASE_KEY in Railway environment variables", flush=True)
-            raise
+            # Don't raise - allow service to start (RAG will fail gracefully)
+            self.supabase = None
         # Initialize OpenAI with timeout configuration
         self.openai = OpenAI(
             api_key=self.openai_key,

@@ -1,166 +1,145 @@
-# Railway Healthcheck Failure Fix
+# Railway Healthcheck Failure - Troubleshooting Guide
 
-## Problem
-Healthcheck is failing: `/health` endpoint not responding
+## 🔴 Issue: Healthcheck Failed
 
-## Possible Causes
+**Error:**
+```
+1/1 replicas never became healthy!
+Healthcheck failed!
+Attempt #1-7 failed with service unavailable
+```
 
-### 1. Service Not Starting Properly
-- Check deployment logs for errors
-- Service might be crashing on startup
+## ✅ Fixed: Syntax Error
 
-### 2. Port Mismatch
-- Start command uses fixed port `8080`
-- Railway might assign different port
-- Solution: Use `$PORT` or let Railway handle it
+**Problem:**
+- Syntax error in `agent_app/rag/supabase_rag.py`
+- `len(self.supabase_key, flush=True)` - invalid syntax
+- Service couldn't start, causing healthcheck to fail
 
-### 3. Healthcheck Path Not Configured
-- Railway needs to know the healthcheck path
-- Should be `/health` for BAV/SAV API
-
-### 4. Service Taking Too Long to Start
-- Healthcheck timeout might be too short
-- Service needs more time to initialize
+**Fixed:**
+- Corrected to: `len(self.supabase_key) > 10`
+- `flush=True` moved to `print()` function
+- Code pushed to main branch
 
 ---
 
-## Solutions
+## 🔍 Other Possible Causes
 
-### Solution 1: Check Deployment Logs
-1. Go to Railway Dashboard
-2. Click on **BAV/SAV API** service
-3. Go to **"Deployments"** tab
-4. Click on the latest deployment
-5. Check **"Build Logs"** and **"Deploy Logs"**
-6. Look for errors or crashes
+### 1. **Missing Environment Variables**
+If service starts but healthcheck fails, check:
+- `SUPABASE_URL` - Must be set
+- `SUPABASE_KEY` - Must be set (service_role key)
+- `OPENAI_API_KEY` - Must be set
+- `BAV_SAV_API_URL` - Should be set
+- `DASHA_GOCHARA_API_URL` - Should be set
 
-### Solution 2: Fix Port in Start Command
-**Current:**
-```
-python3 -m uvicorn api_server:app --host 0.0.0.0 --port 8080
-```
+### 2. **Port Binding Issues**
+- Service must bind to `0.0.0.0:PORT`
+- Railway sets `PORT` environment variable
+- Check if service is listening on correct port
 
-**Better (use Railway's PORT):**
-```
-python3 -m uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8080}
-```
+### 3. **Healthcheck Endpoint**
+- Must respond to `GET /health`
+- Should return 200 OK
+- Should respond quickly (< 5s)
 
-**Or let Railway handle it:**
-- Railway automatically sets `PORT` environment variable
-- The code in `api_server.py` already reads it: `port = int(os.environ.get("PORT", 8000))`
-- So we can use: `python3 -m uvicorn api_server:app --host 0.0.0.0 --port $PORT`
-
-### Solution 3: Configure Healthcheck in Railway
-1. Go to **Settings** → **Deploy** section
-2. Find **"Healthcheck Path"** (if available)
-3. Set it to: `/health`
-4. Set **"Healthcheck Timeout"** to: `100` (seconds)
-
-### Solution 4: Use Railway's Default Healthcheck
-Railway automatically checks the root path `/` if no healthcheck is configured. But our API has `/health`, so we need to either:
-- Configure healthcheck path in Railway settings, OR
-- Add a root endpoint that redirects to `/health`
+### 4. **Import Errors**
+- Check if all dependencies are installed
+- Check if Python version is compatible
+- Check for missing modules
 
 ---
 
-## Quick Fix Steps
+## 🧪 Verification Steps
 
-### Step 1: Update Start Command
-1. Go to **BAV/SAV API** service → **Settings** → **Deploy**
-2. Update **Start Command** to:
-   ```
-   python3 -m uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8080}
-   ```
-   OR simply:
-   ```
-   python3 -m uvicorn api_server:app --host 0.0.0.0 --port 8080
-   ```
-   (Railway will route traffic correctly)
+### Step 1: Check Deployment Logs
+1. Railway Dashboard → Agent App → Deployments
+2. Click latest deployment
+3. Check for:
+   - ✅ "Build successful"
+   - ✅ "Starting container"
+   - ❌ Any Python errors
+   - ❌ Import errors
+   - ❌ Syntax errors
 
-### Step 2: Check Build/Deploy Logs
-1. Go to **Deployments** tab
-2. Check for any errors in logs
-3. Common issues:
-   - Missing dependencies
-   - Import errors
-   - Port conflicts
+### Step 2: Check Runtime Logs
+1. Railway Dashboard → Agent App → Logs
+2. Look for:
+   - `INFO: Application startup complete`
+   - `INFO: Uvicorn running on http://0.0.0.0:8080`
+   - `🔑 Supabase key configured: ...`
+   - Any error messages
 
-### Step 3: Verify Health Endpoint Exists
-The `/health` endpoint exists in `api_server.py`:
-```python
-@app.get("/health", response_model=HealthResponse)
-async def health_check():
-    return {"status": "healthy"}
-```
-
-### Step 4: Test Manually (After Deployment)
-Once deployed, test:
+### Step 3: Test Healthcheck Manually
 ```bash
-curl https://your-bav-api-url.up.railway.app/health
+curl https://your-agent-app.railway.app/health
+```
+
+Should return:
+```json
+{"status": "healthy", "service": "agent"}
 ```
 
 ---
 
-## Alternative: Add Root Endpoint
+## 🔧 Quick Fixes
 
-If Railway is checking `/` instead of `/health`, we can add a root endpoint:
+### If Healthcheck Still Fails:
 
-```python
-@app.get("/")
-async def root():
-    return {"status": "healthy", "service": "BAV/SAV API"}
+1. **Check Environment Variables:**
+   - Railway → Agent App → Variables
+   - Verify all required vars are set
+   - No typos in variable names
+
+2. **Check Start Command:**
+   - Railway → Agent App → Settings
+   - Start Command should be:
+     ```
+     python -m uvicorn agent_app.main:app --host 0.0.0.0 --port 8080
+     ```
+
+3. **Check Dockerfile:**
+   - Should use `Dockerfile.agent`
+   - Should install all dependencies
+   - Should expose port 8080
+
+4. **Manual Redeploy:**
+   - Railway → Agent App → Deployments
+   - Click "Redeploy"
+
+---
+
+## 📋 Expected Startup Sequence
+
+**Successful startup should show:**
+```
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+🔑 Supabase key configured: eyJ... (length: XXX)
+🔗 Supabase URL: https://...
+✅ Supabase connection successful!
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080
 ```
 
-But this requires code changes. Better to configure healthcheck in Railway.
+**If you see errors instead:**
+- Check the error message
+- Fix the underlying issue
+- Redeploy
 
 ---
 
-## Most Likely Issue
+## 🚨 Common Errors
 
-**The service is probably crashing on startup.** Check the deployment logs to see the actual error.
+### Error: "ModuleNotFoundError"
+**Fix:** Check `requirements_agent.txt` includes all dependencies
 
-**Common startup errors:**
-- Missing Python dependencies
-- Import errors (e.g., `ashtakavarga_calculator_final` not found)
-- System library issues (pyswisseph dependencies)
+### Error: "Invalid API key"
+**Fix:** Check environment variables in Railway
 
----
+### Error: "Address already in use"
+**Fix:** Check port configuration
 
-## Action Items
-
-1. ✅ Check deployment logs for errors
-2. ✅ Verify start command is correct
-3. ✅ Check if service is actually running
-4. ✅ Test `/health` endpoint manually after deployment
-5. ✅ Configure healthcheck path in Railway if needed
-
----
-
-## Debugging Steps
-
-1. **Check Logs:**
-   - Railway Dashboard → Service → Deployments → Latest → View Logs
-
-2. **Check Service Status:**
-   - Is the service actually running?
-   - Are there any crash loops?
-
-3. **Test Health Endpoint:**
-   - After deployment, manually test: `curl https://your-url/health`
-
-4. **Check Port:**
-   - Railway sets PORT automatically
-   - Our code reads it: `os.environ.get("PORT", 8000)`
-   - Start command should use the same port
-
----
-
-## Recommended Fix
-
-**Update Start Command in Railway:**
-```
-python3 -m uvicorn api_server:app --host 0.0.0.0 --port 8080
-```
-
-**Then check deployment logs** to see what's actually failing.
+### Error: "Connection refused"
+**Fix:** Check healthcheck endpoint is accessible
 
