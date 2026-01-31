@@ -41,7 +41,12 @@ class SupabaseRAGSystem:
         
         # Initialize clients
         self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
-        self.openai = OpenAI(api_key=self.openai_key)
+        # Initialize OpenAI with timeout configuration
+        self.openai = OpenAI(
+            api_key=self.openai_key,
+            timeout=10.0,  # Default timeout for all requests (10 seconds)
+            max_retries=2  # Retry up to 2 times on failure
+        )
         
         # Embedding model
         self.embedding_model = "text-embedding-3-small"
@@ -57,15 +62,24 @@ class SupabaseRAGSystem:
         Returns:
             List of floats representing the embedding vector
         """
+        import time
+        start_time = time.time()
         try:
+            # Use explicit timeout parameter (in addition to client-level timeout)
             response = self.openai.embeddings.create(
                 model=self.embedding_model,
                 input=text,
-                timeout=10  # 10s timeout for embeddings (usually very fast, but network can be slow)
+                timeout=10.0  # 10s timeout for embeddings (usually very fast, but network can be slow)
             )
+            duration = time.time() - start_time
+            if duration > 2.0:  # Log if embedding takes > 2s
+                print(f"⚠️ Embedding took {duration:.2f}s (slower than expected)")
             return response.data[0].embedding
         except Exception as e:
-            raise Exception(f"Error generating embedding: {str(e)}")
+            duration = time.time() - start_time
+            print(f"❌ Embedding failed after {duration:.2f}s: {str(e)}")
+            # Re-raise with more context
+            raise Exception(f"Error generating embedding after {duration:.2f}s: {str(e)}")
     
     def store_knowledge(self, content: str, metadata: Dict = None, 
                        category: str = None, house_number: int = None, 
