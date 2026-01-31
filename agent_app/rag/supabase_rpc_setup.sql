@@ -11,11 +11,11 @@ CREATE OR REPLACE FUNCTION match_vedic_knowledge(
 )
 RETURNS TABLE (
     id bigint,
+    category text,
     content text,
     metadata jsonb,
-    category varchar,
     house_number int,
-    planet varchar,
+    planet text,
     similarity float
 )
 LANGUAGE plpgsql
@@ -24,11 +24,11 @@ BEGIN
     RETURN QUERY
     SELECT
         vk.id,
+        vk.category::text,  -- Cast VARCHAR(50) to text
         vk.content,
         vk.metadata,
-        vk.category,
         vk.house_number,
-        vk.planet,
+        vk.planet::text,  -- Cast VARCHAR(20) to text
         1 - (vk.embedding <=> query_embedding) as similarity
     FROM vedic_knowledge vk
     WHERE

@@ -27,11 +27,11 @@ BEGIN
     RETURN QUERY
     SELECT
         vk.id,
-        vk.category,
+        vk.category::text,  -- Cast VARCHAR(50) to text
         vk.content,
         vk.metadata,
         vk.house_number,
-        vk.planet,
+        vk.planet::text,  -- Cast VARCHAR(20) to text if needed
         1 - (vk.embedding <=> query_embedding) as similarity
     FROM vedic_knowledge vk
     WHERE vk.embedding IS NOT NULL
