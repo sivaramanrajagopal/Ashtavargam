@@ -144,6 +144,8 @@ class ChatMessageResponse(BaseModel):
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
+    logger.info("🏥 Health check requested")
+    print("🏥 Health check endpoint called", flush=True)
     return {
         "status": "healthy",
         "version": "1.0.0",
