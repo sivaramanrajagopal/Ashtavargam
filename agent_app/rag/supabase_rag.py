@@ -69,7 +69,7 @@ class SupabaseRAGSystem:
             response = self.openai.embeddings.create(
                 model=self.embedding_model,
                 input=text,
-                timeout=10.0  # 10s timeout for embeddings (usually very fast, but network can be slow)
+                timeout=30.0  # 30s timeout for embeddings (matches LLM timeout for production)
             )
             duration = time.time() - start_time
             if duration > 2.0:  # Log if embedding takes > 2s
