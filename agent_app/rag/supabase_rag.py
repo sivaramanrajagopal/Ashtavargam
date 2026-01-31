@@ -39,8 +39,26 @@ class SupabaseRAGSystem:
         if not self.openai_key:
             raise ValueError("OpenAI API key must be provided or set in environment variables")
         
-        # Initialize clients
-        self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
+        # Validate Supabase key format (should be JWT token)
+        if not self.supabase_key.startswith('eyJ'):
+            print(f"⚠️ WARNING: Supabase key doesn't look like a JWT token. Make sure you're using service_role key, not anon key.")
+            print(f"⚠️ Current key starts with: {self.supabase_key[:10] if len(self.supabase_key) > 10 else 'too short'}...")
+        
+        # Log key status (first 10 chars only for security)
+        key_preview = self.supabase_key[:10] + "..." if len(self.supabase_key) > 10 else "INVALID"
+        print(f"🔑 Supabase key configured: {key_preview} (length: {len(self.supabase_key)})")
+        print(f"🔗 Supabase URL: {self.supabase_url}")
+        
+        # Initialize clients with connection test
+        try:
+            self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
+            # Test connection
+            test_result = self.supabase.table("vedic_knowledge").select("id").limit(1).execute()
+            print(f"✅ Supabase connection successful!")
+        except Exception as e:
+            print(f"❌ Supabase connection failed: {str(e)}")
+            print(f"❌ Please check SUPABASE_URL and SUPABASE_KEY in Railway environment variables")
+            raise
         # Initialize OpenAI with timeout configuration
         self.openai = OpenAI(
             api_key=self.openai_key,
