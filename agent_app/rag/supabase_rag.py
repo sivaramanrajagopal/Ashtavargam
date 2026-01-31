@@ -164,6 +164,11 @@ class SupabaseRAGSystem:
             List of relevant knowledge chunks with content and metadata
         """
         try:
+            # Check if Supabase is initialized
+            if not self.supabase:
+                print(f"⚠️ Supabase client not initialized, returning empty context", flush=True)
+                return []
+            
             # Generate query embedding (with timeout protection)
             import time
             embed_start = time.time()
