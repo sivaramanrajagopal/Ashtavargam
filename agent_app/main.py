@@ -4,6 +4,8 @@ Production-ready server with LangGraph agent integration
 """
 
 import os
+import sys
+import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -14,7 +16,21 @@ import uvicorn
 
 from agent_app.graphs.astrology_agent_graph import agent_graph
 from agent_app.conversation.manager import conversation_manager
-from agent_app.conversation.manager import conversation_manager
+
+# Configure logging for Railway (ensure logs are visible)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)  # Explicitly use stdout
+    ]
+)
+# Force unbuffered output
+sys.stdout.reconfigure(line_buffering=True) if hasattr(sys.stdout, 'reconfigure') else None
+sys.stderr.reconfigure(line_buffering=True) if hasattr(sys.stderr, 'reconfigure') else None
+
+logger = logging.getLogger(__name__)
+logger.info("🚀 Agent App starting up...")
 
 
 # Initialize FastAPI app
