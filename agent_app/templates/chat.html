@@ -1200,6 +1200,202 @@
             }
         }
         
+        /* iPad Optimizations */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            /* iPad Portrait */
+            .modal-content {
+                max-width: 90vw;
+                max-height: 85vh;
+                padding: 25px;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.4em;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .btn-header {
+                padding: 10px 18px;
+                font-size: 0.9em;
+                min-width: 100px;
+            }
+            
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .setup-form {
+                padding: 30px;
+            }
+            
+            .message {
+                padding: 18px 15px;
+            }
+            
+            .message-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            
+            .message-content {
+                font-size: 1em;
+            }
+            
+            .data-table {
+                font-size: 0.9em;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 12px 10px;
+            }
+            
+            /* Ashtakavarga modal - optimize for iPad */
+            #ashtakavargaModal .modal-content {
+                max-width: 95vw;
+                padding: 25px;
+            }
+            
+            /* Overall BAV grid - adjust for iPad */
+            .overall-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 15px;
+            }
+            
+            .overall-bav-card {
+                padding: 15px;
+            }
+            
+            .overall-bav-mini-grid {
+                gap: 4px;
+            }
+            
+            .overall-bav-mini-cell {
+                font-size: 0.9em;
+                padding: 8px 4px;
+            }
+            
+            /* Dasha Bhukti tree - better spacing for iPad */
+            .tree-parent {
+                padding: 15px 18px;
+                font-size: 1em;
+            }
+            
+            .tree-child {
+                padding: 12px 18px 12px 50px;
+            }
+            
+            /* Touch-friendly buttons */
+            .suggestion-btn {
+                padding: 12px 18px;
+                font-size: 0.95em;
+                min-height: 44px; /* iOS touch target minimum */
+            }
+            
+            .send-btn {
+                padding: 12px 20px;
+                min-height: 44px;
+            }
+        }
+        
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            /* iPad Landscape / iPad Pro */
+            .modal-content {
+                max-width: 85vw;
+                max-height: 80vh;
+                padding: 30px;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.5em;
+            }
+            
+            /* Ashtakavarga modal - full width on landscape */
+            #ashtakavargaModal .modal-content {
+                max-width: 95vw;
+                padding: 30px;
+            }
+            
+            /* Overall BAV grid - 4 columns on landscape */
+            .overall-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 18px;
+            }
+            
+            .overall-bav-card {
+                padding: 18px;
+            }
+            
+            .overall-bav-mini-grid {
+                gap: 5px;
+            }
+            
+            .overall-bav-mini-cell {
+                font-size: 1em;
+                padding: 10px 5px;
+            }
+            
+            /* Better form layout on landscape */
+            .form-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+            
+            /* Header buttons - better spacing */
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .btn-header {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+        
+        /* iPad-specific touch optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            /* Touch devices (iPad, iPhone) */
+            .btn-header {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .modal-close {
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .suggestion-btn {
+                min-height: 44px;
+            }
+            
+            .send-btn {
+                min-height: 44px;
+                min-width: 80px;
+            }
+            
+            /* Better scroll behavior on touch devices */
+            .modal-content {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .messages-container {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+        
         /* Auspicious Dates Tooltip and Explanation Card Styles */
         .explanation-tooltip {
             position: relative;
