@@ -35,6 +35,15 @@ TAMIL_RASI_ABBR = [
     "மே", "ரி", "மி", "க", "சி", "க", "து", "வி", "த", "ம", "கு", "மீ"
 ]
 
+@app.route('/health')
+def health():
+    """Health check endpoint for Railway"""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'Flask Ashtakavarga Calculator',
+        'version': '1.0.0'
+    }), 200
+
 @app.route('/')
 def index():
     """Home page with birth data input form - redirects to Prokerala style after calculation"""

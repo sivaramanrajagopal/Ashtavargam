@@ -1,0 +1,557 @@
+INFO:     Will watch for changes in these directories: ['/Users/sivaramanrajagopal/Ashtavargam']
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+INFO:     Started reloader process [57434] using WatchFiles
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [57437]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:62270 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62384 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62384 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62384 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62428 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62428 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62428 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62428 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62464 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62554 - "POST /api/chat/start HTTP/1.1" 200 OK
+Traceback (most recent call last):
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/http11.py", line 136, in handle_request
+    raise exc
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_sync/http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_backends/sync.py", line 128, in read
+    return self._sock.recv(max_bytes)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ReadTimeout: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/openai/_base_client.py", line 982, in request
+    response = self._client.send(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/contextlib.py", line 135, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ReadTimeout: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sivaramanrajagopal/Ashtavargam/agent_app/rag/supabase_rag.py", line 342, in generate_interpretation
+    response = self.openai.chat.completions.create(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/openai/_utils/_utils.py", line 287, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/openai/resources/chat/completions/completions.py", line 1150, in create
+    return self._post(
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/openai/_base_client.py", line 1000, in request
+    raise APITimeoutError(request=request) from err
+openai.APITimeoutError: Request timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/sivaramanrajagopal/Ashtavargam/agent_app/graphs/astrology_agent_graph.py", line 371, in analyze_and_interpret
+    interpretation = rag_system.generate_interpretation(
+  File "/Users/sivaramanrajagopal/Ashtavargam/agent_app/rag/supabase_rag.py", line 356, in generate_interpretation
+    raise Exception(f"Error generating interpretation: {str(e)}")
+Exception: Error generating interpretation: Request timed out.
+🔍 Calling BAV/SAV API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ BAV/SAV API call took 0.02s
+✅ BAV/SAV data retrieved: SAV total=337, Houses=12
+🔍 Calling Dasha API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ Dasha API call took 0.01s
+✅ Dasha data retrieved: Moon - Mercury
+⏱️ Gochara API call took 0.00s
+✅ Gochara data retrieved
+⏱️ Total calculate_chart_data took 0.03s
+⏱️ retrieve_knowledge took 2.96s
+RAG generation failed, using LLM directly: Error generating interpretation: Request timed out.
+⏱️ LLM fallback call took 14.41s
+⏱️ Total analyze_and_interpret took 31.01s
+⏱️ Total agent_graph.invoke took 34.13s
+INFO:     127.0.0.1:62587 - "POST /api/chat/message HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [57437]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [57737]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [57737]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [58002]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:63375 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63375 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63375 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63413 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63413 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63414 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63414 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63525 - "POST /api/chat/start HTTP/1.1" 200 OK
+🔍 Calling Dasha API with: dob=1978-09-18, lat=13.08, lon=80.27
+⏱️ Dasha API call took 0.01s
+✅ Dasha data retrieved: Moon - Mercury
+⏱️ Gochara API call took 0.00s
+✅ Gochara data retrieved
+⏱️ Total calculate_chart_data took 0.02s
+⏱️ retrieve_knowledge took 1.20s
+⏱️ LLM call took 7.41s
+⏱️ Total analyze_and_interpret took 7.41s
+⏱️ Total agent_graph.invoke took 8.76s
+INFO:     127.0.0.1:63543 - "POST /api/chat/message HTTP/1.1" 200 OK
+🔍 Calling BAV/SAV API with: dob=1978-09-18, lat=13.08, lon=80.27
+⏱️ BAV/SAV API call took 0.01s
+✅ BAV/SAV data retrieved: SAV total=337, Houses=12
+⏱️ Total calculate_chart_data took 0.01s
+⏱️ retrieve_knowledge took 0.88s
+⏱️ LLM call took 8.32s
+⏱️ Total analyze_and_interpret took 8.32s
+⏱️ Total agent_graph.invoke took 9.34s
+INFO:     127.0.0.1:63866 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 2.39s
+⏱️ LLM call took 10.65s
+⏱️ Total analyze_and_interpret took 10.65s
+⏱️ Total agent_graph.invoke took 13.17s
+INFO:     127.0.0.1:52469 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+Error retrieving context: Error generating embedding: Request timed out.
+⏱️ retrieve_knowledge took 38.54s
+⏱️ LLM call took 18.27s
+⏱️ Total analyze_and_interpret took 18.27s
+⏱️ Total agent_graph.invoke took 56.98s
+INFO:     127.0.0.1:52625 - "POST /api/chat/message HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [58002]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [59275]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [59275]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [59535]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [59535]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [59748]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:53632 - "POST /api/chat/message HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53632 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53632 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53653 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53744 - "POST /api/chat/start HTTP/1.1" 200 OK
+🔍 Calling BAV/SAV API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ BAV/SAV API call took 0.01s
+✅ BAV/SAV data retrieved: SAV total=337, Houses=12
+🔍 Calling Dasha API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ Dasha API call took 0.01s
+✅ Dasha data retrieved: Moon - Mercury
+⏱️ Gochara API call took 0.00s
+✅ Gochara data retrieved
+⏱️ Total calculate_chart_data took 0.02s
+⏱️ retrieve_knowledge took 1.42s
+⏱️ LLM call took 9.21s
+⏱️ Total analyze_and_interpret took 9.21s
+⏱️ Total agent_graph.invoke took 10.79s
+INFO:     127.0.0.1:53758 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ Embedding generation took 21.18s
+⏱️ retrieve_knowledge took 24.07s
+⏱️ LLM call took 7.34s
+⏱️ Total analyze_and_interpret took 7.34s
+⏱️ Total agent_graph.invoke took 31.54s
+INFO:     127.0.0.1:53912 - "POST /api/chat/message HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [59748]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [59938]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [59938]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [59960]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [59960]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [60226]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60226]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [60490]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:54795 - "POST /api/chat/message HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54795 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54795 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54837 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54837 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54837 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54837 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54853 - "GET /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54853 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54853 - "GET /api/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54853 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54970 - "POST /api/chat/start HTTP/1.1" 200 OK
+🔍 Calling BAV/SAV API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ BAV/SAV API call took 0.01s
+✅ BAV/SAV data retrieved: SAV total=337, Houses=12
+🔍 Calling Dasha API with: dob=1978-09-18, lat=13.08, lon=80.28
+⏱️ Dasha API call took 0.01s
+✅ Dasha data retrieved: Moon - Mercury
+⏱️ Gochara API call took 0.00s
+✅ Gochara data retrieved
+⏱️ Total calculate_chart_data took 0.02s
+⏱️ retrieve_knowledge took 1.64s
+⏱️ LLM call took 7.33s
+⏱️ Total analyze_and_interpret took 7.33s
+⏱️ Total agent_graph.invoke took 9.13s
+INFO:     127.0.0.1:54984 - "POST /api/chat/message HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55011 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 0.78s
+⏱️ LLM call took 9.93s
+⏱️ Total analyze_and_interpret took 9.93s
+⏱️ Total agent_graph.invoke took 10.85s
+INFO:     127.0.0.1:55174 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 0.91s
+⏱️ LLM call took 6.03s
+⏱️ Total analyze_and_interpret took 6.03s
+⏱️ Total agent_graph.invoke took 7.08s
+INFO:     127.0.0.1:55361 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 1.22s
+⏱️ LLM call took 6.91s
+⏱️ Total analyze_and_interpret took 6.91s
+⏱️ Total agent_graph.invoke took 8.28s
+INFO:     127.0.0.1:55534 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 1.11s
+⏱️ LLM call took 2.31s
+⏱️ Total analyze_and_interpret took 2.31s
+⏱️ Total agent_graph.invoke took 3.56s
+INFO:     127.0.0.1:55879 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 0.65s
+⏱️ LLM call took 11.38s
+⏱️ Total analyze_and_interpret took 11.38s
+⏱️ Total agent_graph.invoke took 12.17s
+INFO:     127.0.0.1:55923 - "POST /api/chat/message HTTP/1.1" 200 OK
+⏱️ Total calculate_chart_data took 0.00s
+⏱️ retrieve_knowledge took 0.86s
+⏱️ LLM call took 9.68s
+⏱️ Total analyze_and_interpret took 9.68s
+⏱️ Total agent_graph.invoke took 10.70s
+INFO:     127.0.0.1:56017 - "POST /api/chat/message HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py', 'agent_app/graphs/astrology_agent_graph.py', 'agent_app/conversation/manager.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60490]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [61078]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py', 'agent_app/graphs/astrology_agent_graph.py', 'agent_app/conversation/manager.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61078]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [61255]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61255]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [64991]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [64991]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [65347]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65347]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [65649]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65649]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [65932]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [65932]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [67433]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [67433]
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [67748]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [67748]
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+INFO:     Started server process [68433]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py', 'agent_app/graphs/astrology_agent_graph.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [68433]
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [68564]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [68564]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [68605]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [68605]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [69081]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [69081]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [70852]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [70852]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [71276]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [71276]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [71779]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/rag/supabase_rag.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [71779]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+INFO:     Started server process [72297]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [72297]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+2026-01-31 20:50:27,986 - agent_app.main - INFO - 🚀 Agent App starting up...
+INFO:     Started server process [74621]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74621]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+2026-01-31 20:51:05,441 - agent_app.main - INFO - 🚀 Agent App starting up...
+INFO:     Started server process [74988]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'agent_app/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74988]
+/Users/sivaramanrajagopal/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔑 Supabase key configured: eyJhbGciOi... (length: 219)
+🔗 Supabase URL: https://sfoobtzxdajwlbbuvttx.supabase.co
+✅ Supabase connection successful!
+2026-01-31 20:51:59,792 - agent_app.main - INFO - 🚀 Agent App starting up...
+INFO:     Started server process [75577]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
