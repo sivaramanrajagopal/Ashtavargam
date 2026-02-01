@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional
 import uvicorn
 
@@ -42,13 +42,23 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS middleware
+# CORS middleware - Security: Use specific origins instead of wildcard
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:8080,https://agent-app-production.up.railway.app"
+).split(",")
+
+# Clean up origins (remove whitespace)
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify allowed origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,  # Specific origins for security
+    allow_credentials=False,  # Must be False when using multiple origins
+    allow_methods=["GET", "POST", "OPTIONS"],  # Only needed methods
+    allow_headers=["Content-Type", "Authorization", "Accept"],  # Only needed headers
+    expose_headers=["*"],
+    max_age=3600,  # Cache preflight for 1 hour
 )
 
 # Serve static files if they exist
@@ -77,8 +87,24 @@ class BirthData(BaseModel):
 
 class QueryRequest(BaseModel):
     """Request model for agent query"""
-    query: str = Field(..., description="User query/question")
+    query: str = Field(
+        ...,
+        min_length=1,
+        max_length=1000,  # Security: Prevent DoS with very long queries
+        description="User query/question (max 1000 characters)"
+    )
     birth_data: Optional[BirthData] = Field(None, description="Birth data (required for chart analysis)")
+    
+    @validator('query')
+    def validate_query(cls, v):
+        """Validate and sanitize query"""
+        if not v or not v.strip():
+            raise ValueError('Query cannot be empty')
+        # Remove potentially dangerous characters
+        v = v.strip()
+        if len(v) > 1000:
+            raise ValueError('Query too long (max 1000 characters)')
+        return v
 
 
 class QueryResponse(BaseModel):
