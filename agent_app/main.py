@@ -82,13 +82,25 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         
         # Content Security Policy (CSP)
         # Allow inline styles and scripts for DOMPurify and our app
+        # Detect if we're in development (localhost)
+        is_development = (
+            request.url.hostname in ["localhost", "127.0.0.1"] or
+            os.getenv("ENVIRONMENT", "").lower() == "development"
+        )
+        
+        # Build connect-src directive
+        connect_src = "'self' https://api.openai.com https://*.supabase.co https://*.railway.app"
+        if is_development:
+            # Allow localhost connections for development
+            connect_src += " http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:*"
+        
         csp = (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
             "style-src 'self' 'unsafe-inline'; "
             "img-src 'self' data: https:; "
             "font-src 'self' data:; "
-            "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.railway.app; "
+            f"connect-src {connect_src}; "
             "frame-ancestors 'none';"
         )
         response.headers["Content-Security-Policy"] = csp
