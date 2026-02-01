@@ -6,13 +6,14 @@ Production-ready server with LangGraph agent integration
 import os
 import sys
 import logging
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional
 import uvicorn
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from agent_app.graphs.astrology_agent_graph import agent_graph
 from agent_app.conversation.manager import conversation_manager
@@ -61,6 +62,45 @@ app.add_middleware(
     max_age=3600,  # Cache preflight for 1 hour
 )
 
+
+# ============================================================================
+# SECURITY HEADERS MIDDLEWARE (Phase 2)
+# ============================================================================
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Add security headers to all responses"""
+    
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        
+        # Security headers
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        
+        # Content Security Policy (CSP)
+        # Allow inline styles and scripts for DOMPurify and our app
+        csp = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data: https:; "
+            "font-src 'self' data:; "
+            "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.railway.app; "
+            "frame-ancestors 'none';"
+        )
+        response.headers["Content-Security-Policy"] = csp
+        
+        # HSTS (only if HTTPS - Railway handles this, but good to have)
+        if request.url.scheme == "https":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
 # Serve static files if they exist
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_dir):
@@ -78,8 +118,32 @@ class BirthData(BaseModel):
     latitude: float = Field(..., description="Latitude", ge=-90, le=90, alias="lat")
     longitude: float = Field(..., description="Longitude", ge=-180, le=180, alias="lon")
     tz_offset: float = Field(..., description="Timezone offset from UTC")
-    name: Optional[str] = Field(None, description="Name of the native")
-    place: Optional[str] = Field(None, description="Place of birth")
+    name: Optional[str] = Field(None, max_length=200, description="Name of the native")
+    place: Optional[str] = Field(None, max_length=200, description="Place of birth")
+    
+    @validator('dob')
+    def validate_dob(cls, v):
+        """Validate date format"""
+        import re
+        if not re.match(r'^\d{4}-\d{2}-\d{2}$', v):
+            raise ValueError('Date must be in YYYY-MM-DD format')
+        return v
+    
+    @validator('tob')
+    def validate_tob(cls, v):
+        """Validate time format"""
+        import re
+        if not re.match(r'^\d{2}:\d{2}$', v):
+            raise ValueError('Time must be in HH:MM format (24-hour)')
+        # Validate hour and minute ranges
+        parts = v.split(':')
+        hour = int(parts[0])
+        minute = int(parts[1])
+        if hour < 0 or hour > 23:
+            raise ValueError('Hour must be between 00 and 23')
+        if minute < 0 or minute > 59:
+            raise ValueError('Minute must be between 00 and 59')
+        return v
     
     class Config:
         populate_by_name = True  # Allow both lat/lon and latitude/longitude
